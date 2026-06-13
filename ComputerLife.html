@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Computer Life Dashboard Pro
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+:root{
+
+    --primary:#2563eb;
+    --success:#16a34a;
+    --warning:#f59e0b;
+    --danger:#dc2626;
+    --purple:#7c3aed;
+
+    --bg:#f3f4f6;
+    --card:#ffffff;
+    --border:#e5e7eb;
+    --sidebar:#0f172a;
+
+}
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+
+}
+
+body{
+
+    background:var(--bg);
+    color:#111827;
+
+}
+
+/* =========================
+SIDEBAR
+========================= */
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    width:260px;
+
+    height:100vh;
+
+    background:var(--sidebar);
+
+    color:white;
+
+    padding:25px;
+
+    z-index:1000;
+
+    box-shadow:
+    5px 0 25px rgba(0,0,0,.15);
+
+}
+
+.sidebar-logo{
+
+    font-size:24px;
+
+    font-weight:800;
+
+    margin-bottom:25px;
+
+}
+
+.sidebar-menu{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.menu-btn{
+
+    border:none;
+
+    background:transparent;
+
+    color:white;
+
+    text-align:left;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-size:15px;
+
+}
+
+.menu-btn:hover{
+
+    background:#1e293b;
+
+    transform:
+    translateX(5px);
+
+}
+
+.menu-btn.active{
+
+    background:var(--primary);
+
+}
+
+/* =========================
+MAIN
+========================= */
+
+.main-content{
+
+    margin-left:260px;
+
+}
+
+.container{
+
+    max-width:1900px;
+
+    margin:auto;
+
+    padding:25px;
+
+}
+
+/* =========================
+HEADER
+========================= */
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.header-left h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+}
+
+.header-left p{
+
+    color:#6b7280;
+
+    margin-top:6px;
+
+}
+
+.header-right{
+
+    color:#6b7280;
+
+    font-weight:600;
+
+}
+
+/* =========================
+KPI
+========================= */
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+}
+
+.card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    border:1px solid var(--border);
+
+    box-shadow:
+    0 2px 12px rgba(0,0,0,.05);
+
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:
+    translateY(-4px);
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,.12);
+
+}
+
+.card-title{
+
+    color:#6b7280;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+.card-value{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    margin-top:10px;
+
+}
+
+.total-card{
+    border-left:5px solid var(--primary);
+}
+
+.healthy-card{
+    border-left:5px solid var(--success);
+}
+
+.warning-card{
+    border-left:5px solid var(--warning);
+}
+
+.replace-card{
+    border-left:5px solid var(--purple);
+}
+
+.expired-card{
+    border-left:5px solid var(--danger);
+}
+
+/* =========================
+PANEL
+========================= */
+
+.panel{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    border:1px solid var(--border);
+
+    box-shadow:
+    0 2px 12px rgba(0,0,0,.05);
+
+}
+
+.panel-title{
+
+    font-size:20px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+/* =========================
+FORM
+========================= */
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:12px;
+
+}
+
+input,
+select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+}
+
+input:focus,
+select:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+/* =========================
+BUTTON
+========================= */
+
+.btn{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px 18px;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.btn:hover{
+
+    transform:
+    translateY(-2px);
+
+}
+
+.btn-save{
+    background:#2563eb;
+}
+
+.btn-export{
+    background:#16a34a;
+}
+
+.btn-edit{
+    background:#f59e0b;
+}
+
+.btn-delete{
+    background:#dc2626;
+}
+
+.btn-replace{
+    background:#7c3aed;
+}
+
+/* =========================
+SEARCH FILTER
+========================= */
+
+.filter-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:12px;
+
+}
+
+/* =========================
+CHART
+========================= */
+
+.chart-wrapper{
+
+    width:100%;
+
+    max-width:450px;
+
+    margin:auto;
+
+}
+
+canvas{
+
+    max-width:100%;
+
+}
+
+/* =========================
+LINE DASHBOARD
+========================= */
+
+.line-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+    gap:15px;
+
+}
+
+.line-card{
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    padding:18px;
+
+    transition:.25s;
+
+}
+
+.line-card:hover{
+
+    transform:
+    translateY(-3px);
+
+}
+
+.line-name{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.line-count{
+
+    margin-top:8px;
+
+    color:#6b7280;
+
+}
+
+.progress-bar{
+
+    height:10px;
+
+    background:#e5e7eb;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+    margin-top:12px;
+
+}
+
+.progress-fill{
+
+    height:100%;
+
+    background:#16a34a;
+
+    width:0%;
+
+}
+
+/* =========================
+TABLE
+========================= */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+th{
+
+    background:#111827;
+
+    color:white;
+
+    padding:14px;
+
+    text-align:left;
+
+}
+
+td{
+
+    padding:12px;
+
+    border-bottom:
+    1px solid #e5e7eb;
+
+}
+
+tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+.status-good{
+
+    color:#16a34a;
+
+    font-weight:700;
+
+}
+
+.status-warning{
+
+    color:#f59e0b;
+
+    font-weight:700;
+
+}
+
+.status-replace{
+
+    color:#7c3aed;
+
+    font-weight:700;
+
+}
+
+.status-expired{
+
+    color:#dc2626;
+
+    font-weight:700;
+
+}
+
+.action-buttons{
+
+    display:flex;
+
+    gap:8px;
+
+    flex-wrap:wrap;
+
+}
+
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+    .sidebar{
+
+        position:relative;
+
+        width:100%;
+
+        height:auto;
+
+    }
+
+    .main-content{
+
+        margin-left:0;
+
+    }
+
+    .dashboard{
+
+        grid-template-columns:1fr;
+
+    }
+
+    table{
+
+        display:block;
+
+        overflow-x:auto;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="sidebar-logo">
+
+        💻 Computer Life
+
+    </div>
+
+    <div class="sidebar-menu">
+
+        <button
+        class="menu-btn"
+        onclick="window.location.href='Main.html'">
+
+            🏭 Factory Dashboard
+
+        </button>
+
+        <button
+        class="menu-btn active">
+
+            💻 Computer Life
+
+        </button>
+
+        <button
+        class="menu-btn"
+        onclick="scrollToSection('lineSection')">
+
+            🏭 Production Lines
+
+        </button>
+
+        <button
+        class="menu-btn"
+        onclick="scrollToSection('computerSection')">
+
+            🖥 Computer List
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div class="header-left">
+
+        <h1>
+
+            Computer Life Dashboard Pro
+
+        </h1>
+
+        <p>
+
+            Factory Computer Asset Lifecycle Management
+
+        </p>
+
+    </div>
+
+    <div
+    class="header-right"
+    id="todayDate">
+
+    </div>
+
+</div>
+
+<!-- KPI -->
+
+<div class="dashboard">
+
+    <div class="card total-card">
+
+        <div class="card-title">
+            💻 Total PCs
+        </div>
+
+        <div
+        class="card-value"
+        id="totalPC">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card healthy-card">
+
+        <div class="card-title">
+            🟢 Healthy
+        </div>
+
+        <div
+        class="card-value"
+        id="healthyPC">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card warning-card">
+
+        <div class="card-title">
+            🟡 Warning
+        </div>
+
+        <div
+        class="card-value"
+        id="warningPC">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card replace-card">
+
+        <div class="card-title">
+            🟠 Replace Soon
+        </div>
+
+        <div
+        class="card-value"
+        id="replaceSoonPC">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card expired-card">
+
+        <div class="card-title">
+            🔴 Expired
+        </div>
+
+        <div
+        class="card-value"
+        id="expiredPC">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card replace-card">
+
+        <div class="card-title">
+            📅 Replace This Year
+        </div>
+
+        <div
+        class="card-value"
+        id="replaceThisYear">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card warning-card">
+
+        <div class="card-title">
+            📆 Replace Next Year
+        </div>
+
+        <div
+        class="card-value"
+        id="replaceNextYear">
+
+            0
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ADD COMPUTER -->
+
+<div class="panel">
+
+    <div
+    class="panel-title"
+    id="formTitle">
+
+        Add Computer
+
+    </div>
+
+    <div class="form-grid">
+
+        <input
+        type="text"
+        id="assetTag"
+        placeholder="Asset Tag">
+
+        <select id="line">
+
+            <option>HMR</option>
+            <option>GMR</option>
+            <option>TMR1</option>
+            <option>TMR2</option>
+            <option>MIR</option>
+            <option>ISR</option>
+            <option>SP</option>
+            <option>HS</option>
+
+        </select>
+
+        <input
+        type="text"
+        id="pcName"
+        placeholder="Computer Name">
+
+        <input
+        type="text"
+        id="brand"
+        placeholder="Brand">
+
+        <input
+        type="text"
+        id="model"
+        placeholder="Model">
+
+        <select id="os">
+
+            <option>
+                Windows 10
+            </option>
+
+            <option>
+                Windows 11
+            </option>
+
+            <option>
+                Windows Server
+            </option>
+
+        </select>
+
+        <input
+        type="date"
+        id="installDate">
+
+        <select id="lifeCycle">
+
+            <option value="3">
+                3 Years
+            </option>
+
+            <option value="5" selected>
+                5 Years
+            </option>
+
+            <option value="7">
+                7 Years
+            </option>
+
+            <option value="10">
+                10 Years
+            </option>
+
+        </select>
+
+    </div>
+
+    <br>
+
+    <button
+    class="btn btn-save"
+    id="saveBtn"
+    onclick="saveComputer()">
+
+        Save Computer
+
+    </button>
+
+    <button
+    class="btn btn-export"
+    onclick="exportExcel()">
+
+        Export Excel
+
+    </button>
+
+</div>
+
+<!-- SEARCH -->
+
+<div class="panel">
+
+    <div class="panel-title">
+
+        🔍 Search & Filter
+
+    </div>
+
+    <div class="filter-grid">
+
+        <input
+        type="text"
+        id="search"
+        placeholder="Search Asset Tag / PC / Brand / Model"
+        onkeyup="render()">
+
+        <select
+        id="filterLine"
+        onchange="render()">
+
+            <option value="">
+                All Lines
+            </option>
+
+            <option>HMR</option>
+            <option>GMR</option>
+            <option>TMR1</option>
+            <option>TMR2</option>
+            <option>MIR</option>
+            <option>ISR</option>
+            <option>SP</option>
+            <option>HS</option>
+
+        </select>
+
+        <select
+        id="filterStatus"
+        onchange="render()">
+
+            <option value="">
+                All Status
+            </option>
+
+            <option value="Healthy">
+                Healthy
+            </option>
+
+            <option value="Warning">
+                Warning
+            </option>
+
+            <option value="Replace Soon">
+                Replace Soon
+            </option>
+
+            <option value="Expired">
+                Expired
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<!-- PIE CHART -->
+
+<div class="panel">
+
+    <div class="panel-title">
+
+        📊 Computer Health Status
+
+    </div>
+
+    <div class="chart-wrapper">
+
+        <canvas
+        id="statusChart">
+
+        </canvas>
+
+    </div>
+
+</div>
+
+<!-- LINE DASHBOARD -->
+
+<div
+class="panel"
+id="lineSection">
+
+    <div class="panel-title">
+
+        🏭 Production Line Health
+
+    </div>
+
+    <div class="line-grid">
+
+        <div class="line-card">
+            <div class="line-name">HMR</div>
+            <div class="line-count" id="hmrCount">0 / 9 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="hmrBar"></div></div>
+        </div>
+
+        <div class="line-card">
+            <div class="line-name">GMR</div>
+            <div class="line-count" id="gmrCount">0 / 9 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="gmrBar"></div></div>
+        </div>
+
+        <div class="line-card">
+            <div class="line-name">TMR1</div>
+            <div class="line-count" id="tmr1Count">0 / 9 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="tmr1Bar"></div></div>
+        </div>
+
+        <div class="line-card">
+            <div class="line-name">TMR2</div>
+            <div class="line-count" id="tmr2Count">0 / 9 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="tmr2Bar"></div></div>
+        </div>
+
+        <div class="line-card">
+            <div class="line-name">MIR</div>
+            <div class="line-count" id="mirCount">0 / 9 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="mirBar"></div></div>
+        </div>
+
+        <div class="line-card">
+            <div class="line-name">ISR</div>
+            <div class="line-count" id="isrCount">0 / 9 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="isrBar"></div></div>
+        </div>
+
+        <div class="line-card">
+            <div class="line-name">SP</div>
+            <div class="line-count" id="spCount">0 / 9 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="spBar"></div></div>
+        </div>
+
+        <div class="line-card">
+            <div class="line-name">HS</div>
+            <div class="line-count" id="hsCount">0 / 3 Healthy</div>
+            <div class="progress-bar"><div class="progress-fill" id="hsBar"></div></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- COMPUTER LIST -->
+
+<div
+class="panel"
+id="computerSection">
+
+    <div class="panel-title">
+
+        🖥 Computer Life List
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Asset Tag</th>
+                <th>Line</th>
+                <th>Computer</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>OS</th>
+                <th>Install Date</th>
+                <th>Life Cycle</th>
+                <th>Expire Date</th>
+                <th>Remaining</th>
+                <th>Status</th>
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="computerTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbz0A6wukzTmMvJ4VgTblvcnf5R3g9GE-MgjvSStlSTXVDPpHnCROnh94MjcetlFz--W4Q/exec";
+
+let computers = [];
+
+
+async function loadData(){
+
+    try{
+
+        const response =
+        await fetch(API_URL);
+
+        computers =
+        await response.json();
+
+        render();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+        "Load Data Error"
+        );
+
+    }
+
+}
+let editIndex = -1;
+
+let chartInstance = null;
+
+/* =====================
+DATE
+===================== */
+
+function updateDate(){
+
+    const now =
+    new Date();
+
+    document
+    .getElementById(
+        "todayDate"
+    )
+    .innerText =
+
+    now.toLocaleDateString(
+        "en-US",
+        {
+            weekday:"long",
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        }
+    );
+
+}
+
+/* =====================
+SCROLL
+===================== */
+
+function scrollToSection(id){
+
+    const section =
+    document
+    .getElementById(id);
+
+    if(section){
+
+        section.scrollIntoView({
+            behavior:"smooth"
+        });
+
+    }
+
+}
+
+/* =====================
+SAVE
+===================== */
+
+async function saveComputer(){
+
+    const assetTag =
+    document.getElementById(
+        "assetTag"
+    ).value.trim();
+
+    const pcName =
+    document.getElementById(
+        "pcName"
+    ).value.trim();
+
+    const installDate =
+    document.getElementById(
+        "installDate"
+    ).value;
+
+    if(assetTag===""){
+
+        alert(
+        "Please enter Asset Tag"
+        );
+
+        return;
+
+    }
+
+    if(pcName===""){
+
+        alert(
+        "Please enter Computer Name"
+        );
+
+        return;
+
+    }
+
+    if(installDate===""){
+
+        alert(
+        "Please select Install Date"
+        );
+
+        return;
+
+    }
+
+    const computer = {
+
+        assetTag:
+        document.getElementById(
+            "assetTag"
+        ).value,
+
+        line:
+        document.getElementById(
+            "line"
+        ).value,
+
+        pcName:
+        document.getElementById(
+            "pcName"
+        ).value,
+
+        brand:
+        document.getElementById(
+            "brand"
+        ).value,
+
+        model:
+        document.getElementById(
+            "model"
+        ).value,
+
+        os:
+        document.getElementById(
+            "os"
+        ).value,
+
+        installDate:
+        document.getElementById(
+            "installDate"
+        ).value,
+
+        lifeCycle:
+        parseInt(
+            document.getElementById(
+                "lifeCycle"
+            ).value
+        )
+
+    };
+
+    try{
+
+        const response =
+        await fetch(
+        API_URL,
+        {
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(
+                computer
+            )
+
+        });
+
+        const result =
+        await response.json();
+
+        if(result.success){
+
+            alert(
+            "Save Success"
+            );
+
+            clearForm();
+
+            await loadData();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+        "Cannot Save To Google Sheet"
+        );
+
+    }
+
+}
+/* =====================
+EDIT / REPLACE
+===================== */
+
+function editComputer(index){
+
+    const pc =
+    computers[index];
+
+    document
+    .getElementById(
+        "assetTag"
+    )
+    .value =
+    pc.assetTag;
+
+    document
+    .getElementById(
+        "line"
+    )
+    .value =
+    pc.line;
+
+    document
+    .getElementById(
+        "pcName"
+    )
+    .value =
+    pc.pcName;
+
+    document
+    .getElementById(
+        "brand"
+    )
+    .value =
+    pc.brand;
+
+    document
+    .getElementById(
+        "model"
+    )
+    .value =
+    pc.model;
+
+    document
+    .getElementById(
+        "os"
+    )
+    .value =
+    pc.os;
+
+    document
+    .getElementById(
+        "installDate"
+    )
+    .value =
+    pc.installDate;
+
+    document
+    .getElementById(
+        "lifeCycle"
+    )
+    .value =
+    pc.lifeCycle;
+
+    editIndex =
+    index;
+
+    document
+    .getElementById(
+        "formTitle"
+    )
+    .innerText =
+    "Replace Computer";
+
+    document
+    .getElementById(
+        "saveBtn"
+    )
+    .innerText =
+    "Update Computer";
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+
+}
+
+/* =====================
+DELETE
+===================== */
+
+function deleteComputer(index){
+
+    alert(
+    "Delete ยังไม่ได้ทำใน Google Sheet"
+    );
+
+}
+
+/* =====================
+CLEAR FORM
+===================== */
+
+function clearForm(){
+
+    document
+    .getElementById(
+        "assetTag"
+    )
+    .value="";
+
+    document
+    .getElementById(
+        "pcName"
+    )
+    .value="";
+
+    document
+    .getElementById(
+        "brand"
+    )
+    .value="";
+
+    document
+    .getElementById(
+        "model"
+    )
+    .value="";
+
+    document
+    .getElementById(
+        "installDate"
+    )
+    .value="";
+
+    document
+    .getElementById(
+        "line"
+    )
+    .selectedIndex=0;
+
+    document
+    .getElementById(
+        "os"
+    )
+    .selectedIndex=0;
+
+    document
+    .getElementById(
+        "lifeCycle"
+    )
+    .value="5";
+
+    editIndex = -1;
+
+}
+
+/* =====================
+STATUS
+===================== */
+
+function getStatus(
+remainingYears
+){
+
+    if(
+        remainingYears <= 0
+    ){
+
+        return{
+            text:"Expired",
+            className:
+            "status-expired"
+        };
+
+    }
+
+    if(
+        remainingYears <= 1
+    ){
+
+        return{
+            text:"Replace Soon",
+            className:
+            "status-replace"
+        };
+
+    }
+
+    if(
+        remainingYears <= 2
+    ){
+
+        return{
+            text:"Warning",
+            className:
+            "status-warning"
+        };
+
+    }
+
+    return{
+
+        text:"Healthy",
+
+        className:
+        "status-good"
+
+    };
+
+}
+
+
+/* =====================
+RENDER
+===================== */
+
+function render(){
+
+    let html = "";
+
+    let healthy = 0;
+    let warning = 0;
+    let replaceSoon = 0;
+    let expired = 0;
+
+    let replaceThisYear = 0;
+    let replaceNextYear = 0;
+
+    const lineCapacity = {
+
+        HMR:9,
+        GMR:9,
+        TMR1:9,
+        TMR2:9,
+        MIR:9,
+        ISR:9,
+        SP:9,
+        HS:3
+
+    };
+
+    const lineHealthy = {
+
+        HMR:0,
+        GMR:0,
+        TMR1:0,
+        TMR2:0,
+        MIR:0,
+        ISR:0,
+        SP:0,
+        HS:0
+
+    };
+
+    const keyword =
+    document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+    const filterLine =
+    document
+    .getElementById("filterLine")
+    .value;
+
+    const filterStatus =
+    document
+    .getElementById("filterStatus")
+    .value;
+
+    const today =
+    new Date();
+
+    const currentYear =
+    today.getFullYear();
+
+    computers.forEach(pc=>{
+
+        const install =
+        new Date(
+            pc.installDate
+        );
+
+        const expire =
+        new Date(
+            install
+        );
+
+        expire.setFullYear(
+            expire.getFullYear()
+            +
+            parseInt(
+                pc.lifeCycle
+            )
+        );
+
+        const remainingYears =
+
+        (
+            expire - today
+        )
+
+        /
+
+        (
+            1000 *
+            60 *
+            60 *
+            24 *
+            365
+        );
+
+        const status =
+        getStatus(
+            remainingYears
+        );
+
+        if(
+            status.text ===
+            "Healthy"
+        ){
+
+            healthy++;
+
+            lineHealthy[
+                pc.line
+            ]++;
+
+        }
+
+        if(
+            status.text ===
+            "Warning"
+        ){
+            warning++;
+        }
+
+        if(
+            status.text ===
+            "Replace Soon"
+        ){
+            replaceSoon++;
+        }
+
+        if(
+            status.text ===
+            "Expired"
+        ){
+            expired++;
+        }
+
+        if(
+            expire.getFullYear()
+            ===
+            currentYear
+        ){
+            replaceThisYear++;
+        }
+
+        if(
+            expire.getFullYear()
+            ===
+            currentYear + 1
+        ){
+            replaceNextYear++;
+        }
+
+    });
+
+    const filteredData =
+
+    computers.filter(pc=>{
+
+        const install =
+        new Date(
+            pc.installDate
+        );
+
+        const expire =
+        new Date(
+            install
+        );
+
+        expire.setFullYear(
+            expire.getFullYear()
+            +
+            parseInt(
+                pc.lifeCycle
+            )
+        );
+
+        const remainingYears =
+
+        (
+            expire - today
+        )
+
+        /
+
+        (
+            1000 *
+            60 *
+            60 *
+            24 *
+            365
+        );
+
+        const status =
+        getStatus(
+            remainingYears
+        );
+
+        const matchKeyword =
+
+        pc.assetTag
+        .toLowerCase()
+        .includes(keyword)
+
+        ||
+
+        pc.pcName
+        .toLowerCase()
+        .includes(keyword)
+
+        ||
+
+        pc.brand
+        .toLowerCase()
+        .includes(keyword)
+
+        ||
+
+        pc.model
+        .toLowerCase()
+        .includes(keyword);
+
+        const matchLine =
+
+        filterLine === ""
+
+        ||
+
+        pc.line === filterLine;
+
+        const matchStatus =
+
+        filterStatus === ""
+
+        ||
+
+        status.text === filterStatus;
+
+        return(
+
+            matchKeyword
+
+            &&
+
+            matchLine
+
+            &&
+
+            matchStatus
+
+        );
+
+    });
+
+    filteredData.forEach(
+    (pc,index)=>{
+
+        const install =
+        new Date(
+            pc.installDate
+        );
+
+        const expire =
+        new Date(
+            install
+        );
+
+        expire.setFullYear(
+            expire.getFullYear()
+            +
+            parseInt(
+                pc.lifeCycle
+            )
+        );
+
+        const remainingYears =
+
+        (
+            expire - today
+        )
+
+        /
+
+        (
+            1000 *
+            60 *
+            60 *
+            24 *
+            365
+        );
+
+        const status =
+        getStatus(
+            remainingYears
+        );
+
+        const realIndex =
+        computers.indexOf(pc);
+
+        html += `
+
+        <tr>
+
+            <td>${pc.assetTag}</td>
+
+            <td>${pc.line}</td>
+
+            <td>${pc.pcName}</td>
+
+            <td>${pc.brand}</td>
+
+            <td>${pc.model}</td>
+
+            <td>${pc.os}</td>
+
+            <td>${pc.installDate}</td>
+
+            <td>${pc.lifeCycle} Years</td>
+
+            <td>
+                ${expire
+                .toISOString()
+                .split("T")[0]}
+            </td>
+
+            <td>
+                ${remainingYears
+                .toFixed(1)}
+                Years
+            </td>
+
+            <td
+            class="${status.className}">
+
+                ${status.text}
+
+            </td>
+
+            <td>
+
+                <div class="action-buttons">
+
+                    <button
+                    class="btn btn-edit"
+                    onclick="editComputer(${realIndex})">
+
+                        Edit
+
+                    </button>
+
+                    <button
+                    class="btn btn-replace"
+                    onclick="editComputer(${realIndex})">
+
+                        Replace
+
+                    </button>
+
+                    <button
+                    class="btn btn-delete"
+                    onclick="deleteComputer(${realIndex})">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    document
+    .getElementById(
+        "computerTable"
+    )
+    .innerHTML =
+    html;
+
+    document
+    .getElementById(
+        "totalPC"
+    )
+    .innerText =
+    computers.length;
+
+    document
+    .getElementById(
+        "healthyPC"
+    )
+    .innerText =
+    healthy;
+
+    document
+    .getElementById(
+        "warningPC"
+    )
+    .innerText =
+    warning;
+
+    document
+    .getElementById(
+        "replaceSoonPC"
+    )
+    .innerText =
+    replaceSoon;
+
+    document
+    .getElementById(
+        "expiredPC"
+    )
+    .innerText =
+    expired;
+
+    document
+    .getElementById(
+        "replaceThisYear"
+    )
+    .innerText =
+    replaceThisYear;
+
+    document
+    .getElementById(
+        "replaceNextYear"
+    )
+    .innerText =
+    replaceNextYear;
+
+    updateLineCard(
+        "hmr",
+        lineHealthy.HMR,
+        lineCapacity.HMR
+    );
+
+    updateLineCard(
+        "gmr",
+        lineHealthy.GMR,
+        lineCapacity.GMR
+    );
+
+    updateLineCard(
+        "tmr1",
+        lineHealthy.TMR1,
+        lineCapacity.TMR1
+    );
+
+    updateLineCard(
+        "tmr2",
+        lineHealthy.TMR2,
+        lineCapacity.TMR2
+    );
+
+    updateLineCard(
+        "mir",
+        lineHealthy.MIR,
+        lineCapacity.MIR
+    );
+
+    updateLineCard(
+        "isr",
+        lineHealthy.ISR,
+        lineCapacity.ISR
+    );
+
+    updateLineCard(
+        "sp",
+        lineHealthy.SP,
+        lineCapacity.SP
+    );
+
+    updateLineCard(
+        "hs",
+        lineHealthy.HS,
+        lineCapacity.HS
+    );
+
+    drawChart(
+        healthy,
+        warning,
+        replaceSoon,
+        expired
+    );
+
+}
+
+/* =====================
+LINE CARD
+===================== */
+
+function updateLineCard(
+line,
+healthy,
+capacity
+){
+
+    const percent =
+
+    (
+        healthy /
+        capacity
+    ) * 100;
+
+    document
+    .getElementById(
+        line + "Count"
+    )
+    .innerText =
+
+    healthy +
+    " / " +
+    capacity +
+    " Healthy";
+
+    document
+    .getElementById(
+        line + "Bar"
+    )
+    .style.width =
+
+    percent + "%";
+
+}
+
+/* =====================
+PIE CHART
+===================== */
+
+function drawChart(
+healthy,
+warning,
+replaceSoon,
+expired
+){
+
+    const ctx =
+    document
+    .getElementById(
+        "statusChart"
+    );
+
+    if(chartInstance){
+
+        chartInstance.destroy();
+
+    }
+
+    chartInstance =
+    new Chart(
+        ctx,
+        {
+
+            type:"pie",
+
+            data:{
+
+                labels:[
+
+                    "Healthy",
+                    "Warning",
+                    "Replace Soon",
+                    "Expired"
+
+                ],
+
+                datasets:[{
+
+                    data:[
+
+                        healthy,
+                        warning,
+                        replaceSoon,
+                        expired
+
+                    ],
+
+                    backgroundColor:[
+
+                        "#16a34a",
+                        "#f59e0b",
+                        "#7c3aed",
+                        "#dc2626"
+
+                    ]
+
+                }]
+
+            },
+
+            options:{
+
+                responsive:true,
+
+                plugins:{
+
+                    legend:{
+
+                        position:"bottom"
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+}
+
+/* =====================
+EXPORT
+===================== */
+
+function exportExcel(){
+
+    const ws =
+    XLSX.utils.json_to_sheet(
+        computers
+    );
+
+    const wb =
+    XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+
+        wb,
+
+        ws,
+
+        "ComputerLife"
+
+    );
+
+    XLSX.writeFile(
+
+        wb,
+
+        "ComputerLifeDashboard.xlsx"
+
+    );
+
+}
+
+/* =====================
+START
+===================== */
+
+updateDate();
+
+loadData();
+
+</script>
+
+</body>
+</html>
