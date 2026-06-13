@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Factory Dashboard Professional V2</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+
+:root{
+
+    --primary:#2563eb;
+    --success:#16a34a;
+    --warning:#f59e0b;
+    --danger:#dc2626;
+
+    --sidebar:#0f172a;
+
+    --dark:#111827;
+    --gray:#6b7280;
+
+    --light:#f8fafc;
+    --border:#e5e7eb;
+
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+
+    background:#f3f4f6;
+    color:#111827;
+
+}
+
+/* ======================
+SIDEBAR
+====================== */
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    width:260px;
+
+    height:100vh;
+
+    background:var(--sidebar);
+
+    color:white;
+
+    padding:25px;
+
+    z-index:1000;
+
+    box-shadow:
+    5px 0 25px rgba(0,0,0,.15);
+
+}
+
+.sidebar-logo{
+
+    font-size:24px;
+    font-weight:800;
+
+    margin-bottom:25px;
+
+}
+
+.sidebar-user{
+
+    background:#1e293b;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    margin-bottom:25px;
+
+}
+
+.user-title{
+
+    font-size:14px;
+    font-weight:600;
+
+}
+
+.user-sub{
+
+    font-size:12px;
+    opacity:.7;
+
+    margin-top:5px;
+
+}
+
+.sidebar-menu{
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+
+}
+
+.menu-btn{
+
+    border:none;
+
+    background:transparent;
+
+    color:white;
+
+    text-align:left;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-size:15px;
+
+}
+
+.menu-btn:hover{
+
+    background:#1e293b;
+
+    transform:translateX(5px);
+
+}
+
+.menu-btn.active{
+
+    background:var(--primary);
+
+}
+
+/* ======================
+MAIN CONTENT
+====================== */
+
+.main-content{
+
+    margin-left:260px;
+
+}
+
+.container{
+
+    max-width:1700px;
+
+    margin:auto;
+
+    padding:25px;
+
+}
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.header-left h1{
+
+    font-size:32px;
+
+    font-weight:800;
+
+}
+
+.header-left p{
+
+    color:var(--gray);
+
+    margin-top:5px;
+
+}
+
+.header-right{
+
+    color:var(--gray);
+
+    font-weight:600;
+
+}
+
+/* ======================
+KPI CARDS
+====================== */
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+}
+
+.card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    border:1px solid var(--border);
+
+    box-shadow:
+    0 2px 12px rgba(0,0,0,.05);
+
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,.10);
+
+}
+
+.card-title{
+
+    color:#6b7280;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+.card-value{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    margin-top:10px;
+
+}
+
+.total-card{
+    border-left:5px solid var(--primary);
+}
+
+.progress-card{
+    border-left:5px solid var(--warning);
+}
+
+.complete-card{
+    border-left:5px solid var(--success);
+}
+
+.critical-card{
+    border-left:5px solid var(--danger);
+}
+
+.overdue-card{
+    border-left:5px solid #7c3aed;
+}
+
+.archive-card{
+    border-left:5px solid #0ea5e9;
+}
+
+/* ======================
+PANEL
+====================== */
+
+.panel{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    border:1px solid var(--border);
+
+    box-shadow:
+    0 2px 12px rgba(0,0,0,.05);
+
+}
+
+.panel-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:12px;
+
+}
+
+/* ======================
+INPUTS
+====================== */
+
+input,
+textarea,
+select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    transition:.25s;
+
+}
+
+input:hover,
+textarea:hover,
+select:hover{
+
+    border-color:#93c5fd;
+
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+textarea{
+
+    min-height:100px;
+
+    resize:vertical;
+
+}
+
+/* ======================
+BUTTONS
+====================== */
+
+.btn{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px 18px;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 10px 20px rgba(0,0,0,.15);
+
+}
+
+.btn-save{
+    background:#2563eb;
+}
+
+.btn-cancel{
+    background:#6b7280;
+}
+
+.btn-export{
+    background:#16a34a;
+}
+
+.btn-edit{
+    background:#f59e0b;
+    padding:8px 12px;
+}
+
+.btn-delete{
+    background:#dc2626;
+    padding:8px 12px;
+}
+
+.btn-archive{
+    background:#7c3aed;
+    padding:8px 12px;
+}
+
+.btn-restore{
+    background:#0891b2;
+    padding:8px 12px;
+}
+
+/* ======================
+CATEGORY
+====================== */
+
+.category-buttons{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin-top:15px;
+
+}
+
+.category-btn{
+
+    border:none;
+
+    background:#e5e7eb;
+
+    padding:10px 16px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.category-btn:hover{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+}
+
+.category-btn.active{
+
+    background:#111827;
+
+    color:white;
+
+}
+
+/* ======================
+TABLE
+====================== */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:white;
+
+}
+
+th{
+
+    background:#111827;
+
+    color:white;
+
+    padding:14px;
+
+    text-align:left;
+
+}
+
+td{
+
+    padding:12px;
+
+    border-bottom:1px solid #e5e7eb;
+
+}
+
+tbody tr{
+
+    transition:.25s;
+
+}
+
+tbody tr:hover{
+
+    background:#f8fafc;
+
+    transform:scale(1.002);
+
+}
+
+.action-buttons{
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+.status{
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.start{
+    background:#6b7280;
+}
+
+.progress{
+    background:#2563eb;
+}
+
+.done{
+    background:#16a34a;
+}
+
+.priority-critical{
+    color:#dc2626;
+    font-weight:700;
+}
+
+.priority-high{
+    color:#ea580c;
+    font-weight:700;
+}
+
+.priority-medium{
+    color:#2563eb;
+    font-weight:700;
+}
+
+.priority-low{
+    color:#16a34a;
+    font-weight:700;
+}
+
+.overdue-row{
+
+    background:#fef2f2;
+
+}
+
+/* ======================
+RESPONSIVE
+====================== */
+
+@media(max-width:768px){
+
+    .sidebar{
+
+        position:relative;
+
+        width:100%;
+
+        height:auto;
+
+    }
+
+    .main-content{
+
+        margin-left:0;
+
+    }
+
+    .dashboard{
+
+        grid-template-columns:1fr;
+
+    }
+
+    table{
+
+        display:block;
+
+        overflow-x:auto;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="sidebar-logo">
+
+        🏭 Factory Dashboard
+
+    </div>
+
+    <div class="sidebar-user">
+
+        <div class="user-title">
+
+            Smart Factory System
+
+        </div>
+
+        <div class="user-sub">
+
+            Production & Engineering
+
+        </div>
+
+    </div>
+
+    <div class="sidebar-menu">
+
+        <button
+        class="menu-btn active"
+        onclick="scrollToSection('dashboardSection')">
+
+            📊 Dashboard
+
+        </button>
+
+       <button
+class="menu-btn"
+onclick="window.location.href='ComputerLife.html'">
+
+    💻 Computer Life
+
+</button>
+        <button
+        class="menu-btn"
+        onclick="scrollToSection('archiveSection')">
+
+            📦 Archive
+
+        </button>
+
+        <button
+        class="menu-btn"
+        onclick="scrollToSection('criticalSection')">
+
+            🚨 Critical Tasks
+
+        </button>
+
+        <button
+        class="menu-btn">
+
+            📈 Reports
+
+        </button>
+
+        <button
+        class="menu-btn">
+
+            ⚙ Settings
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div class="header-left">
+
+        <h1>
+
+            Factory Dashboard SRC
+        </h1>
+
+        <p>
+
+            Production, Maintenance & Engineering
+            Task Tracking System
+
+        </p>
+
+    </div>
+
+    <div class="header-right">
+
+        <span id="todayDate"></span>
+
+    </div>
+
+</div>
+
+<!-- KPI DASHBOARD -->
+
+<div
+class="dashboard"
+id="dashboardSection">
+
+    <div class="card total-card">
+
+        <div class="card-title">
+
+            📋 Total Tasks
+
+        </div>
+
+        <div
+        class="card-value"
+        id="total">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card progress-card">
+
+        <div class="card-title">
+
+            ⚙ In Progress
+
+        </div>
+
+        <div
+        class="card-value"
+        id="working">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card complete-card">
+
+        <div class="card-title">
+
+            ✅ Completed
+
+        </div>
+
+        <div
+        class="card-value"
+        id="completed">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card critical-card">
+
+        <div class="card-title">
+
+            🚨 Critical
+
+        </div>
+
+        <div
+        class="card-value"
+        id="criticalCount">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card overdue-card">
+
+        <div class="card-title">
+
+            ⏰ Overdue
+
+        </div>
+
+        <div
+        class="card-value"
+        id="overdueCount">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="card archive-card">
+
+        <div class="card-title">
+
+            📦 Archived
+
+        </div>
+
+        <div
+        class="card-value"
+        id="archiveCount">
+
+            0
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TASK FORM -->
+
+<div
+class="panel"
+id="taskFormSection">
+
+    <div
+    class="panel-title"
+    id="formTitle">
+
+        Add New Task
+
+    </div>
+
+    <div class="form-grid">
+
+        <input
+        type="text"
+        id="title"
+        placeholder="Task Title">
+
+        <select id="category">
+
+            <option value="">
+                Select Category
+            </option>
+
+            <option>
+                New Model
+            </option>
+
+            <option>
+                Production Line
+            </option>
+
+            <option>
+                Computer
+            </option>
+
+            <option>
+                UPS
+            </option>
+
+            <option>
+                Defect
+            </option>
+
+            <option>
+                Downtime
+            </option>
+
+            <option>
+                Order Parts
+            </option>
+
+            <option>
+                Other
+            </option>
+
+        </select>
+
+        <select id="priority">
+
+            <option value="Low">
+                Low
+            </option>
+
+            <option value="Medium">
+                Medium
+            </option>
+
+            <option value="High">
+                High
+            </option>
+
+            <option value="Critical">
+                Critical
+            </option>
+
+        </select>
+
+        <select id="status">
+
+            <option>
+                Not Started
+            </option>
+
+            <option>
+                In Progress
+            </option>
+
+            <option>
+                Completed
+            </option>
+
+        </select>
+
+        <input
+        type="number"
+        id="percent"
+        min="0"
+        max="100"
+        placeholder="Progress %">
+
+        <input
+        type="date"
+        id="duedate">
+
+    </div>
+
+    <br>
+
+    <textarea
+    id="detail"
+    placeholder="Task Details"></textarea>
+
+    <br>
+
+    <button
+    id="saveBtn"
+    class="btn btn-save"
+    onclick="saveTask()">
+
+        Save Task
+
+    </button>
+
+    <button
+    class="btn btn-cancel"
+    onclick="clearForm()">
+
+        Cancel
+
+    </button>
+
+    <button
+    class="btn btn-export"
+    onclick="exportExcel()">
+
+        Export Excel
+
+    </button>
+
+</div>
+
+<!-- SEARCH PANEL -->
+
+<div class="panel">
+
+    <div class="panel-title">
+
+        Search & Filter
+
+    </div>
+
+    <div class="form-grid">
+
+        <input
+        type="text"
+        id="search"
+        placeholder="🔍 Search task..."
+        onkeyup="render()">
+
+        <select
+        id="filterStatus"
+        onchange="render()">
+
+            <option value="">
+                All Status
+            </option>
+
+            <option value="Not Started">
+                Not Started
+            </option>
+
+            <option value="In Progress">
+                In Progress
+            </option>
+
+            <option value="Completed">
+                Completed
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="category-buttons">
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('')">
+
+            All
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('New Model')">
+
+            New Model
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('Production Line')">
+
+            Production Line
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('Computer')">
+
+            Computer
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('UPS')">
+
+            UPS
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('Defect')">
+
+            Defect
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('Downtime')">
+
+            Downtime
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('Order Parts')">
+
+            Order Parts
+
+        </button>
+
+        <button
+        class="category-btn"
+        onclick="filterCategory('Other')">
+
+            Other
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ACTIVE TASKS -->
+
+<div
+class="panel"
+id="criticalSection">
+
+    <div class="panel-title">
+
+        📋 Active Tasks
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Title</th>
+
+                <th>Category</th>
+
+                <th>Priority</th>
+
+                <th>Status</th>
+
+                <th>Progress</th>
+
+                <th>Due Date</th>
+
+                <th>Created</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="taskTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- ARCHIVE -->
+
+<div
+class="panel"
+id="archiveSection">
+
+    <div class="panel-title">
+
+        📦 Archived Tasks
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Title</th>
+
+                <th>Category</th>
+
+                <th>Priority</th>
+
+                <th>Status</th>
+
+                <th>Created</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="archiveTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</div>
+</div>
+<script>
+
+let tasks =
+JSON.parse(
+localStorage.getItem("tasks")
+) || [];
+
+let archiveTasks =
+JSON.parse(
+localStorage.getItem("archiveTasks")
+) || [];
+
+let editIndex = -1;
+
+let selectedCategory = "";
+
+/* ======================
+DATE
+====================== */
+
+function updateDate(){
+
+    const now =
+    new Date();
+
+    document
+    .getElementById("todayDate")
+    .innerText =
+    now.toLocaleDateString(
+        "en-US",
+        {
+            weekday:"long",
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        }
+    );
+}
+
+/* ======================
+SCROLL MENU
+====================== */
+
+function scrollToSection(id){
+
+    const section =
+    document.getElementById(id);
+
+    if(section){
+
+        section.scrollIntoView({
+            behavior:"smooth"
+        });
+
+    }
+}
+
+/* ======================
+CATEGORY FILTER
+====================== */
+
+function filterCategory(category){
+
+    selectedCategory =
+    category;
+
+    document
+    .querySelectorAll(
+        ".category-btn"
+    )
+    .forEach(btn=>{
+
+        btn.classList.remove(
+            "active"
+        );
+
+        if(
+            btn.innerText.trim()
+            ===
+            (
+                category === ""
+                ? "All"
+                : category
+            )
+        ){
+            btn.classList.add(
+                "active"
+            );
+        }
+
+    });
+
+    render();
+}
+
+/* ======================
+SAVE TASK
+====================== */
+
+function saveTask(){
+
+    const title =
+    document
+    .getElementById("title")
+    .value
+    .trim();
+
+    if(title===""){
+
+        alert(
+        "Please enter task title"
+        );
+
+        return;
+    }
+
+    const task = {
+
+        title:
+        document.getElementById("title").value,
+
+        category:
+        document.getElementById("category").value,
+
+        priority:
+        document.getElementById("priority").value,
+
+        detail:
+        document.getElementById("detail").value,
+
+        status:
+        document.getElementById("status").value,
+
+        percent:
+        document.getElementById("percent").value || 0,
+
+        due:
+        document.getElementById("duedate").value,
+
+        createdAt:
+
+        editIndex === -1
+
+        ?
+
+        new Date()
+        .toLocaleString()
+
+        :
+
+        tasks[editIndex]
+        .createdAt
+
+    };
+
+    if(editIndex === -1){
+
+        tasks.push(task);
+
+    }else{
+
+        tasks[editIndex] =
+        task;
+
+        editIndex = -1;
+
+        document
+        .getElementById(
+            "formTitle"
+        )
+        .innerText =
+        "Add New Task";
+
+        document
+        .getElementById(
+            "saveBtn"
+        )
+        .innerText =
+        "Save Task";
+
+    }
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+    clearForm();
+
+    render();
+}
+
+/* ======================
+EDIT
+====================== */
+
+function editTask(index){
+
+    const task =
+    tasks[index];
+
+    document
+    .getElementById("title")
+    .value =
+    task.title;
+
+    document
+    .getElementById("category")
+    .value =
+    task.category;
+
+    document
+    .getElementById("priority")
+    .value =
+    task.priority;
+
+    document
+    .getElementById("detail")
+    .value =
+    task.detail;
+
+    document
+    .getElementById("status")
+    .value =
+    task.status;
+
+    document
+    .getElementById("percent")
+    .value =
+    task.percent;
+
+    document
+    .getElementById("duedate")
+    .value =
+    task.due;
+
+    editIndex =
+    index;
+
+    document
+    .getElementById(
+        "formTitle"
+    )
+    .innerText =
+    "Edit Task";
+
+    document
+    .getElementById(
+        "saveBtn"
+    )
+    .innerText =
+    "Update Task";
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+}
+
+/* ======================
+DELETE
+====================== */
+
+function deleteTask(index){
+
+    if(
+        !confirm(
+            "Delete this task?"
+        )
+    ){
+        return;
+    }
+
+    tasks.splice(
+        index,
+        1
+    );
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+    render();
+}
+
+/* ======================
+ARCHIVE
+====================== */
+
+function archiveTask(index){
+
+    if(
+        !confirm(
+        "Move task to archive?"
+        )
+    ){
+        return;
+    }
+
+    archiveTasks.push(
+        tasks[index]
+    );
+
+    tasks.splice(
+        index,
+        1
+    );
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+    localStorage.setItem(
+        "archiveTasks",
+        JSON.stringify(
+            archiveTasks
+        )
+    );
+
+    render();
+}
+
+/* ======================
+RESTORE
+====================== */
+
+function restoreTask(index){
+
+    tasks.push(
+        archiveTasks[index]
+    );
+
+    archiveTasks.splice(
+        index,
+        1
+    );
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+    localStorage.setItem(
+        "archiveTasks",
+        JSON.stringify(
+            archiveTasks
+        )
+    );
+
+    render();
+}
+
+/* ======================
+CLEAR FORM
+====================== */
+
+function clearForm(){
+
+    document
+    .getElementById("title")
+    .value="";
+
+    document
+    .getElementById("category")
+    .selectedIndex=0;
+
+    document
+    .getElementById("priority")
+    .selectedIndex=0;
+
+    document
+    .getElementById("detail")
+    .value="";
+
+    document
+    .getElementById("percent")
+    .value="";
+
+    document
+    .getElementById("duedate")
+    .value="";
+
+    document
+    .getElementById("status")
+    .selectedIndex=0;
+
+    editIndex = -1;
+}
+
+/* ======================
+RENDER
+====================== */
+
+function render(){
+
+    let html="";
+
+    let archiveHtml="";
+
+    let working=0;
+    let completed=0;
+    let critical=0;
+    let overdue=0;
+
+    const keyword =
+    document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+    const filterStatus =
+    document
+    .getElementById(
+        "filterStatus"
+    )
+    .value;
+
+    const today =
+    new Date();
+
+    const filteredTasks =
+
+    tasks.filter(task=>{
+
+        const matchKeyword =
+
+        task.title
+        .toLowerCase()
+        .includes(keyword)
+
+        ||
+
+        task.detail
+        .toLowerCase()
+        .includes(keyword);
+
+        const matchStatus =
+
+        filterStatus === ""
+
+        ||
+
+        task.status
+        ===
+        filterStatus;
+
+        const matchCategory =
+
+        selectedCategory === ""
+
+        ||
+
+        task.category
+        ===
+        selectedCategory;
+
+        return(
+
+            matchKeyword
+
+            &&
+
+            matchStatus
+
+            &&
+
+            matchCategory
+
+        );
+
+    });
+
+    tasks.forEach(task=>{
+
+        if(
+            task.status
+            ===
+            "In Progress"
+        ){
+            working++;
+        }
+
+        if(
+            task.status
+            ===
+            "Completed"
+        ){
+            completed++;
+        }
+
+        if(
+            task.priority
+            ===
+            "Critical"
+        ){
+            critical++;
+        }
+
+        if(
+            task.due &&
+            new Date(task.due)
+            < today &&
+            task.status
+            !==
+            "Completed"
+        ){
+            overdue++;
+        }
+
+    });
+
+    filteredTasks.forEach(
+    (task,index)=>{
+
+        let cls="start";
+
+        if(
+            task.status
+            ===
+            "In Progress"
+        ){
+            cls="progress";
+        }
+
+        if(
+            task.status
+            ===
+            "Completed"
+        ){
+            cls="done";
+        }
+
+        let rowClass="";
+
+        if(
+            task.due &&
+            new Date(task.due)
+            < today &&
+            task.status
+            !==
+            "Completed"
+        ){
+            rowClass =
+            "overdue-row";
+        }
+
+        const realIndex =
+        tasks.indexOf(task);
+
+        html += `
+
+        <tr class="${rowClass}">
+
+            <td>${task.title}</td>
+
+            <td>${task.category}</td>
+
+            <td class="priority-${task.priority.toLowerCase()}">
+                ${task.priority}
+            </td>
+
+            <td>
+                <span class="status ${cls}">
+                    ${task.status}
+                </span>
+            </td>
+
+            <td>${task.percent}%</td>
+
+            <td>${task.due || "-"}</td>
+
+            <td>${task.createdAt}</td>
+
+            <td>
+
+                <div class="action-buttons">
+
+                    <button
+                    class="btn btn-edit"
+                    onclick="editTask(${realIndex})">
+
+                    Edit
+
+                    </button>
+
+                    <button
+                    class="btn btn-archive"
+                    onclick="archiveTask(${realIndex})">
+
+                    Archive
+
+                    </button>
+
+                    <button
+                    class="btn btn-delete"
+                    onclick="deleteTask(${realIndex})">
+
+                    Delete
+
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    archiveTasks.forEach(
+    (task,index)=>{
+
+        archiveHtml += `
+
+        <tr>
+
+            <td>${task.title}</td>
+
+            <td>${task.category}</td>
+
+            <td>${task.priority}</td>
+
+            <td>${task.status}</td>
+
+            <td>${task.createdAt}</td>
+
+            <td>
+
+                <button
+                class="btn btn-restore"
+                onclick="restoreTask(${index})">
+
+                Restore
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    document
+    .getElementById(
+        "taskTable"
+    )
+    .innerHTML =
+    html;
+
+    document
+    .getElementById(
+        "archiveTable"
+    )
+    .innerHTML =
+    archiveHtml;
+
+    document
+    .getElementById("total")
+    .innerText =
+    tasks.length;
+
+    document
+    .getElementById("working")
+    .innerText =
+    working;
+
+    document
+    .getElementById("completed")
+    .innerText =
+    completed;
+
+    document
+    .getElementById("criticalCount")
+    .innerText =
+    critical;
+
+    document
+    .getElementById("overdueCount")
+    .innerText =
+    overdue;
+
+    document
+    .getElementById("archiveCount")
+    .innerText =
+    archiveTasks.length;
+}
+
+/* ======================
+EXPORT EXCEL
+====================== */
+
+function exportExcel(){
+
+    const ws =
+    XLSX.utils.json_to_sheet(
+        tasks
+    );
+
+    const wb =
+    XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        "Tasks"
+    );
+
+    XLSX.writeFile(
+        wb,
+        "Factory_Dashboard_Report.xlsx"
+    );
+}
+
+/* ======================
+START
+====================== */
+
+updateDate();
+
+render();
+
+</script>
+
+</body>
+</html>
