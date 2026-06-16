@@ -1542,7 +1542,25 @@ String(
 
 <td>${task.percent || 0}%</td>
 
-<td>${task.due || "-"}</td>
+<td>
+${
+task.due
+?
+String(task.due).split("T")[0]
+:
+"-"
+}
+</td>
+
+<td>
+${
+task.createdAt
+?
+String(task.createdAt).split("T")[0]
+:
+""
+}
+</td>
 
 <td>${task.createdAt || ""}</td>
 
@@ -1626,7 +1644,15 @@ Delete
 
 <td>${task.status || ""}</td>
 
-<td>${task.createdAt || ""}</td>
+<td>
+${
+task.createdAt
+?
+String(task.createdAt).split("T")[0]
+:
+""
+}
+</td>
 
 </tr>
 
