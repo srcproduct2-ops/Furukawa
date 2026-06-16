@@ -50,6 +50,8 @@ body{
     box-shadow:
     0 20px 40px rgba(0,0,0,.25);
 
+    position:relative;
+
 }
 
 .logo{
@@ -83,7 +85,6 @@ body{
     margin-bottom:25px;
 
 }
-
 label{
 
     display:block;
@@ -91,6 +92,10 @@ label{
     margin-bottom:6px;
 
     font-weight:600;
+
+    color:#ffffff;
+
+
 
 }
 
@@ -228,6 +233,34 @@ min-height:20px;
         transform:rotate(360deg);
     }
 
+}.language-box{
+
+    position:absolute;
+
+    top:20px;
+
+    right:20px;
+
+    z-index:1000;
+
+}
+
+#language{
+
+    width:120px;
+
+    height:36px;
+
+    border:none;
+
+    border-radius:8px;
+
+    padding:0 10px;
+
+    font-size:14px;
+
+    cursor:pointer;
+
 }
 
 
@@ -242,9 +275,40 @@ min-height:20px;
 
 
 
-<div id="loginBox">
+<div id="loginBox" class="login-box">
+
+    <div class="language-box">
+
+        <select
+        id="language"
+        onchange="changeLanguage()">
+
+            <option value="en">
+                English
+            </option>
+
+            <option value="th">
+                ไทย
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="logo">
+        🏭
+    </div>
+
+    <div class="title">
+        Factory Dashboard
+    </div>
+
+    <div class="subtitle">
+        Sign in to continue
+    </div>
 
     <label>Username</label>
+ 
 
     <input
     type="text"
