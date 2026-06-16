@@ -880,12 +880,17 @@ async function loadData(){
         }
 
         const response =
-        await fetch(url);
+await fetch(url);
 
-        tasks =
-        await response.json();
-console.log(tasks);
-        render();
+tasks =
+await response.json();
+
+console.log(
+    "TASKS",
+    tasks
+);
+
+render();
 
     }
     catch(error){
@@ -1429,16 +1434,15 @@ function render(){
         }
 
         const matchKeyword =
-
-        (task.title || "")
-        .toLowerCase()
-        .includes(keyword)
-
-        ||
-
-        String(task.title || "")
+String(task.title || "")
 .toLowerCase()
 .includes(keyword)
+
+||
+
+String(task.detail || "")
+.toLowerCase()
+.includes(keyword);
 
 ||
 
