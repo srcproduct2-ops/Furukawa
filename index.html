@@ -782,25 +782,27 @@ function logout(){
 
 function updateDate(){
 
-    document
-    .getElementById(
-        "todayDate"
-    )
-    .innerText =
+    const lang =
+    localStorage.getItem("language")
+    || "en";
 
-    new Date()
-    .toLocaleDateString(
-        "en-US",
+    document.getElementById("todayDate").innerText =
+    new Date().toLocaleDateString(
+
+        lang === "th"
+        ? "th-TH"
+        : "en-US",
+
         {
             weekday:"long",
             year:"numeric",
             month:"long",
             day:"numeric"
         }
+
     );
 
 }
-
 
 async function loadUsers(){
 
@@ -1724,71 +1726,183 @@ if(
     "none";
 
 }
+
+
+    
     function applyLanguage(){
 
-    if(LANG !== "th"){
+    const lang =
+    localStorage.getItem("language")
+    || "en";
+
+    if(lang !== "th"){
         return;
     }
 
     document.title =
     "แดชบอร์ดโรงงาน";
 
-    document
-    .querySelector(".sidebar-logo")
-    .innerHTML =
+    /* Sidebar */
+
+    document.querySelector(".sidebar-logo").innerHTML =
     "🏭 แดชบอร์ดโรงงาน";
 
-    document
-    .querySelectorAll(".menu-btn")[0]
-    .innerHTML =
+    document.querySelectorAll(".menu-btn")[0].innerHTML =
     "📊 แดชบอร์ด";
 
-    document
-    .querySelectorAll(".menu-btn")[1]
-    .innerHTML =
-    "💻 อายุการใช้งานคอม";
+    document.querySelectorAll(".menu-btn")[1].innerHTML =
+    "💻 อายุการใช้งานคอมพิวเตอร์";
 
-    document
-    .querySelectorAll(".menu-btn")[2]
-    .innerHTML =
+    document.querySelectorAll(".menu-btn")[2].innerHTML =
     "📦 งานที่เก็บถาวร";
 
-    document
-    .getElementById("formTitle")
-    .innerText =
+    /* Header */
+
+    document.querySelector("h1").innerText =
+    "แดชบอร์ดโรงงาน V3";
+
+    document.querySelector(".header p").innerText =
+    "ระบบติดตามงานฝ่ายผลิต ซ่อมบำรุง และวิศวกรรม";
+
+    document.querySelector(".btn-delete").innerText =
+    "ออกจากระบบ";
+
+    /* Dashboard Cards */
+
+    document.querySelectorAll(".card div")[0].innerText =
+    "งานทั้งหมด";
+
+    document.querySelectorAll(".card div")[2].innerText =
+    "กำลังดำเนินการ";
+
+    document.querySelectorAll(".card div")[4].innerText =
+    "เสร็จสิ้น";
+
+    document.querySelectorAll(".card div")[6].innerText =
+    "งานเร่งด่วน";
+
+    document.querySelectorAll(".card div")[8].innerText =
+    "เก็บถาวร";
+
+    /* Form */
+
+    document.getElementById("formTitle").innerText =
     "เพิ่มงานใหม่";
 
-    document
-    .querySelectorAll(".panel-title")[1]
-    .innerText =
-    "ค้นหาและกรอง";
+    const labels =
+    document.querySelectorAll("label");
 
-    document
-    .querySelectorAll(".panel-title")[2]
-    .innerText =
-    "📋 งานที่กำลังดำเนินการ";
+    if(labels.length >= 8){
 
-    document
-    .querySelectorAll(".panel-title")[3]
-    .innerText =
-    "📦 งานที่เก็บถาวร";
+        labels[0].innerText = "ผู้รับผิดชอบ";
+        labels[1].innerText = "ชื่องาน";
+        labels[2].innerText = "หมวดหมู่";
+        labels[3].innerText = "ความสำคัญ";
+        labels[4].innerText = "สถานะ";
+        labels[5].innerText = "ความคืบหน้า";
+        labels[6].innerText = "กำหนดส่ง";
+        labels[7].innerText = "รายละเอียดงาน";
 
-    document
-    .getElementById("saveBtn")
-    .innerText =
+    }
+
+    /* Category */
+
+    const category =
+    document.getElementById("category");
+
+    category.options[0].text = "เลือกหมวดหมู่";
+    category.options[1].text = "รุ่นใหม่";
+    category.options[2].text = "ไลน์ผลิต";
+    category.options[3].text = "คอมพิวเตอร์";
+    category.options[4].text = "UPS";
+    category.options[5].text = "ของเสีย";
+    category.options[6].text = "เครื่องหยุด";
+    category.options[7].text = "สั่งอะไหล่";
+    category.options[8].text = "อื่นๆ";
+
+    /* Priority */
+
+    const priority =
+    document.getElementById("priority");
+
+    priority.options[0].text = "ต่ำ";
+    priority.options[1].text = "ปานกลาง";
+    priority.options[2].text = "สูง";
+    priority.options[3].text = "วิกฤต";
+
+    /* Status */
+
+    const status =
+    document.getElementById("status");
+
+    status.options[0].text = "ยังไม่เริ่ม";
+    status.options[1].text = "กำลังดำเนินการ";
+    status.options[2].text = "รอดำเนินการ";
+
+    /* Buttons */
+
+    document.getElementById("saveBtn").innerText =
     "บันทึกงาน";
 
-    document
-    .querySelector(".btn-cancel")
-    .innerText =
+    document.querySelector(".btn-cancel").innerText =
     "ยกเลิก";
 
-    document
-    .querySelector(".btn-export")
-    .innerText =
+    document.querySelector(".btn-export").innerText =
     "ส่งออก Excel";
 
+    /* Search Panel */
+
+    document.querySelectorAll(".panel-title")[1].innerText =
+    "ค้นหาและกรอง";
+
+    document.getElementById("search").placeholder =
+    "ค้นหา...";
+
+    document.getElementById("filterStatus").options[0].text =
+    "ทุกสถานะ";
+
+    document.getElementById("filterStatus").options[1].text =
+    "ยังไม่เริ่ม";
+
+    document.getElementById("filterStatus").options[2].text =
+    "กำลังดำเนินการ";
+
+    document.getElementById("filterStatus").options[3].text =
+    "รอดำเนินการ";
+
+    document.getElementById("filterStatus").options[4].text =
+    "เสร็จสิ้น";
+
+    /* Tables */
+
+    document.querySelectorAll(".panel-title")[2].innerText =
+    "📋 งานที่กำลังดำเนินการ";
+
+    document.querySelectorAll(".panel-title")[3].innerText =
+    "📦 งานที่เก็บถาวร";
+
+    const th =
+    document.querySelectorAll("th");
+
+    th[0].innerText = "ผู้รับผิดชอบ";
+    th[1].innerText = "หัวข้อ";
+    th[2].innerText = "หมวดหมู่";
+    th[3].innerText = "ความสำคัญ";
+    th[4].innerText = "สถานะ";
+    th[5].innerText = "ความคืบหน้า";
+    th[6].innerText = "กำหนดส่ง";
+    th[7].innerText = "วันที่สร้าง";
+    th[8].innerText = "จัดการ";
+
+    th[9].innerText = "ผู้รับผิดชอบ";
+    th[10].innerText = "หัวข้อ";
+    th[11].innerText = "หมวดหมู่";
+    th[12].innerText = "ความสำคัญ";
+    th[13].innerText = "สถานะ";
+    th[14].innerText = "วันที่สร้าง";
+
 }
+    
 applyLanguage();
 updateDate();
 
