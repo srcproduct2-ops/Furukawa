@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Factory Dashboard Professional V2</title>
+<title>Factory Dashboard V3</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -15,20 +14,13 @@
 <style>
 
 :root{
-
     --primary:#2563eb;
     --success:#16a34a;
     --warning:#f59e0b;
     --danger:#dc2626;
-
     --sidebar:#0f172a;
-
-    --dark:#111827;
     --gray:#6b7280;
-
-    --light:#f8fafc;
     --border:#e5e7eb;
-
 }
 
 *{
@@ -39,643 +31,203 @@
 }
 
 body{
-
     background:#f3f4f6;
     color:#111827;
-
 }
 
-/* ======================
-SIDEBAR
-====================== */
-
 .sidebar{
-
     position:fixed;
-
     left:0;
     top:0;
-
     width:260px;
-
     height:100vh;
-
     background:var(--sidebar);
-
-    color:white;
-
+    color:#fff;
     padding:25px;
-
     z-index:1000;
-
-    box-shadow:
-    5px 0 25px rgba(0,0,0,.15);
-
 }
 
 .sidebar-logo{
-
     font-size:24px;
     font-weight:800;
-
     margin-bottom:25px;
-
 }
 
 .sidebar-user{
-
     background:#1e293b;
-
     padding:15px;
-
     border-radius:12px;
-
     margin-bottom:25px;
-
-}
-
-.user-title{
-
-    font-size:14px;
-    font-weight:600;
-
-}
-
-.user-sub{
-
-    font-size:12px;
-    opacity:.7;
-
-    margin-top:5px;
-
 }
 
 .sidebar-menu{
-
     display:flex;
     flex-direction:column;
     gap:10px;
-
 }
 
 .menu-btn{
-
     border:none;
-
     background:transparent;
-
-    color:white;
-
+    color:#fff;
     text-align:left;
-
     padding:14px;
-
     border-radius:12px;
-
     cursor:pointer;
-
-    transition:.25s;
-
-    font-size:15px;
-
-}
-
-.menu-btn:hover{
-
-    background:#1e293b;
-
-    transform:translateX(5px);
-
 }
 
 .menu-btn.active{
-
-    background:var(--primary);
-
+    background:#2563eb;
 }
 
-/* ======================
-MAIN CONTENT
-====================== */
-
 .main-content{
-
     margin-left:260px;
-
 }
 
 .container{
-
     max-width:1700px;
-
     margin:auto;
-
     padding:25px;
-
 }
 
 .header{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     margin-bottom:25px;
-
 }
-
-.header-left h1{
-
-    font-size:32px;
-
-    font-weight:800;
-
-}
-
-.header-left p{
-
-    color:var(--gray);
-
-    margin-top:5px;
-
-}
-
-.header-right{
-
-    color:var(--gray);
-
-    font-weight:600;
-
-}
-
-/* ======================
-KPI CARDS
-====================== */
 
 .dashboard{
-
     display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:15px;
-
     margin-bottom:25px;
-
 }
 
 .card{
-
-    background:white;
-
+    background:#fff;
     border-radius:16px;
-
     padding:24px;
-
     border:1px solid var(--border);
-
-    box-shadow:
-    0 2px 12px rgba(0,0,0,.05);
-
-    transition:.25s;
-
-}
-
-.card:hover{
-
-    transform:translateY(-4px);
-
-    box-shadow:
-    0 15px 35px rgba(0,0,0,.10);
-
-}
-
-.card-title{
-
-    color:#6b7280;
-
-    font-size:14px;
-
-    font-weight:500;
-
 }
 
 .card-value{
-
     font-size:34px;
-
     font-weight:800;
-
-    margin-top:10px;
-
 }
-
-.total-card{
-    border-left:5px solid var(--primary);
-}
-
-.progress-card{
-    border-left:5px solid var(--warning);
-}
-
-.complete-card{
-    border-left:5px solid var(--success);
-}
-
-.critical-card{
-    border-left:5px solid var(--danger);
-}
-
-.overdue-card{
-    border-left:5px solid #7c3aed;
-}
-
-.archive-card{
-    border-left:5px solid #0ea5e9;
-}
-
-/* ======================
-PANEL
-====================== */
 
 .panel{
-
-    background:white;
-
+    background:#fff;
     border-radius:16px;
-
     padding:20px;
-
     margin-bottom:20px;
-
     border:1px solid var(--border);
-
-    box-shadow:
-    0 2px 12px rgba(0,0,0,.05);
-
 }
 
 .panel-title{
-
     font-size:18px;
-
     font-weight:700;
-
     margin-bottom:15px;
-
 }
 
 .form-grid{
-
     display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:12px;
-
 }
-
-/* ======================
-INPUTS
-====================== */
 
 input,
 textarea,
 select{
-
     width:100%;
-
     padding:12px;
-
     border:1px solid #d1d5db;
-
     border-radius:10px;
-
-    font-size:14px;
-
-    transition:.25s;
-
 }
-
-input:hover,
-textarea:hover,
-select:hover{
-
-    border-color:#93c5fd;
-
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-
-    outline:none;
-
-    border-color:#2563eb;
-
-    box-shadow:
-    0 0 0 4px rgba(37,99,235,.15);
-
-}
-
-textarea{
-
-    min-height:100px;
-
-    resize:vertical;
-
-}
-
-/* ======================
-BUTTONS
-====================== */
 
 .btn{
-
     border:none;
-
     border-radius:10px;
-
     padding:12px 18px;
-
-    color:white;
-
+    color:#fff;
     cursor:pointer;
-
-    font-weight:600;
-
-    transition:.25s;
-
 }
 
-.btn:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:
-    0 10px 20px rgba(0,0,0,.15);
-
-}
-
-.btn-save{
-    background:#2563eb;
-}
-
-.btn-cancel{
-    background:#6b7280;
-}
-
-.btn-export{
-    background:#16a34a;
-}
-
-.btn-edit{
-    background:#f59e0b;
-    padding:8px 12px;
-}
-
-.btn-delete{
-    background:#dc2626;
-    padding:8px 12px;
-}
-
-.btn-archive{
-    background:#7c3aed;
-    padding:8px 12px;
-}
-
-.btn-restore{
-    background:#0891b2;
-    padding:8px 12px;
-}
-
-/* ======================
-CATEGORY
-====================== */
-
-.category-buttons{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:10px;
-
-    margin-top:15px;
-
-}
-
-.category-btn{
-
-    border:none;
-
-    background:#e5e7eb;
-
-    padding:10px 16px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-}
-
-.category-btn:hover{
-
-    background:#dbeafe;
-
-    color:#2563eb;
-
-}
-
-.category-btn.active{
-
-    background:#111827;
-
-    color:white;
-
-}
-
-/* ======================
-TABLE
-====================== */
+.btn-save{background:#2563eb;}
+.btn-edit{background:#f59e0b;}
+.btn-delete{background:#dc2626;}
+.btn-complete{background:#16a34a;}
+.btn-export{background:#16a34a;}
+.btn-cancel{background:#6b7280;}
 
 table{
-
     width:100%;
-
     border-collapse:collapse;
-
-    background:white;
-
 }
 
 th{
-
     background:#111827;
-
-    color:white;
-
+    color:#fff;
     padding:14px;
-
     text-align:left;
-
 }
 
 td{
-
     padding:12px;
-
     border-bottom:1px solid #e5e7eb;
-
-}
-
-tbody tr{
-
-    transition:.25s;
-
-}
-
-tbody tr:hover{
-
-    background:#f8fafc;
-
-    transform:scale(1.002);
-
 }
 
 .action-buttons{
-
     display:flex;
-
     gap:8px;
-
 }
 
-.status{
-
-    color:white;
-
-    padding:6px 12px;
-
-    border-radius:999px;
-
-    font-size:13px;
-
-    font-weight:600;
-
+.loading-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    color:#fff;
 }
 
-.start{
-    background:#6b7280;
+.loader{
+    width:50px;
+    height:50px;
+    border:5px solid #ddd;
+    border-top:5px solid #00d4ff;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
 }
 
-.progress{
-    background:#2563eb;
-}
-
-.done{
-    background:#16a34a;
-}
-
-.priority-critical{
-    color:#dc2626;
-    font-weight:700;
-}
-
-.priority-high{
-    color:#ea580c;
-    font-weight:700;
-}
-
-.priority-medium{
-    color:#2563eb;
-    font-weight:700;
-}
-
-.priority-low{
-    color:#16a34a;
-    font-weight:700;
-}
-
-.overdue-row{
-
-    background:#fef2f2;
-
-}
-
-/* ======================
-RESPONSIVE
-====================== */
-
-@media(max-width:768px){
-
-    .sidebar{
-
-        position:relative;
-
-        width:100%;
-
-        height:auto;
-
-    }
-
-    .main-content{
-
-        margin-left:0;
-
-    }
-
-    .dashboard{
-
-        grid-template-columns:1fr;
-
-    }
-
-    table{
-
-        display:block;
-
-        overflow-x:auto;
-
-    }
-
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
 }
 
 </style>
 
 </head>
 
-
 <body>
-
-<!-- SIDEBAR -->
 
 <div class="sidebar">
 
     <div class="sidebar-logo">
-
         🏭 Factory Dashboard
-
     </div>
 
     <div class="sidebar-user">
 
-        <div class="user-title">
-
+        <div>
             Smart Factory System
-
         </div>
 
-        <div class="user-sub">
-
+        <div style="font-size:12px;opacity:.7;">
             Production & Engineering
-
         </div>
 
     </div>
@@ -685,207 +237,94 @@ RESPONSIVE
         <button
         class="menu-btn active"
         onclick="scrollToSection('dashboardSection')">
-
             📊 Dashboard
-
         </button>
 
-       <button
-class="menu-btn"
-onclick="window.location.href='ComputerLife.html'">
+        <button
+        class="menu-btn"
+        onclick="window.location.href='ComputerLife.html'">
+            💻 Computer Life
+        </button>
 
-    💻 Computer Life
-
-</button>
         <button
         class="menu-btn"
         onclick="scrollToSection('archiveSection')">
-
-            📦 Archive
-
-        </button>
-
-        <button
-        class="menu-btn"
-        onclick="scrollToSection('criticalSection')">
-
-            🚨 Critical Tasks
-
-        </button>
-
-        <button
-        class="menu-btn">
-
-            📈 Reports
-
-        </button>
-
-        <button
-        class="menu-btn">
-
-            ⚙ Settings
-
+            📦 Archived
         </button>
 
     </div>
 
 </div>
-
-<!-- MAIN CONTENT -->
 
 <div class="main-content">
 
 <div class="container">
 
-<!-- HEADER -->
-
 <div class="header">
 
-    <div class="header-left">
+    <div>
 
         <h1>
-
-            Factory Dashboard SRC
+            Factory Dashboard V3
         </h1>
 
         <p>
-
-            Production, Maintenance & Engineering
-            Task Tracking System
-
+            Production, Maintenance & Engineering Task Tracking System
         </p>
 
     </div>
 
-    <div class="header-right">
+    <div>
 
         <span id="todayDate"></span>
+
+        <span
+        id="userInfo"
+        style="margin-left:15px;">
+        </span>
+
+        <button
+        class="btn btn-delete"
+        onclick="logout()">
+            Logout
+        </button>
 
     </div>
 
 </div>
-
-<!-- KPI DASHBOARD -->
 
 <div
 class="dashboard"
 id="dashboardSection">
 
-    <div class="card total-card">
-
-        <div class="card-title">
-
-            📋 Total Tasks
-
-        </div>
-
-        <div
-        class="card-value"
-        id="total">
-
-            0
-
-        </div>
-
+    <div class="card">
+        <div>Total Tasks</div>
+        <div id="total" class="card-value">0</div>
     </div>
 
-    <div class="card progress-card">
-
-        <div class="card-title">
-
-            ⚙ In Progress
-
-        </div>
-
-        <div
-        class="card-value"
-        id="working">
-
-            0
-
-        </div>
-
+    <div class="card">
+        <div>In Progress</div>
+        <div id="working" class="card-value">0</div>
     </div>
 
-    <div class="card complete-card">
-
-        <div class="card-title">
-
-            ✅ Completed
-
-        </div>
-
-        <div
-        class="card-value"
-        id="completed">
-
-            0
-
-        </div>
-
+    <div class="card">
+        <div>Completed</div>
+        <div id="completed" class="card-value">0</div>
     </div>
 
-    <div class="card critical-card">
-
-        <div class="card-title">
-
-            🚨 Critical
-
-        </div>
-
-        <div
-        class="card-value"
-        id="criticalCount">
-
-            0
-
-        </div>
-
+    <div class="card">
+        <div>Critical</div>
+        <div id="criticalCount" class="card-value">0</div>
     </div>
 
-    <div class="card overdue-card">
-
-        <div class="card-title">
-
-            ⏰ Overdue
-
-        </div>
-
-        <div
-        class="card-value"
-        id="overdueCount">
-
-            0
-
-        </div>
-
-    </div>
-
-    <div class="card archive-card">
-
-        <div class="card-title">
-
-            📦 Archived
-
-        </div>
-
-        <div
-        class="card-value"
-        id="archiveCount">
-
-            0
-
-        </div>
-
+    <div class="card">
+        <div>Archived</div>
+        <div id="archiveCount" class="card-value">0</div>
     </div>
 
 </div>
 
-<!-- TASK FORM -->
-
-<div
-class="panel"
-id="taskFormSection">
+<div class="panel">
 
     <div
     class="panel-title"
@@ -897,105 +336,169 @@ id="taskFormSection">
 
     <div class="form-grid">
 
-        <input
-        type="text"
-        id="title"
-        placeholder="Task Title">
+        <div
+        id="ownerBox"
+        style="display:none;">
 
-        <select id="category">
+            <label>Owner</label>
 
-            <option value="">
-                Select Category
-            </option>
+            <select id="owner">
 
-            <option>
-                New Model
-            </option>
+                <option value="">
+                    Loading...
+                </option>
 
-            <option>
-                Production Line
-            </option>
+            </select>
 
-            <option>
-                Computer
-            </option>
+        </div>
 
-            <option>
-                UPS
-            </option>
+        <div>
 
-            <option>
-                Defect
-            </option>
+            <label>Task Title</label>
 
-            <option>
-                Downtime
-            </option>
+            <input
+            type="text"
+            id="title">
 
-            <option>
-                Order Parts
-            </option>
+        </div>
 
-            <option>
-                Other
-            </option>
+        <div>
 
-        </select>
+            <label>Category</label>
 
-        <select id="priority">
+            <select id="category">
 
-            <option value="Low">
-                Low
-            </option>
+                <option value="">
+                    Select Category
+                </option>
 
-            <option value="Medium">
-                Medium
-            </option>
+                <option>
+                    New Model
+                </option>
 
-            <option value="High">
-                High
-            </option>
+                <option>
+                    Production Line
+                </option>
 
-            <option value="Critical">
-                Critical
-            </option>
+                <option>
+                    Computer
+                </option>
 
-        </select>
+                <option>
+                    UPS
+                </option>
 
-        <select id="status">
+                <option>
+                    Defect
+                </option>
 
-            <option>
-                Not Started
-            </option>
+                <option>
+                    Downtime
+                </option>
 
-            <option>
-                In Progress
-            </option>
+                <option>
+                    Order Parts
+                </option>
 
-            <option>
-                Completed
-            </option>
+                <option>
+                    Other
+                </option>
 
-        </select>
+            </select>
 
-        <input
-        type="number"
-        id="percent"
-        min="0"
-        max="100"
-        placeholder="Progress %">
+        </div>
 
-        <input
-        type="date"
-        id="duedate">
+
+        <div>
+
+            <label>Priority</label>
+
+            <select id="priority">
+
+                <option value="Low">
+                    Low
+                </option>
+
+                <option value="Medium">
+                    Medium
+                </option>
+
+                <option value="High">
+                    High
+                </option>
+
+                <option value="Critical">
+                    Critical
+                </option>
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label>Status</label>
+
+            <select id="status">
+
+                <option>
+                    Not Started
+                </option>
+
+                <option>
+                    In Progress
+                </option>
+
+                <option>
+                    Pending
+                </option>
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label>Progress</label>
+
+            <input
+            type="range"
+            id="percent"
+            min="0"
+            max="100"
+            value="0"
+            oninput="
+            document.getElementById('percentLabel').innerText=this.value+'%'">
+
+            <div id="percentLabel">
+                0%
+            </div>
+
+        </div>
+
+        <div>
+
+            <label>Due Date</label>
+
+            <input
+            type="date"
+            id="duedate">
+
+        </div>
 
     </div>
 
-    <br>
+    <div style="margin-top:15px;">
 
-    <textarea
-    id="detail"
-    placeholder="Task Details"></textarea>
+        <label>
+            Task Details
+        </label>
+
+        <textarea
+        id="detail">
+        </textarea>
+
+    </div>
 
     <br>
 
@@ -1026,8 +529,6 @@ id="taskFormSection">
 
 </div>
 
-<!-- SEARCH PANEL -->
-
 <div class="panel">
 
     <div class="panel-title">
@@ -1041,7 +542,7 @@ id="taskFormSection">
         <input
         type="text"
         id="search"
-        placeholder="🔍 Search task..."
+        placeholder="Search..."
         onkeyup="render()">
 
         <select
@@ -1060,93 +561,30 @@ id="taskFormSection">
                 In Progress
             </option>
 
-            <option value="Completed">
-                Completed
+            <option value="Pending">
+                Pending
+            </option>
+
+            <option value="Complete">
+                Complete
+            </option>
+
+        </select>
+
+        <select
+        id="ownerFilter"
+        onchange="render()"
+        style="display:none;">
+
+            <option value="">
+                All Owner
             </option>
 
         </select>
 
     </div>
 
-    <div class="category-buttons">
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('')">
-
-            All
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('New Model')">
-
-            New Model
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('Production Line')">
-
-            Production Line
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('Computer')">
-
-            Computer
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('UPS')">
-
-            UPS
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('Defect')">
-
-            Defect
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('Downtime')">
-
-            Downtime
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('Order Parts')">
-
-            Order Parts
-
-        </button>
-
-        <button
-        class="category-btn"
-        onclick="filterCategory('Other')">
-
-            Other
-
-        </button>
-
-    </div>
-
 </div>
-
-<!-- ACTIVE TASKS -->
 
 <div
 class="panel"
@@ -1164,20 +602,14 @@ id="criticalSection">
 
             <tr>
 
+                <th>Owner</th>
                 <th>Title</th>
-
                 <th>Category</th>
-
                 <th>Priority</th>
-
                 <th>Status</th>
-
                 <th>Progress</th>
-
-                <th>Due Date</th>
-
+                <th>Due</th>
                 <th>Created</th>
-
                 <th>Actions</th>
 
             </tr>
@@ -1191,8 +623,6 @@ id="criticalSection">
     </table>
 
 </div>
-
-<!-- ARCHIVE -->
 
 <div
 class="panel"
@@ -1210,17 +640,12 @@ id="archiveSection">
 
             <tr>
 
+                <th>Owner</th>
                 <th>Title</th>
-
                 <th>Category</th>
-
                 <th>Priority</th>
-
                 <th>Status</th>
-
                 <th>Created</th>
-
-                <th>Actions</th>
 
             </tr>
 
@@ -1236,35 +661,95 @@ id="archiveSection">
 
 </div>
 </div>
+
 <script>
 
-let tasks =
-JSON.parse(
-localStorage.getItem("tasks")
-) || [];
+const API_URL =
+"https://script.google.com/macros/s/AKfycbyeOUQEZVqDvHWLWC3Z5ntW3cTEsBB8G3WpO2Su--PVpj-HPCCp7gxG8dnTKVTFdzVf/exec";
 
-let archiveTasks =
-JSON.parse(
-localStorage.getItem("archiveTasks")
-) || [];
+const ROLE =
+localStorage.getItem("role");
 
-let editIndex = -1;
+const USERNAME =
+localStorage.getItem("username");
+
+const SHEET_NAME =
+localStorage.getItem("workSheet");
+
+let tasks = [];
+
+let editingId = null;
 
 let selectedCategory = "";
 
-/* ======================
-DATE
-====================== */
+if(
+    !USERNAME ||
+    !ROLE
+){
+    location.href =
+    "Login.html";
+}
+
+function showLoading(
+msg="Loading..."
+){
+
+    document
+    .getElementById(
+        "loadingText"
+    )
+    .innerText =
+    msg;
+
+    document
+    .getElementById(
+        "loadingOverlay"
+    )
+    .style.display =
+    "flex";
+
+}
+
+function hideLoading(){
+
+    document
+    .getElementById(
+        "loadingOverlay"
+    )
+    .style.display =
+    "none";
+
+}
+
+function scrollToSection(id){
+
+    document
+    .getElementById(id)
+    ?.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+function logout(){
+
+    localStorage.clear();
+
+    location.href =
+    "Login.html";
+
+}
 
 function updateDate(){
 
-    const now =
-    new Date();
-
     document
-    .getElementById("todayDate")
+    .getElementById(
+        "todayDate"
+    )
     .innerText =
-    now.toLocaleDateString(
+
+    new Date()
+    .toLocaleDateString(
         "en-US",
         {
             weekday:"long",
@@ -1273,377 +758,637 @@ function updateDate(){
             day:"numeric"
         }
     );
+
 }
 
-/* ======================
-SCROLL MENU
-====================== */
 
-function scrollToSection(id){
+async function loadUsers(){
 
-    const section =
-    document.getElementById(id);
-
-    if(section){
-
-        section.scrollIntoView({
-            behavior:"smooth"
-        });
-
-    }
-}
-
-/* ======================
-CATEGORY FILTER
-====================== */
-
-function filterCategory(category){
-
-    selectedCategory =
-    category;
-
-    document
-    .querySelectorAll(
-        ".category-btn"
-    )
-    .forEach(btn=>{
-
-        btn.classList.remove(
-            "active"
-        );
-
-        if(
-            btn.innerText.trim()
-            ===
-            (
-                category === ""
-                ? "All"
-                : category
-            )
-        ){
-            btn.classList.add(
-                "active"
-            );
-        }
-
-    });
-
-    render();
-}
-
-/* ======================
-SAVE TASK
-====================== */
-
-function saveTask(){
-
-    const title =
-    document
-    .getElementById("title")
-    .value
-    .trim();
-
-    if(title===""){
-
-        alert(
-        "Please enter task title"
-        );
-
+    if(
+        ROLE !== "Admin"
+    ){
         return;
     }
 
-    const task = {
+    document
+    .getElementById(
+        "ownerBox"
+    )
+    .style.display =
+    "block";
 
-        title:
-        document.getElementById("title").value,
+    document
+    .getElementById(
+        "ownerFilter"
+    )
+    .style.display =
+    "block";
 
-        category:
-        document.getElementById("category").value,
+    try{
 
-        priority:
-        document.getElementById("priority").value,
+        const response =
+        await fetch(
 
-        detail:
-        document.getElementById("detail").value,
+            API_URL +
 
-        status:
-        document.getElementById("status").value,
+            "?action=getUsers"
 
-        percent:
-        document.getElementById("percent").value || 0,
+        );
 
-        due:
-        document.getElementById("duedate").value,
+        const users =
+        await response.json();
 
-        createdAt:
+        let ownerHtml = "";
+        let filterHtml =
+        `
+        <option value="">
+            All Owner
+        </option>
+        `;
 
-        editIndex === -1
+        users.forEach(user=>{
 
-        ?
+            ownerHtml +=
+            `
+            <option value="${user.username}">
+                ${user.username}
+            </option>
+            `;
 
-        new Date()
-        .toLocaleString()
+            filterHtml +=
+            `
+            <option value="${user.username}">
+                ${user.username}
+            </option>
+            `;
 
-        :
-
-        tasks[editIndex]
-        .createdAt
-
-    };
-
-    if(editIndex === -1){
-
-        tasks.push(task);
-
-    }else{
-
-        tasks[editIndex] =
-        task;
-
-        editIndex = -1;
-
-        document
-        .getElementById(
-            "formTitle"
-        )
-        .innerText =
-        "Add New Task";
+        });
 
         document
-        .getElementById(
-            "saveBtn"
-        )
-        .innerText =
-        "Save Task";
+        .getElementById("owner")
+        .innerHTML =
+        ownerHtml;
+
+        document
+        .getElementById("ownerFilter")
+        .innerHTML =
+        filterHtml;
+
+    }
+    catch(error){
+
+        console.error(error);
 
     }
 
-    localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-    );
-
-    clearForm();
-
-    render();
 }
 
-/* ======================
-EDIT
-====================== */
+async function loadData(){
+
+    showLoading(
+        "Loading Tasks..."
+    );
+
+    try{
+
+        let url = "";
+
+        if(
+            ROLE === "Admin"
+        ){
+
+            url =
+            API_URL +
+            "?action=loadAll";
+
+        }
+        else{
+
+            url =
+            API_URL +
+            "?action=load" +
+            "&sheetName=" +
+            encodeURIComponent(
+                SHEET_NAME
+            );
+
+        }
+
+        const response =
+        await fetch(url);
+
+        tasks =
+        await response.json();
+
+        render();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Load Data Error"
+        );
+
+    }
+    finally{
+
+        hideLoading();
+
+    }
+
+}
+
+async function saveTask(){
+
+    const owner =
+
+    ROLE === "Admin"
+
+    ?
+
+    document
+    .getElementById("owner")
+    .value
+
+    :
+
+    USERNAME;
+
+    const task = {
+
+        owner:owner,
+
+        title:
+        document
+        .getElementById("title")
+        .value,
+
+        category:
+        document
+        .getElementById("category")
+        .value,
+
+        priority:
+        document
+        .getElementById("priority")
+        .value,
+
+        detail:
+        document
+        .getElementById("detail")
+        .value,
+
+        status:
+        document
+        .getElementById("status")
+        .value,
+
+        percent:
+        document
+        .getElementById("percent")
+        .value,
+
+        due:
+        document
+        .getElementById("duedate")
+        .value,
+
+        createdAt:
+        new Date()
+        .toLocaleString()
+
+    };
+
+    if(
+        !task.title.trim()
+    ){
+        alert(
+            "Please enter task title"
+        );
+        return;
+    }
+
+    showLoading(
+        "Saving..."
+    );
+
+    try{
+
+        let url =
+
+        API_URL +
+
+        (
+            editingId
+            ?
+            "?action=update"
+            :
+            "?action=save"
+        );
+
+        if(editingId){
+
+            url +=
+
+            "&id=" +
+            encodeURIComponent(
+                editingId
+            )
+
+            +
+
+"&sheetName=" +
+encodeURIComponent(
+    window.currentSheetName ||
+    SHEET_NAME
+);
+        }
+        else{
+
+            url +=
+
+            "&sheetName=" +
+            encodeURIComponent(
+                SHEET_NAME
+            );
+
+        }
+
+        url +=
+
+        "&role=" +
+        encodeURIComponent(
+            ROLE
+        )
+
+        +
+
+        "&owner=" +
+        encodeURIComponent(
+            task.owner
+        )
+
+        +
+
+        "&title=" +
+        encodeURIComponent(
+            task.title
+        )
+
+        +
+
+        "&category=" +
+        encodeURIComponent(
+            task.category
+        )
+
+        +
+
+        "&priority=" +
+        encodeURIComponent(
+            task.priority
+        )
+
+        +
+
+        "&detail=" +
+        encodeURIComponent(
+            task.detail
+        )
+
+        +
+
+        "&status=" +
+        encodeURIComponent(
+            task.status
+        )
+
+        +
+
+        "&percent=" +
+        encodeURIComponent(
+            task.percent
+        )
+
+        +
+
+        "&due=" +
+        encodeURIComponent(
+            task.due
+        )
+
+        +
+
+        "&createdAt=" +
+        encodeURIComponent(
+            task.createdAt
+        );
+
+        const response =
+        await fetch(url);
+
+        const result =
+        await response.json();
+
+        if(
+            result.success
+        ){
+
+            clearForm();
+
+            await loadData();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Save Failed"
+        );
+
+    }
+    finally{
+
+        hideLoading();
+
+    }
+
+}
 
 function editTask(index){
 
     const task =
     tasks[index];
 
+    editingId =
+    task.id;
+
+    window.currentSheetName =
+    task.sheetName;
+
     document
     .getElementById("title")
     .value =
-    task.title;
+    task.title || "";
 
     document
     .getElementById("category")
     .value =
-    task.category;
+    task.category || "";
 
     document
     .getElementById("priority")
     .value =
-    task.priority;
+    task.priority || "";
 
     document
     .getElementById("detail")
     .value =
-    task.detail;
+    task.detail || "";
 
     document
     .getElementById("status")
     .value =
-    task.status;
+    task.status || "";
 
     document
     .getElementById("percent")
     .value =
-    task.percent;
+    task.percent || 0;
 
     document
     .getElementById("duedate")
     .value =
-    task.due;
+    task.due || "";
 
-    editIndex =
-    index;
 
-    document
-    .getElementById(
-        "formTitle"
-    )
-    .innerText =
-    "Edit Task";
+if(
+ROLE === "Admin"
+){
 
     document
-    .getElementById(
-        "saveBtn"
-    )
-    .innerText =
-    "Update Task";
+    .getElementById("owner")
+    .value =
+    task.owner || "";
 
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
 }
 
-/* ======================
-DELETE
-====================== */
+}
 
-function deleteTask(index){
+
+async function deleteTask(id,sheetName){
 
     if(
         !confirm(
-            "Delete this task?"
+            "Delete this task ?"
         )
     ){
         return;
     }
 
-    tasks.splice(
-        index,
-        1
+    showLoading(
+        "Deleting..."
     );
 
-    localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-    );
+    try{
 
-    render();
+        const response =
+        await fetch(
+
+            API_URL +
+
+            "?action=delete"
+
+            + "&id=" +
+            encodeURIComponent(id)
+
+            + "&sheetName=" +
+            encodeURIComponent(sheetName)
+
+        );
+
+        const result =
+        await response.json();
+
+        if(
+            result.success
+        ){
+
+            await loadData();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Delete Failed"
+        );
+
+    }
+    finally{
+
+        hideLoading();
+
+    }
+
 }
 
-/* ======================
-ARCHIVE
-====================== */
-
-function archiveTask(index){
+async function completeTask(
+id,
+sheetName
+){
 
     if(
         !confirm(
-        "Move task to archive?"
+            "Complete this task ?"
         )
     ){
         return;
     }
 
-    archiveTasks.push(
-        tasks[index]
+    const task =
+    tasks.find(
+        t =>
+        String(t.id)
+        ===
+        String(id)
     );
 
-    tasks.splice(
-        index,
-        1
+    if(!task){
+        return;
+    }
+
+    showLoading(
+        "Completing..."
     );
 
-    localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-    );
+    try{
 
-    localStorage.setItem(
-        "archiveTasks",
-        JSON.stringify(
-            archiveTasks
-        )
-    );
+        const url =
 
-    render();
+        API_URL +
+
+        "?action=update"
+
+        + "&id=" +
+        encodeURIComponent(id)
+
+        + "&sheetName=" +
+        encodeURIComponent(sheetName)
+
+        + "&owner=" +
+        encodeURIComponent(task.owner)
+
+        + "&title=" +
+        encodeURIComponent(task.title)
+
+        + "&category=" +
+        encodeURIComponent(task.category)
+
+        + "&priority=" +
+        encodeURIComponent(task.priority)
+
+        + "&detail=" +
+        encodeURIComponent(task.detail)
+
+        + "&status=Complete"
+
+        + "&percent=100"
+
+        + "&due=" +
+        encodeURIComponent(task.due || "")
+
+        + "&createdAt=" +
+        encodeURIComponent(task.createdAt)
+
+        + "&fileName=" +
+        encodeURIComponent(task.fileName || "")
+
+        + "&fileUrl=" +
+        encodeURIComponent(task.fileUrl || "");
+
+        const response =
+        await fetch(url);
+
+        const result =
+        await response.json();
+
+        if(
+            result.success
+        ){
+
+            await loadData();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Complete Failed"
+        );
+
+    }
+    finally{
+
+        hideLoading();
+
+    }
+
 }
-
-/* ======================
-RESTORE
-====================== */
-
-function restoreTask(index){
-
-    tasks.push(
-        archiveTasks[index]
-    );
-
-    archiveTasks.splice(
-        index,
-        1
-    );
-
-    localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-    );
-
-    localStorage.setItem(
-        "archiveTasks",
-        JSON.stringify(
-            archiveTasks
-        )
-    );
-
-    render();
-}
-
-/* ======================
-CLEAR FORM
-====================== */
 
 function clearForm(){
 
+    editingId = null;
+
     document
     .getElementById("title")
-    .value="";
+    .value = "";
 
     document
     .getElementById("category")
-    .selectedIndex=0;
+    .selectedIndex = 0;
 
     document
     .getElementById("priority")
-    .selectedIndex=0;
+    .selectedIndex = 0;
 
     document
     .getElementById("detail")
-    .value="";
+    .value = "";
 
     document
     .getElementById("percent")
-    .value="";
+    .value = 0;
+
+    document
+    .getElementById("percentLabel")
+    .innerText = "0%";
 
     document
     .getElementById("duedate")
-    .value="";
+    .value = "";
 
     document
     .getElementById("status")
-    .selectedIndex=0;
+    .selectedIndex = 0;
 
-    editIndex = -1;
 }
-
-/* ======================
-RENDER
-====================== */
 
 function render(){
 
-    let html="";
-
-    let archiveHtml="";
-
-    let working=0;
-    let completed=0;
-    let critical=0;
-    let overdue=0;
+    let html = "";
+    let archiveHtml = "";
 
     const keyword =
     document
@@ -1651,253 +1396,200 @@ function render(){
     .value
     .toLowerCase();
 
-    const filterStatus =
+    const statusFilter =
     document
-    .getElementById(
-        "filterStatus"
-    )
+    .getElementById("filterStatus")
     .value;
 
-    const today =
-    new Date();
+    const ownerFilterEl =
+    document
+    .getElementById("ownerFilter");
 
-    const filteredTasks =
+    const ownerFilter =
+    ownerFilterEl
+    ?
+    ownerFilterEl.value
+    :
+    "";
+
+    const activeTasks =
 
     tasks.filter(task=>{
 
+        if(
+            task.status ===
+            "Complete"
+        ){
+            return false;
+        }
+
         const matchKeyword =
 
-        task.title
+        (task.title || "")
         .toLowerCase()
         .includes(keyword)
 
         ||
 
-        task.detail
+        (task.detail || "")
         .toLowerCase()
         .includes(keyword);
 
         const matchStatus =
 
-        filterStatus === ""
+        !statusFilter
 
         ||
 
-        task.status
-        ===
-        filterStatus;
+        task.status ===
+        statusFilter;
 
-        const matchCategory =
+        const matchOwner =
 
-        selectedCategory === ""
+        !ownerFilter
 
         ||
 
-        task.category
-        ===
-        selectedCategory;
+        task.owner ===
+        ownerFilter;
 
-        return(
-
-            matchKeyword
-
-            &&
-
-            matchStatus
-
-            &&
-
-            matchCategory
-
+        return (
+            matchKeyword &&
+            matchStatus &&
+            matchOwner
         );
 
     });
 
-    tasks.forEach(task=>{
+    const archivedTasks =
 
-        if(
-            task.status
-            ===
-            "In Progress"
-        ){
-            working++;
-        }
+    tasks.filter(
 
-        if(
-            task.status
-            ===
-            "Completed"
-        ){
-            completed++;
-        }
+        task =>
 
-        if(
-            task.priority
-            ===
-            "Critical"
-        ){
-            critical++;
-        }
+        task.status ===
+        "Complete"
 
-        if(
-            task.due &&
-            new Date(task.due)
-            < today &&
-            task.status
-            !==
-            "Completed"
-        ){
-            overdue++;
-        }
+    );
 
-    });
-
-    filteredTasks.forEach(
+    activeTasks.forEach(
     (task,index)=>{
-
-        let cls="start";
-
-        if(
-            task.status
-            ===
-            "In Progress"
-        ){
-            cls="progress";
-        }
-
-        if(
-            task.status
-            ===
-            "Completed"
-        ){
-            cls="done";
-        }
-
-        let rowClass="";
-
-        if(
-            task.due &&
-            new Date(task.due)
-            < today &&
-            task.status
-            !==
-            "Completed"
-        ){
-            rowClass =
-            "overdue-row";
-        }
-
-        const realIndex =
-        tasks.indexOf(task);
 
         html += `
 
-        <tr class="${rowClass}">
+<tr>
 
-            <td>${task.title}</td>
+<td>${task.owner || "-"}</td>
 
-            <td>${task.category}</td>
+<td>${task.title || ""}</td>
 
-            <td class="priority-${task.priority.toLowerCase()}">
-                ${task.priority}
-            </td>
+<td>${task.category || ""}</td>
 
-            <td>
-                <span class="status ${cls}">
-                    ${task.status}
-                </span>
-            </td>
+<td>${task.priority || ""}</td>
 
-            <td>${task.percent}%</td>
+<td>${task.status || ""}</td>
 
-            <td>${task.due || "-"}</td>
+<td>${task.percent || 0}%</td>
 
-            <td>${task.createdAt}</td>
+<td>${task.due || "-"}</td>
 
-            <td>
+<td>${task.createdAt || ""}</td>
 
-                <div class="action-buttons">
+<td>
 
-                    <button
-                    class="btn btn-edit"
-                    onclick="editTask(${realIndex})">
+<div class="action-buttons">
 
-                    Edit
+${
+ROLE === "Admin"
+||
+task.owner === USERNAME
 
-                    </button>
+?
 
-                    <button
-                    class="btn btn-archive"
-                    onclick="archiveTask(${realIndex})">
+`
+<button
+class="btn btn-edit"
+onclick="editTask(${tasks.indexOf(task)})">
 
-                    Archive
+Edit
 
-                    </button>
+</button>
+`
 
-                    <button
-                    class="btn btn-delete"
-                    onclick="deleteTask(${realIndex})">
+:
 
-                    Delete
+""
+}
+${
+ROLE === "Admin"
+?
 
-                    </button>
+`
+<button
+class="btn btn-complete"
+onclick="completeTask(
+'${task.id}',
+'${task.sheetName || SHEET_NAME}'
+)">
+Complete
+</button>
 
-                </div>
+<button
+class="btn btn-delete"
+onclick="deleteTask(
+'${task.id}',
+'${task.sheetName || SHEET_NAME}'
+)">
+Delete
+</button>
+`
 
-            </td>
+:
 
-        </tr>
+""
+}
 
-        `;
+</div>
+
+</td>
+
+</tr>
+
+`;
 
     });
 
-    archiveTasks.forEach(
-    (task,index)=>{
+    archivedTasks.forEach(task=>{
 
         archiveHtml += `
 
-        <tr>
+<tr>
 
-            <td>${task.title}</td>
+<td>${task.owner || "-"}</td>
 
-            <td>${task.category}</td>
+<td>${task.title || ""}</td>
 
-            <td>${task.priority}</td>
+<td>${task.category || ""}</td>
 
-            <td>${task.status}</td>
+<td>${task.priority || ""}</td>
 
-            <td>${task.createdAt}</td>
+<td>${task.status || ""}</td>
 
-            <td>
+<td>${task.createdAt || ""}</td>
 
-                <button
-                class="btn btn-restore"
-                onclick="restoreTask(${index})">
+</tr>
 
-                Restore
-
-                </button>
-
-            </td>
-
-        </tr>
-
-        `;
+`;
 
     });
 
     document
-    .getElementById(
-        "taskTable"
-    )
+    .getElementById("taskTable")
     .innerHTML =
     html;
 
     document
-    .getElementById(
-        "archiveTable"
-    )
+    .getElementById("archiveTable")
     .innerHTML =
     archiveHtml;
 
@@ -1909,32 +1601,32 @@ function render(){
     document
     .getElementById("working")
     .innerText =
-    working;
+    tasks.filter(
+        t =>
+        t.status ===
+        "In Progress"
+    ).length;
 
     document
     .getElementById("completed")
     .innerText =
-    completed;
+    archivedTasks.length;
 
     document
     .getElementById("criticalCount")
     .innerText =
-    critical;
-
-    document
-    .getElementById("overdueCount")
-    .innerText =
-    overdue;
+    tasks.filter(
+        t =>
+        t.priority ===
+        "Critical"
+    ).length;
 
     document
     .getElementById("archiveCount")
     .innerText =
-    archiveTasks.length;
-}
+    archivedTasks.length;
 
-/* ======================
-EXPORT EXCEL
-====================== */
+}
 
 function exportExcel(){
 
@@ -1956,17 +1648,53 @@ function exportExcel(){
         wb,
         "Factory_Dashboard_Report.xlsx"
     );
+
 }
 
-/* ======================
-START
-====================== */
+document
+.getElementById("userInfo")
+.innerHTML =
+
+"👤 " +
+
+USERNAME +
+
+" (" +
+
+ROLE +
+
+")";
+
+if(
+    ROLE !== "Admin"
+){
+
+    document
+    .querySelector(".btn-export")
+    .style.display =
+    "none";
+
+}
 
 updateDate();
 
-render();
+loadUsers();
+
+loadData();
 
 </script>
+
+<div
+id="loadingOverlay"
+class="loading-overlay">
+
+<div class="loader"></div>
+
+<div id="loadingText">
+Loading...
+</div>
+
+</div>
 
 </body>
 </html>
