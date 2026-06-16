@@ -1433,20 +1433,19 @@ function render(){
             return false;
         }
 
-        const matchKeyword =
-String(task.title || "")
+   const matchKeyword =
+
+String(
+    task.title || ""
+)
 .toLowerCase()
 .includes(keyword)
 
 ||
 
-String(task.detail || "")
-.toLowerCase()
-.includes(keyword);
-
-||
-
-String(task.detail || "")
+String(
+    task.detail || ""
+)
 .toLowerCase()
 .includes(keyword);
 
