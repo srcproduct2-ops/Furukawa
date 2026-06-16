@@ -1724,7 +1724,72 @@ if(
     "none";
 
 }
+    function applyLanguage(){
 
+    if(LANG !== "th"){
+        return;
+    }
+
+    document.title =
+    "แดชบอร์ดโรงงาน";
+
+    document
+    .querySelector(".sidebar-logo")
+    .innerHTML =
+    "🏭 แดชบอร์ดโรงงาน";
+
+    document
+    .querySelectorAll(".menu-btn")[0]
+    .innerHTML =
+    "📊 แดชบอร์ด";
+
+    document
+    .querySelectorAll(".menu-btn")[1]
+    .innerHTML =
+    "💻 อายุการใช้งานคอม";
+
+    document
+    .querySelectorAll(".menu-btn")[2]
+    .innerHTML =
+    "📦 งานที่เก็บถาวร";
+
+    document
+    .getElementById("formTitle")
+    .innerText =
+    "เพิ่มงานใหม่";
+
+    document
+    .querySelectorAll(".panel-title")[1]
+    .innerText =
+    "ค้นหาและกรอง";
+
+    document
+    .querySelectorAll(".panel-title")[2]
+    .innerText =
+    "📋 งานที่กำลังดำเนินการ";
+
+    document
+    .querySelectorAll(".panel-title")[3]
+    .innerText =
+    "📦 งานที่เก็บถาวร";
+
+    document
+    .getElementById("saveBtn")
+    .innerText =
+    "บันทึกงาน";
+
+    document
+    .querySelector(".btn-cancel")
+    .innerText =
+    "ยกเลิก";
+
+    document
+    .querySelector(".btn-export")
+    .innerText =
+    "ส่งออก Excel";
+
+}
+applyLanguage();
 updateDate();
 
 loadUsers();
