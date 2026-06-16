@@ -740,6 +740,22 @@ function hideLoginLoading(){
 
 }
 
+    function changeLanguage(){
+
+    const lang =
+    document
+    .getElementById("language")
+    .value;
+
+    localStorage.setItem(
+        "language",
+        lang
+    );
+
+    location.reload();
+
+}
+
 
 
 </script>
