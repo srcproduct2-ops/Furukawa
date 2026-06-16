@@ -694,19 +694,24 @@ function showLoading(
 msg="Loading..."
 ){
 
-    document
-    .getElementById(
+    const textEl =
+    document.getElementById(
         "loadingText"
-    )
-    .innerText =
-    msg;
+    );
 
-    document
-    .getElementById(
+    if(textEl){
+        textEl.innerText = msg;
+    }
+
+    const overlay =
+    document.getElementById(
         "loadingOverlay"
-    )
-    .style.display =
-    "flex";
+    );
+
+    if(overlay){
+        overlay.style.display =
+        "flex";
+    }
 
 }
 
@@ -879,7 +884,7 @@ async function loadData(){
 
         tasks =
         await response.json();
-
+console.log(tasks);
         render();
 
     }
@@ -1431,9 +1436,15 @@ function render(){
 
         ||
 
-        (task.detail || "")
-        .toLowerCase()
-        .includes(keyword);
+        String(task.title || "")
+.toLowerCase()
+.includes(keyword)
+
+||
+
+String(task.detail || "")
+.toLowerCase()
+.includes(keyword);
 
         const matchStatus =
 
