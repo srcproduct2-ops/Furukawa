@@ -663,6 +663,41 @@ id="archiveSection">
 </div>
 
 <script>
+    const LANG =
+localStorage.getItem(
+    "language"
+) || "en";
+    const TEXT = {
+
+    en:{
+
+        dashboard:"Dashboard",
+        computer:"Computer Life",
+        archived:"Archived",
+        addTask:"Add New Task",
+        search:"Search & Filter",
+        active:"Active Tasks",
+        owner:"Owner",
+        save:"Save Task",
+        cancel:"Cancel"
+
+    },
+
+    th:{
+
+        dashboard:"แดชบอร์ด",
+        computer:"อายุการใช้งานคอมพิวเตอร์",
+        archived:"งานที่เก็บถาวร",
+        addTask:"เพิ่มงานใหม่",
+        search:"ค้นหาและกรอง",
+        active:"งานที่กำลังดำเนินการ",
+        owner:"ผู้รับผิดชอบ",
+        save:"บันทึกงาน",
+        cancel:"ยกเลิก"
+
+    }
+
+};
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbyeOUQEZVqDvHWLWC3Z5ntW3cTEsBB8G3WpO2Su--PVpj-HPCCp7gxG8dnTKVTFdzVf/exec";
