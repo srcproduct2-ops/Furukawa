@@ -755,6 +755,20 @@ function hideLoginLoading(){
     location.reload();
 
 }
+    document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const lang =
+        localStorage.getItem("language")
+        || "en";
+
+        document
+        .getElementById("language")
+        .value = lang;
+
+    }
+);
 
 
 
