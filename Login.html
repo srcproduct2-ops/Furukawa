@@ -785,6 +785,22 @@ function hideLoginLoading(){
     }
 );
 
+    document.addEventListener("DOMContentLoaded", () => {
+
+    document
+    .getElementById("loginPassword")
+    .addEventListener("keypress", function(e){
+
+        if(e.key === "Enter"){
+
+            login();
+
+        }
+
+    });
+
+});
+
 
 
 </script>
