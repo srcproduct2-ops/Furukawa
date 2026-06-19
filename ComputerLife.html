@@ -705,26 +705,7 @@ RESPONSIVE
 
 }
 
-    .pc-detail{
-
-    font-size:11px;
-
-    color:#64748b;
-
-    line-height:1.5;
-
-    margin-top:10px;
-
-    max-height:0;
-
-    overflow:hidden;
-
-    opacity:0;
-
-    transition:.3s;
-
-}
-
+  
 .line-card:hover .pc-detail{
 
     max-height:200px;
@@ -1233,14 +1214,12 @@ async function loadData(){
 
     try{
 
-        const response =
-        await fetch(API_URL);
+       computers =
+await response.json();
 
-        computers =
-        await response.json();
+render();
 
-        render();
-
+renderLinePC();
     }
     catch(error){
 
@@ -2145,14 +2124,18 @@ function renderLinePC(){
         i++
     ){
 
-      const pc =
+     const pc =
 computers.find(c =>
 
     c.line === line
 
     &&
 
-    c.pcName === `PC${i}`
+    (
+        c.pcNumber === `PC${i}`
+        ||
+        c.pcName === `PC${i}`
+    )
 
 );
 
@@ -2314,76 +2297,7 @@ computers.find(c =>
     html;
 
 }
-    function showPCDetail(
-line,
-pcNumber
-){
 
-   console.log(
-"CLICK",
-line,
-pcNumber
-);
-
-console.table(
-computers
-);
-
-const pc =
-computers.find(c =>
-
-    String(c.line).trim()
-    ===
-    String(line).trim()
-
-    &&
-
-    String(c.pcName).trim()
-    ===
-    String(pcNumber).trim()
-
-);
-
-console.log(
-"FOUND",
-pc
-);
-    document
-    .getElementById(
-        "pcDetail"
-    )
-    .innerHTML =
-
-    `
-    <h2>${line}-${pcNumber}</h2>
-
-    <br>
-
-    <b>Asset Tag :</b>
-    ${pc.assetTag}
-
-    <br><br>
-
-    <b>Computer Name :</b>
-    ${pc.pcName}
-
-    <br><br>
-
-    <b>Brand :</b>
-    ${pc.brand}
-
-    <br><br>
-
-    <b>Model :</b>
-    ${pc.model}
-
-    <br><br>
-
-    <b>OS :</b>
-    ${pc.os}
-    `;
-
-}
 
 
 updateDate();
