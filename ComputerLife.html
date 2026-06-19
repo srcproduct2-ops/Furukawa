@@ -871,7 +871,22 @@ RESPONSIVE
             <option>SP</option>
             <option>HS</option>
 
+
         </select>
+
+<select id="pcNumber">
+
+    <option>PC1</option>
+    <option>PC2</option>
+    <option>PC3</option>
+    <option>PC4</option>
+    <option>PC5</option>
+    <option>PC6</option>
+    <option>PC7</option>
+    <option>PC8</option>
+    <option>PC9</option>
+
+</select>
 
         <input
         type="text"
@@ -1100,6 +1115,7 @@ id="computerSection">
 
                 <th>Asset Tag</th>
                 <th>Line</th>
+                <th>PC No.</th>
                 <th>Computer</th>
                 <th>Brand</th>
                 <th>Model</th>
@@ -1302,6 +1318,11 @@ async function saveComputer(){
             document.getElementById(
                 "lifeCycle"
             ).value
+
+pcNumber:
+document.getElementById(
+    "pcNumber"
+).value,
         )
 
     };
@@ -1869,6 +1890,7 @@ function render(){
             <td>${pc.assetTag}</td>
 
             <td>${pc.line}</td>
+            <td>${pc.pcNumber || ""}</td>
 
             <td>${pc.pcName}</td>
 
