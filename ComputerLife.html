@@ -1209,33 +1209,34 @@ const API_URL =
 
 let computers = [];
 
-
 async function loadData(){
 
     try{
 
-       computers =
-await response.json();
+        const response =
+        await fetch(
+            API_URL
+        );
 
-render();
+        computers =
+        await response.json();
 
-renderLinePC();
+        render();
+
+        renderLinePC();
+
     }
     catch(error){
 
         console.error(error);
 
         alert(
-        "Load Data Error"
+            "Load Data Error"
         );
 
     }
 
 }
-let editIndex = -1;
-
-let chartInstance = null;
-
 /* =====================
 DATE
 ===================== */
