@@ -1051,56 +1051,30 @@ id="lineSection">
 
     </div>
 
-    <div class="line-grid">
+  <select
+id="lineSelector"
+onchange="renderLinePC()"
+style="
+width:250px;
+margin-bottom:15px;
+">
 
-        <div class="line-card">
-            <div class="line-name">HMR</div>
-            <div class="line-count" id="hmrCount">0 / 9 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="hmrBar"></div></div>
-        </div>
+    <option value="HMR">HMR</option>
+    <option value="GMR">GMR</option>
+    <option value="TMR1">TMR1</option>
+    <option value="TMR2">TMR2</option>
+    <option value="MIR">MIR</option>
+    <option value="ISR">ISR</option>
+    <option value="SP">SP</option>
+    <option value="HS">HS</option>
 
-        <div class="line-card">
-            <div class="line-name">GMR</div>
-            <div class="line-count" id="gmrCount">0 / 9 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="gmrBar"></div></div>
-        </div>
+</select>
 
-        <div class="line-card">
-            <div class="line-name">TMR1</div>
-            <div class="line-count" id="tmr1Count">0 / 9 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="tmr1Bar"></div></div>
-        </div>
+<div
+class="line-grid"
+id="lineGrid">
 
-        <div class="line-card">
-            <div class="line-name">TMR2</div>
-            <div class="line-count" id="tmr2Count">0 / 9 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="tmr2Bar"></div></div>
-        </div>
-
-        <div class="line-card">
-            <div class="line-name">MIR</div>
-            <div class="line-count" id="mirCount">0 / 9 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="mirBar"></div></div>
-        </div>
-
-        <div class="line-card">
-            <div class="line-name">ISR</div>
-            <div class="line-count" id="isrCount">0 / 9 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="isrBar"></div></div>
-        </div>
-
-        <div class="line-card">
-            <div class="line-name">SP</div>
-            <div class="line-count" id="spCount">0 / 9 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="spBar"></div></div>
-        </div>
-
-        <div class="line-card">
-            <div class="line-name">HS</div>
-            <div class="line-count" id="hsCount">0 / 3 Healthy</div>
-            <div class="progress-bar"><div class="progress-fill" id="hsBar"></div></div>
-        </div>
-
+</div>
     </div>
 
 </div>
@@ -2235,13 +2209,78 @@ function exportExcel(){
 
     );
 
+}function renderLinePC(){
+
+    const line =
+    document.getElementById(
+        "lineSelector"
+    ).value;
+
+    const totalPC = {
+
+        HMR:9,
+        GMR:9,
+        TMR1:9,
+        TMR2:9,
+        MIR:9,
+        ISR:9,
+        SP:9,
+        HS:3
+
+    }[line];
+
+    let html = "";
+
+    for(
+        let i = 1;
+        i <= totalPC;
+        i++
+    ){
+
+        html += `
+
+        <div class="line-card">
+
+            <div class="line-name">
+
+                ${line}-PC${i}
+
+            </div>
+
+            <div class="line-count">
+
+                Ready
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div
+                class="progress-fill"
+                style="width:100%;">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        `;
+
+    }
+
+    document
+    .getElementById(
+        "lineGrid"
+    )
+    .innerHTML =
+    html;
+
 }
 
-/* =====================
-START
-===================== */
 
 updateDate();
+    renderLinePC();
 
 loadData();
 
