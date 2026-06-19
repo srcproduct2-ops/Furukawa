@@ -2125,21 +2125,36 @@ function renderLinePC(){
         i++
     ){
 
-     const pc =
+   const pc =
 computers.find(c =>
 
-    c.line === line
+    String(c.line).trim()
+    ===
+    String(line).trim()
 
     &&
 
     (
-        c.pcNumber === `PC${i}`
+
+        String(c.pcNumber || "").trim()
+        ===
+        `PC${i}`
+
         ||
-        c.pcName === `PC${i}`
+
+        String(c.pcName || "").trim()
+        ===
+        `${line}-PC${i}`
+
+        ||
+
+        String(c.pcName || "").trim()
+        ===
+        `PC${i}`
+
     )
 
 );
-
         let daysLeft = "-";
         let percent = 100;
         let detail = "";
