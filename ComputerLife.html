@@ -2155,43 +2155,35 @@ line,
 pcNumber
 ){
 
-    console.log(
-        computers
-    );
+   console.log(
+"CLICK",
+line,
+pcNumber
+);
 
-    const pc =
-    computers.find(c =>
+console.table(
+computers
+);
 
-        String(c.line).trim() ===
-        String(line).trim()
+const pc =
+computers.find(c =>
 
-        &&
+    String(c.line).trim()
+    ===
+    String(line).trim()
 
-        String(c.pcName).trim() ===
-        String(pcNumber).trim()
+    &&
 
-    );
+    String(c.pcName).trim()
+    ===
+    String(pcNumber).trim()
 
-    console.log(pc);
+);
 
-    if(!pc){
-
-        document
-        .getElementById(
-            "pcDetail"
-        )
-        .innerHTML =
-
-        `
-        <h2>${line}-${pcNumber}</h2>
-        <br>
-        No Data
-        `;
-
-        return;
-
-    }
-
+console.log(
+"FOUND",
+pc
+);
     document
     .getElementById(
         "pcDetail"
