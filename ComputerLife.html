@@ -2111,20 +2111,30 @@ showPCDetail(
     .innerHTML =
     html;
 
-}  function showPCDetail(
+} 
+    function showPCDetail(
 line,
 pcNumber
 ){
-const pc =
-computers.find(c=>
 
-    c.line === line
-    &&
-    c.pcName === pcNumber
+    console.log(
+        computers
+    );
 
-);
+    const pc =
+    computers.find(c =>
+
+        String(c.line).trim() ===
+        String(line).trim()
+
+        &&
+
+        String(c.pcName).trim() ===
+        String(pcNumber).trim()
 
     );
+
+    console.log(pc);
 
     if(!pc){
 
@@ -2136,37 +2146,13 @@ computers.find(c=>
 
         `
         <h2>${line}-${pcNumber}</h2>
-
         <br>
-
         No Data
         `;
 
         return;
 
     }
-
-    const install =
-    new Date(
-        pc.installDate
-    );
-
-    const expire =
-    new Date(
-        install
-    );
-
-    expire.setFullYear(
-
-        expire.getFullYear()
-
-        +
-
-        parseInt(
-            pc.lifeCycle
-        )
-
-    );
 
     document
     .getElementById(
@@ -2175,9 +2161,7 @@ computers.find(c=>
     .innerHTML =
 
     `
-    <h2>
-        ${line}-${pcNumber}
-    </h2>
+    <h2>${line}-${pcNumber}</h2>
 
     <br>
 
@@ -2203,25 +2187,6 @@ computers.find(c=>
 
     <b>OS :</b>
     ${pc.os}
-
-    <br><br>
-
-    <b>Install Date :</b>
-    ${pc.installDate}
-
-    <br><br>
-
-    <b>Expire Date :</b>
-    ${
-        expire
-        .toISOString()
-        .split("T")[0]
-    }
-
-    <br><br>
-
-    <b>Life Cycle :</b>
-    ${pc.lifeCycle} Years
     `;
 
 }
