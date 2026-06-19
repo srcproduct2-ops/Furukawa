@@ -1276,57 +1276,56 @@ async function saveComputer(){
 
     }
 
-    const computer = {
+   const computer = {
 
-        assetTag:
+    assetTag:
+    document.getElementById(
+        "assetTag"
+    ).value,
+
+    line:
+    document.getElementById(
+        "line"
+    ).value,
+
+    pcNumber:
+    document.getElementById(
+        "pcNumber"
+    ).value,
+
+    pcName:
+    document.getElementById(
+        "pcName"
+    ).value,
+
+    brand:
+    document.getElementById(
+        "brand"
+    ).value,
+
+    model:
+    document.getElementById(
+        "model"
+    ).value,
+
+    os:
+    document.getElementById(
+        "os"
+    ).value,
+
+    installDate:
+    document.getElementById(
+        "installDate"
+    ).value,
+
+    lifeCycle:
+    parseInt(
         document.getElementById(
-            "assetTag"
-        ).value,
+            "lifeCycle"
+        ).value
+    )
 
-        line:
-        document.getElementById(
-            "line"
-        ).value,
-
-        pcName:
-        document.getElementById(
-            "pcName"
-        ).value,
-
-        brand:
-        document.getElementById(
-            "brand"
-        ).value,
-
-        model:
-        document.getElementById(
-            "model"
-        ).value,
-
-        os:
-        document.getElementById(
-            "os"
-        ).value,
-
-        installDate:
-        document.getElementById(
-            "installDate"
-        ).value,
-
-        lifeCycle:
-        parseInt(
-            document.getElementById(
-                "lifeCycle"
-            ).value
-
-pcNumber:
-document.getElementById(
-    "pcNumber"
-).value,
-        )
-
-    };
-
+};
     try{
 
       const response =
