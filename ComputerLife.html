@@ -22,6 +22,7 @@ rel="stylesheet">
 
 <style>
 
+    
 :root{
 
     --primary:#2563eb;
@@ -1382,9 +1383,16 @@ function editComputer(index){
     document
     .getElementById(
         "line"
-    )
+    )    
     .value =
     pc.line;
+    document
+.getElementById(
+    "pcNumber"
+)
+.value =
+pc.pcNumber || "PC1";
+    
 
     document
     .getElementById(
@@ -1484,6 +1492,12 @@ function clearForm(){
         "pcName"
     )
     .value="";
+document
+.getElementById(
+    "pcNumber"
+)
+.selectedIndex = 0;
+    
 
     document
     .getElementById(
