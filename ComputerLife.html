@@ -2115,13 +2115,14 @@ showPCDetail(
 line,
 pcNumber
 ){
+const pc =
+computers.find(c=>
 
-    const pc =
-    computers.find(c=>
+    c.line === line
+    &&
+    c.pcName === pcNumber
 
-        c.line === line
-        &&
-        c.pcNumber === pcNumber
+);
 
     );
 
