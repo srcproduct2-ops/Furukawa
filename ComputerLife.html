@@ -1995,53 +1995,7 @@ function render(){
     .innerText =
     replaceNextYear;
 
-    updateLineCard(
-        "hmr",
-        lineHealthy.HMR,
-        lineCapacity.HMR
-    );
-
-    updateLineCard(
-        "gmr",
-        lineHealthy.GMR,
-        lineCapacity.GMR
-    );
-
-    updateLineCard(
-        "tmr1",
-        lineHealthy.TMR1,
-        lineCapacity.TMR1
-    );
-
-    updateLineCard(
-        "tmr2",
-        lineHealthy.TMR2,
-        lineCapacity.TMR2
-    );
-
-    updateLineCard(
-        "mir",
-        lineHealthy.MIR,
-        lineCapacity.MIR
-    );
-
-    updateLineCard(
-        "isr",
-        lineHealthy.ISR,
-        lineCapacity.ISR
-    );
-
-    updateLineCard(
-        "sp",
-        lineHealthy.SP,
-        lineCapacity.SP
-    );
-
-    updateLineCard(
-        "hs",
-        lineHealthy.HS,
-        lineCapacity.HS
-    );
+   
 
     drawChart(
         healthy,
@@ -2056,39 +2010,7 @@ function render(){
 LINE CARD
 ===================== */
 
-function updateLineCard(
-line,
-healthy,
-capacity
-){
 
-    const percent =
-
-    (
-        healthy /
-        capacity
-    ) * 100;
-
-    document
-    .getElementById(
-        line + "Count"
-    )
-    .innerText =
-
-    healthy +
-    " / " +
-    capacity +
-    " Healthy";
-
-    document
-    .getElementById(
-        line + "Bar"
-    )
-    .style.width =
-
-    percent + "%";
-
-}
 
 /* =====================
 PIE CHART
