@@ -18,7 +18,7 @@ rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <style>
 
@@ -1034,22 +1034,17 @@ RESPONSIVE
 
 </div>
 
-<!-- PIE CHART -->
-
 <div class="panel">
 
     <div class="panel-title">
 
-        📊 Computer Health Status
+        💻 Computer Detail
 
     </div>
 
-    <div class="chart-wrapper">
+    <div id="pcDetail">
 
-        <canvas
-        id="statusChart">
-
-        </canvas>
+        Select PC Card
 
     </div>
 
@@ -2032,139 +2027,12 @@ function render(){
 
    
 
-    drawChart(
-        healthy,
-        warning,
-        replaceSoon,
-        expired
-    );
-
+   
 }
 
-/* =====================
-LINE CARD
-===================== */
 
 
 
-/* =====================
-PIE CHART
-===================== */
-
-function drawChart(
-healthy,
-warning,
-replaceSoon,
-expired
-){
-
-    const ctx =
-    document
-    .getElementById(
-        "statusChart"
-    );
-
-    if(chartInstance){
-
-        chartInstance.destroy();
-
-    }
-
-    chartInstance =
-    new Chart(
-        ctx,
-        {
-
-            type:"pie",
-
-            data:{
-
-                labels:[
-
-                    "Healthy",
-                    "Warning",
-                    "Replace Soon",
-                    "Expired"
-
-                ],
-
-                datasets:[{
-
-                    data:[
-
-                        healthy,
-                        warning,
-                        replaceSoon,
-                        expired
-
-                    ],
-
-                    backgroundColor:[
-
-                        "#16a34a",
-                        "#f59e0b",
-                        "#7c3aed",
-                        "#dc2626"
-
-                    ]
-
-                }]
-
-            },
-
-            options:{
-
-                responsive:true,
-
-                plugins:{
-
-                    legend:{
-
-                        position:"bottom"
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    );
-
-}
-
-/* =====================
-EXPORT
-===================== */
-
-function exportExcel(){
-
-    const ws =
-    XLSX.utils.json_to_sheet(
-        computers
-    );
-
-    const wb =
-    XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(
-
-        wb,
-
-        ws,
-
-        "ComputerLife"
-
-    );
-
-    XLSX.writeFile(
-
-        wb,
-
-        "ComputerLifeDashboard.xlsx"
-
-    );
 
 }function renderLinePC(){
 
@@ -2194,10 +2062,16 @@ function exportExcel(){
         i++
     ){
 
-        html += `
+       html += `
 
-        <div class="line-card">
-
+<div
+class="line-card"
+onclick="
+showPCDetail(
+'${line}',
+'PC${i}'
+)
+">
             <div class="line-name">
 
                 ${line}-PC${i}
@@ -2232,6 +2106,118 @@ function exportExcel(){
     )
     .innerHTML =
     html;
+
+}  function showPCDetail(
+line,
+pcNumber
+){
+
+    const pc =
+    computers.find(c=>
+
+        c.line === line
+        &&
+        c.pcNumber === pcNumber
+
+    );
+
+    if(!pc){
+
+        document
+        .getElementById(
+            "pcDetail"
+        )
+        .innerHTML =
+
+        `
+        <h2>${line}-${pcNumber}</h2>
+
+        <br>
+
+        No Data
+        `;
+
+        return;
+
+    }
+
+    const install =
+    new Date(
+        pc.installDate
+    );
+
+    const expire =
+    new Date(
+        install
+    );
+
+    expire.setFullYear(
+
+        expire.getFullYear()
+
+        +
+
+        parseInt(
+            pc.lifeCycle
+        )
+
+    );
+
+    document
+    .getElementById(
+        "pcDetail"
+    )
+    .innerHTML =
+
+    `
+    <h2>
+        ${line}-${pcNumber}
+    </h2>
+
+    <br>
+
+    <b>Asset Tag :</b>
+    ${pc.assetTag}
+
+    <br><br>
+
+    <b>Computer Name :</b>
+    ${pc.pcName}
+
+    <br><br>
+
+    <b>Brand :</b>
+    ${pc.brand}
+
+    <br><br>
+
+    <b>Model :</b>
+    ${pc.model}
+
+    <br><br>
+
+    <b>OS :</b>
+    ${pc.os}
+
+    <br><br>
+
+    <b>Install Date :</b>
+    ${pc.installDate}
+
+    <br><br>
+
+    <b>Expire Date :</b>
+    ${
+        expire
+        .toISOString()
+        .split("T")[0]
+    }
+
+    <br><br>
+
+    <b>Life Cycle :</b>
+    ${pc.lifeCycle} Years
+    `;
 
 }
 
