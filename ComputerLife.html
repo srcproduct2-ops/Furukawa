@@ -677,6 +677,61 @@ RESPONSIVE
     }
 
 }
+    .pc-detail{
+
+    font-size:11px;
+
+    color:#64748b;
+
+    line-height:1.5;
+
+    margin-top:10px;
+
+    max-height:0;
+
+    overflow:hidden;
+
+    opacity:0;
+
+    transition:.3s;
+
+}
+
+.line-card:hover .pc-detail{
+
+    max-height:200px;
+
+    opacity:1;
+
+}
+
+    .pc-detail{
+
+    font-size:11px;
+
+    color:#64748b;
+
+    line-height:1.5;
+
+    margin-top:10px;
+
+    max-height:0;
+
+    overflow:hidden;
+
+    opacity:0;
+
+    transition:.3s;
+
+}
+
+.line-card:hover .pc-detail{
+
+    max-height:200px;
+
+    opacity:1;
+
+}
 
 </style>
 
@@ -1117,21 +1172,7 @@ id="lineGrid">
     </div>
 
 </div>
-<div class="panel">
 
-    <div class="panel-title">
-
-        💻 Computer Detail
-
-    </div>
-
-    <div id="pcDetail">
-
-        Select PC Card
-
-    </div>
-
-</div>
 
 <!-- COMPUTER LIST -->
 
@@ -2104,16 +2145,135 @@ function renderLinePC(){
         i++
     ){
 
-       html += `
+        const pc =
+        computers.find(c =>
 
-<div
-class="line-card"
-onclick="
-showPCDetail(
-'${line}',
-'PC${i}'
-)
-">
+            c.line === line
+
+            &&
+
+            c.pcName === `PC${i}`
+
+        );
+
+        let daysLeft = "-";
+        let percent = 100;
+        let detail = "";
+
+        if(pc){
+
+            const install =
+            new Date(
+                pc.installDate
+            );
+
+            const expire =
+            new Date(
+                install
+            );
+
+            expire.setFullYear(
+
+                expire.getFullYear()
+
+                +
+
+                Number(
+                    pc.lifeCycle
+                )
+
+            );
+
+            daysLeft =
+            Math.ceil(
+
+                (
+                    expire
+                    -
+                    new Date()
+                )
+
+                /
+
+                86400000
+
+            );
+
+            const totalDays =
+
+            Number(
+                pc.lifeCycle
+            ) * 365;
+
+            const usedDays =
+
+            (
+                new Date()
+                -
+                install
+            )
+
+            /
+
+            86400000;
+
+            percent =
+
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    (
+                        (
+                            totalDays
+                            -
+                            usedDays
+                        )
+                        /
+                        totalDays
+                    )
+                    *
+                    100
+                )
+            );
+
+            detail =
+
+            `
+            <div class="pc-detail">
+
+                Asset :
+                ${pc.assetTag}
+
+                <br>
+
+                Brand :
+                ${pc.brand}
+
+                <br>
+
+                Model :
+                ${pc.model}
+
+                <br>
+
+                OS :
+                ${pc.os}
+
+                <br>
+
+                Install :
+                ${pc.installDate}
+
+            </div>
+            `;
+
+        }
+
+        html += `
+
+        <div class="line-card">
+
             <div class="line-name">
 
                 ${line}-PC${i}
@@ -2122,16 +2282,20 @@ showPCDetail(
 
             <div class="line-count">
 
-                Ready
+                ${daysLeft}
+                Days Remaining
 
             </div>
+
+            ${detail}
 
             <div class="progress-bar">
 
                 <div
                 class="progress-fill"
-                style="width:100%;">
-
+                style="
+                width:${percent}%;
+                ">
                 </div>
 
             </div>
@@ -2149,7 +2313,7 @@ showPCDetail(
     .innerHTML =
     html;
 
-} 
+}
     function showPCDetail(
 line,
 pcNumber
