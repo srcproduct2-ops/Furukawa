@@ -2235,38 +2235,41 @@ computers.find(c =>
                     100
                 )
             );
+detail =
 
-            detail =
+`
+<div class="pc-detail">
 
-            `
-            <div class="pc-detail">
+    <b>Asset :</b>
+    ${pc.assetTag}
 
-                Asset :
-                ${pc.assetTag}
+    <br>
 
-                <br>
+    <b>Computer :</b>
+    ${pc.pcName}
 
-                Brand :
-                ${pc.brand}
+    <br>
 
-                <br>
+    <b>Brand :</b>
+    ${pc.brand}
 
-                Model :
-                ${pc.model}
+    <br>
 
-                <br>
+    <b>Model :</b>
+    ${pc.model}
 
-                OS :
-                ${pc.os}
+    <br>
 
-                <br>
+    <b>OS :</b>
+    ${pc.os}
 
-                Install :
-                ${pc.installDate}
+    <br>
 
-            </div>
-            `;
+    <b>Install :</b>
+    ${pc.installDate}
 
+</div>
+`;
         }
 
         html += `
