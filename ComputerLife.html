@@ -2271,8 +2271,9 @@ detail = `
 
     <br>
 
-    <b>Install :</b>
-    ${pc.installDate}
+ <b>Install :</b>
+${new Date(pc.installDate)
+    .toLocaleDateString("en-GB")}
 
 </div>
 `;}
