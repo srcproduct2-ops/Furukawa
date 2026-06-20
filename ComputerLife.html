@@ -1480,9 +1480,7 @@ async function saveComputer(){
 
 };
     try{
-
-      const response =
-          console.log(computer);
+const response =
 await fetch(
     API_URL,
     {
@@ -1490,6 +1488,8 @@ await fetch(
         body:JSON.stringify(computer)
     }
 );
+
+console.log(computer);
         const result =
         await response.json();
 
