@@ -1608,11 +1608,15 @@ pc.pcNumber || "PC1";
     pc.os;
 
     document
-    .getElementById(
-        "installDate"
-    )
-    .value =
-    pc.installDate;
+.getElementById(
+    "installDate"
+)
+.value =
+new Date(
+    pc.installDate
+)
+.toISOString()
+.split("T")[0];
 
     document
     .getElementById(
@@ -2089,7 +2093,16 @@ computers.forEach(pc=>{
 
             <td>${pc.os}</td>
 
-            <td>${pc.installDate}</td>
+            <td>
+${
+    new Date(
+        pc.installDate
+    )
+    .toLocaleDateString(
+        "en-GB"
+    )
+}
+</td>
 
             <td>${pc.lifeCycle} Years</td>
 
