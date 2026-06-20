@@ -2164,119 +2164,67 @@ computers.find(c =>
         let percent = 100;
         let detail = "";
 
-        if(pc){
+ if(pc){
 
-            const install =
-            new Date(
-                pc.installDate
-            );
+    console.log("PC =", pc);
 
-            const expire =
-            new Date(
-                install
-            );
+    const install =
+    new Date(pc.installDate);
 
-            expire.setFullYear(
+    console.log("INSTALL =", install);
 
-                expire.getFullYear()
+    console.log("LIFECYCLE =", pc.lifeCycle);
 
-                +
+    const expire =
+    new Date(install);
 
-                Number(
-                  parseInt(
-                      pc.lifeCycle || 5
-)
-                )
+    expire.setFullYear(
+        expire.getFullYear()
+        +
+        parseInt(
+            pc.lifeCycle || 5
+        )
+    );
 
-            );
+    daysLeft =
+    Math.ceil(
+        (
+            expire -
+            new Date()
+        )
+        /
+        86400000
+    );
 
-            daysLeft =
-            Math.ceil(
+    const totalDays =
+    parseInt(
+        pc.lifeCycle || 5
+    ) * 365;
 
-                (
-                    expire
-                    -
-                    new Date()
-                )
+    const usedDays =
+    (
+        new Date()
+        -
+        install
+    ) / 86400000;
 
-                /
-
-                86400000
-
-            );
-
-       const totalDays =
-
-parseInt(
-    pc.lifeCycle || 5
-) * 365;
-
-            const usedDays =
-
+    percent =
+    Math.max(
+        0,
+        Math.min(
+            100,
             (
-                new Date()
-                -
-                install
-            )
-
-            /
-
-            86400000;
-
-            percent =
-
-            Math.max(
-                0,
-                Math.min(
-                    100,
-                    (
-                        (
-                            totalDays
-                            -
-                            usedDays
-                        )
-                        /
-                        totalDays
-                    )
-                    *
-                    100
+                (
+                    totalDays -
+                    usedDays
                 )
-            );
-detail =
+                /
+                totalDays
+            ) * 100
+        )
+    );
 
-`
-<div class="pc-detail">
-
-    <b>Asset :</b>
-    ${pc.assetTag}
-
-    <br>
-
-    <b>Computer :</b>
-    ${pc.pcName}
-
-    <br>
-
-    <b>Brand :</b>
-    ${pc.brand}
-
-    <br>
-
-    <b>Model :</b>
-    ${pc.model}
-
-    <br>
-
-    <b>OS :</b>
-    ${pc.os}
-
-    <br>
-
-
-
-</div>
-`;
-        }
+}
 
         html += `
 
