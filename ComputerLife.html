@@ -208,11 +208,9 @@ KPI
     display:grid;
 
     grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
+    repeat(auto-fit,minmax(180px,1fr));
 
-    gap:15px;
-
-    margin-bottom:25px;
+    gap:12px;
 
 }
 
@@ -906,39 +904,10 @@ RESPONSIVE
 
     </div>
 
-    <div class="card replace-card">
-
-        <div class="card-title">
-            📅 Replace This Year
-        </div>
-
-        <div
-        class="card-value"
-        id="replaceThisYear">
-
-            0
-
-        </div>
-
-    </div>
-    <div class="card warning-card">
-
-    <div class="card-title">
-        📆 Replace Next Year
-    </div>
-
-    <div
-    class="card-value"
-    id="replaceNextYear">
-
-        0
-
-    </div>
-
 
 
 </div>
-    </div>
+
 
 <!-- ADD COMPUTER -->
 
@@ -1687,8 +1656,6 @@ function render(){
     let replaceSoon = 0;
     let expired = 0;
 
-    let replaceThisYear = 0;
-    let replaceNextYear = 0;
 
     const lineCapacity = {
 
@@ -1819,21 +1786,7 @@ computers.forEach(pc=>{
             expired++;
         }
 
-        if(
-            expire.getFullYear()
-            ===
-            currentYear
-        ){
-            replaceThisYear++;
-        }
 
-        if(
-            expire.getFullYear()
-            ===
-            currentYear + 1
-        ){
-            replaceNextYear++;
-        }
 
     });
 
@@ -2100,29 +2053,7 @@ computers.forEach(pc=>{
     )
     .innerText =
     expired;
-
-    document
-    .getElementById(
-        "replaceThisYear"
-    )
-    .innerText =
-    replaceThisYear;
-
-    document
-    .getElementById(
-        "replaceNextYear"
-    )
-    .innerText =
-    replaceNextYear;
-
-   
-
-   
 }
-
-
-
-
 
 function renderLinePC(){
 
