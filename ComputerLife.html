@@ -1461,7 +1461,9 @@ if(duplicate){
 
     }
 
-   const computer = {
+  const computer = {
+
+    id: editId,
 
     assetTag:
     document.getElementById(
@@ -1513,6 +1515,15 @@ if(duplicate){
 };
     try{
 const response =
+
+    console.log(
+    "EDIT ID =",
+    editId
+);
+
+console.log(
+    computer
+);
 await fetch(
     API_URL,
     {
