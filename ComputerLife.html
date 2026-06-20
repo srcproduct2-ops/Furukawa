@@ -1717,12 +1717,13 @@ function render(){
     const currentYear =
     today.getFullYear();
 
-    computers.forEach(pc=>{
-if(!pc.installDate){
+computers.forEach(pc=>{
 
-    continue;
+    if(!pc.installDate){
 
-}
+        return;
+
+    }
 
         const install =
         new Date(
