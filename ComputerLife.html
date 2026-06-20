@@ -1039,7 +1039,9 @@ RESPONSIVE
 
 <!-- ADD COMPUTER -->
 
-<div class="panel">
+<div
+class="panel"
+id="addComputerPanel">
 
     <div
     class="panel-title"
@@ -1196,10 +1198,10 @@ RESPONSIVE
 
     </button>
 
-    <button
-    class="btn btn-export"
-    onclick="exportExcel()">
-
+  <button
+id="exportBtn"
+class="btn btn-export"
+onclick="exportExcel()">
         Export Excel
 
     </button>
@@ -1300,7 +1302,10 @@ id="computerSection">
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzLhwp4NkREqxLueMVmrL7jR9MVJrby0IeZnbjz45Zxs0oCK_0fO340LuyEMZorin-JhA/exec";
-
+const role =
+localStorage.getItem(
+    "role"
+) || "User";
 let computers = [];
 let editIndex = -1;
     let editId = "";
@@ -2183,37 +2188,52 @@ ${
 
             </td>
 
-            <td>
+<td>
 
-                <div class="action-buttons">
+${
+role === "Admin"
 
-                    <button
-                    class="btn btn-edit"
-                    onclick="editComputer(${realIndex})">
+?
 
-                        Edit
+`
 
-                    </button>
+<div class="action-buttons">
 
-                    <button
-                    class="btn btn-replace"
-                    onclick="editComputer(${realIndex})">
+    <button
+    class="btn btn-edit"
+    onclick="editComputer(${realIndex})">
 
-                        Replace
+        Edit
 
-                    </button>
+    </button>
 
-                    <button
-                    class="btn btn-delete"
-                    onclick="deleteComputer(${realIndex})">
+    <button
+    class="btn btn-replace"
+    onclick="editComputer(${realIndex})">
 
-                        Delete
+        Replace
 
-                    </button>
+    </button>
 
-                </div>
+    <button
+    class="btn btn-delete"
+    onclick="deleteComputer(${realIndex})">
 
-            </td>
+        Delete
+
+    </button>
+
+</div>
+
+`
+
+:
+
+"-"
+
+}
+
+</td>
 
         </tr>
 
@@ -2505,7 +2525,26 @@ updateDate();
 
 loadData();
 
+    if(role !== "Admin"){
+
+    document
+    .getElementById(
+        "addComputerPanel"
+    )
+    .style.display =
+    "none";
+
+    document
+    .getElementById(
+        "exportBtn"
+    )
+    .style.display =
+    "none";
+
+}
+
 </script>
+    
 <div id="loadingOverlay">
 
     <div class="loading-box">
