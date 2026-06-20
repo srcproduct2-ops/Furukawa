@@ -968,8 +968,8 @@ RESPONSIVE
 
         <input
         type="text"
-        id="model"
-        placeholder="Model">
+        id="program"
+        placeholder="Program">
 
         <select id="os">
 
@@ -1049,7 +1049,7 @@ RESPONSIVE
         <input
         type="text"
         id="search"
-        placeholder="Search Asset Tag / PC / Brand / Model"
+        placeholder="Search Asset Tag / PC / Brand / Program"
         onkeyup="render()">
 
         <select
@@ -1168,7 +1168,7 @@ id="computerSection">
                 <th>PC No.</th>
                 <th>Computer</th>
                 <th>Brand</th>
-                <th>Model</th>
+                <th>Program</th>
                 <th>OS</th>
                 <th>Install Date</th>
                 <th>Life Cycle</th>
@@ -1352,9 +1352,9 @@ async function saveComputer(){
         "brand"
     ).value,
 
-    model:
+    program:
     document.getElementById(
-        "model"
+        "program"
     ).value,
 
     os:
@@ -1458,10 +1458,10 @@ pc.pcNumber || "PC1";
 
     document
     .getElementById(
-        "model"
+        "program"
     )
     .value =
-    pc.model;
+    pc.program;
 
     document
     .getElementById(
@@ -1555,7 +1555,7 @@ document
 
     document
     .getElementById(
-        "model"
+        "program"
     )
     .value="";
 
@@ -1853,7 +1853,8 @@ computers.forEach(pc=>{
 
         ||
 
-        pc.model
+        pc.program
+            
         .toLowerCase()
         .includes(keyword);
 
@@ -1947,7 +1948,7 @@ computers.forEach(pc=>{
 
             <td>${pc.brand}</td>
 
-            <td>${pc.model}</td>
+            <td>${pc.program}</td>
 
             <td>${pc.os}</td>
 
@@ -2192,8 +2193,8 @@ detail = `
 
     <br>
 
-    <b>Model :</b>
-    ${pc.model}
+    <b>Program :</b>
+    ${pc.program}
 
     <br>
 
