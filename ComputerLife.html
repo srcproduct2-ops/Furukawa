@@ -2224,13 +2224,10 @@ computers.find(c =>
         let detail = "";
         let cardClass = "";
 
- if(pc){
-
-
+if(pc){
 
     const install =
     new Date(pc.installDate);
-
 
     const expire =
     new Date(install);
@@ -2242,32 +2239,41 @@ computers.find(c =>
             pc.lifeCycle || 5
         )
     );
-if(daysLeft <= 0){
 
-    cardClass =
-    "expired-card-bg";
+    daysLeft =
+    Math.ceil(
+        (
+            expire -
+            new Date()
+        )
+        /
+        86400000
+    );
 
-}
-else if(daysLeft <= 365){
+    if(daysLeft <= 0){
 
-    cardClass =
-    "replace-card-bg";
+        cardClass =
+        "expired-card-bg";
 
-}
-else if(daysLeft <= 730){
+    }
+    else if(daysLeft <= 365){
 
-    cardClass =
-    "warning-card-bg";
+        cardClass =
+        "replace-card-bg";
 
-}
-else{
+    }
+    else if(daysLeft <= 730){
 
-    cardClass =
-    "healthy-card-bg";
+        cardClass =
+        "warning-card-bg";
 
-}
+    }
+    else{
 
-}
+        cardClass =
+        "healthy-card-bg";
+
+    }
 
     const totalDays =
     parseInt(
@@ -2297,6 +2303,15 @@ else{
         )
     );
 
+    detail = `
+    <div class="pc-detail">
+
+        ...
+
+    </div>
+    `;
+
+}
 detail = `
 <div class="pc-detail">
 
