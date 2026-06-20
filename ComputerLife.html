@@ -490,16 +490,17 @@ LINE DASHBOARD
 
 .line-name{
 
-    font-size:18px;
+    display:flex;
 
-    font-weight:800;
+    justify-content:space-between;
 
-    color:#111827;
+    align-items:center;
 
-    margin-bottom:10px;
+    font-size:12px;
+
+    font-weight:700;
 
 }
-
 .line-count{
 
     font-size:14px;
@@ -731,6 +732,24 @@ RESPONSIVE
 
 }
 
+    .pc-program{
+
+    font-size:11px;
+
+    font-weight:600;
+
+    color:#64748b;
+
+    background:#f1f5f9;
+
+    padding:4px 8px;
+
+    border-radius:999px;
+
+    white-space:nowrap;
+
+}
+
 
 </style>
 
@@ -955,11 +974,49 @@ RESPONSIVE
 
 </select>
 
-        <input
-        type="text"
-        id="pcName"
-        placeholder="Computer Name">
+       <select id="pcName">
 
+    <option value="">
+        Select Computer Name
+    </option>
+
+    <option>
+        Pigtail Welding
+    </option>
+
+    <option>
+        FFC1 Welding (L)
+    </option>
+
+    <option>
+        FFC1 Welding (R)
+    </option>
+
+    <option>
+        FFC2 Welding (L)
+    </option>
+
+    <option>
+        FFC2 Welding (R)
+    </option>
+
+    <option>
+        Function Tester
+    </option>
+
+    <option>
+        Electric Tester
+    </option>
+
+    <option>
+        Final Tester
+    </option>
+
+    <option>
+        Image Filing
+    </option>
+
+</select>
         <input
         type="text"
         id="brand"
@@ -1541,10 +1598,10 @@ function clearForm(){
     .value="";
 
     document
-    .getElementById(
-        "pcName"
-    )
-    .value="";
+.getElementById(
+    "pcName"
+)
+.selectedIndex = 0;
 document
 .getElementById(
     "pcNumber"
@@ -2219,11 +2276,21 @@ ${new Date(pc.installDate)
 
         <div class="line-card">
 
-            <div class="line-name">
+        <div class="line-name">
 
-                ${line}-PC${i}
+    ${line}-PC${i}
 
-            </div>
+    ${
+        pc
+        ?
+        `<span class="pc-program">
+            ${pc.pcName}
+        </span>`
+        :
+        ""
+    }
+
+</div>
 
             <div class="line-count">
 
