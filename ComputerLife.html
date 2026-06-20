@@ -1295,7 +1295,8 @@ const API_URL =
 "https://script.google.com/macros/s/AKfycbzscipVR9mF2FBdbsf2ILUs28OLsC1Tvk1Za2cf1m-GQW4Y7rcBa823W8u6y28jHDI3tQ/exec";
 
 let computers = [];
-
+let editIndex = -1;
+    let editId = "";
 async function loadData(){
 
     try{
@@ -1556,7 +1557,7 @@ function editComputer(index){
 
     const pc =
     computers[index];
-
+    editId = pc.id;
     document
     .getElementById(
         "assetTag"
@@ -1681,7 +1682,7 @@ document
     "pcNumber"
 )
 .selectedIndex = 0;
-    
+
 
     document
     .getElementById(
@@ -1720,7 +1721,7 @@ document
     .value="5";
 
     editIndex = -1;
-
+editId = "";
 }
 
 /* =====================
