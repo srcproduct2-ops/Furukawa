@@ -1514,50 +1514,48 @@ if(duplicate){
 
 };
     try{
-const response =
 
     console.log(
-    "EDIT ID =",
-    editId
-);
+        "EDIT ID =",
+        editId
+    );
 
-console.log(
-    computer
-);
-await fetch(
-    API_URL,
-    {
-        method:"POST",
-        body:JSON.stringify(computer)
-    }
-);
+    console.log(
+        computer
+    );
 
-console.log(computer);
-        const result =
-        await response.json();
-
-        if(result.success){
-
-            alert(
-            "Save Success"
-            );
-
-            clearForm();
-
-            await loadData();
-
+    const response =
+    await fetch(
+        API_URL,
+        {
+            method:"POST",
+            body:JSON.stringify(computer)
         }
+    );
 
-    }
-    catch(error){
+    const result =
+    await response.json();
 
-        console.error(error);
+    if(result.success){
 
         alert(
-        "Cannot Save To Google Sheet"
+            "Save Success"
         );
 
+        clearForm();
+
+        await loadData();
+
     }
+
+}
+catch(error){
+
+    console.error(error);
+
+    alert(
+        "Cannot Save To Google Sheet"
+    );
 
 }
 /* =====================
