@@ -1718,6 +1718,11 @@ function render(){
     today.getFullYear();
 
     computers.forEach(pc=>{
+if(!pc.installDate){
+
+    continue;
+
+}
 
         const install =
         new Date(
@@ -2178,7 +2183,9 @@ computers.find(c =>
                 +
 
                 Number(
-                    pc.lifeCycle
+                  parseInt(
+                      pc.lifeCycle || 5
+)
                 )
 
             );
@@ -2198,11 +2205,11 @@ computers.find(c =>
 
             );
 
-            const totalDays =
+       const totalDays =
 
-            Number(
-                pc.lifeCycle
-            ) * 365;
+parseInt(
+    pc.lifeCycle || 5
+) * 365;
 
             const usedDays =
 
