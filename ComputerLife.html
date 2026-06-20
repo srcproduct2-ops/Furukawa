@@ -474,10 +474,9 @@ LINE DASHBOARD
 
     position:relative;
 
-    overflow:hidden;
+    overflow:visible;
 
 }
-
 .line-card:hover{
 
     transform:
@@ -683,13 +682,13 @@ RESPONSIVE
 
     left:50%;
 
-    top:100%;
+    top:110%;
 
     transform:translateX(-50%);
 
-    width:240px;
+    width:260px;
 
-    background:white;
+    background:#ffffff;
 
     border:1px solid #e5e7eb;
 
@@ -697,16 +696,18 @@ RESPONSIVE
 
     padding:12px;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.15);
 
     opacity:0;
 
     visibility:hidden;
 
-    z-index:999;
+    transition:.25s;
+
+    z-index:9999;
 
 }
-
 .line-card:hover .pc-detail{
 
     opacity:1;
