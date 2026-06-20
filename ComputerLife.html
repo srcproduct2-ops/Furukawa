@@ -1305,25 +1305,35 @@ let computers = [];
 let editIndex = -1;
     let editId = "";
 
-    function showLoading(){
+ function showLoading(){
 
-    document
-    .getElementById(
+    const overlay =
+    document.getElementById(
         "loadingOverlay"
-    )
-    .style.display =
-    "flex";
+    );
+
+    if(overlay){
+
+        overlay.style.display =
+        "flex";
+
+    }
 
 }
 
 function hideLoading(){
 
-    document
-    .getElementById(
+    const overlay =
+    document.getElementById(
         "loadingOverlay"
-    )
-    .style.display =
-    "none";
+    );
+
+    if(overlay){
+
+        overlay.style.display =
+        "none";
+
+    }
 
 }
 async function loadData(){
@@ -2487,15 +2497,6 @@ if(pc){
 
 }
 
-
-
-updateDate();
-
-loadData();
-
-</script>
-
-
 <div id="loadingOverlay">
 
     <div class="loading-box">
@@ -2511,6 +2512,15 @@ loadData();
     </div>
 
 </div>
+
+
+
+
+updateDate();
+
+loadData();
+
+</script>
 
 
     
