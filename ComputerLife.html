@@ -754,6 +754,44 @@ RESPONSIVE
 
 }
 
+    .expired-card-bg{
+
+    background:
+    rgba(220,38,38,.08);
+
+    border:
+    1px solid rgba(220,38,38,.35);
+
+}
+
+    .healthy-card-bg{
+
+    background:
+    rgba(34,197,94,.08);
+
+}
+
+.warning-card-bg{
+
+    background:
+    rgba(245,158,11,.08);
+
+}
+
+.replace-card-bg{
+
+    background:
+    rgba(124,58,237,.08);
+
+}
+
+.expired-card-bg{
+
+    background:
+    rgba(220,38,38,.08);
+
+}
+
 
 </style>
 
@@ -2184,6 +2222,7 @@ computers.find(c =>
         let daysLeft = "-";
         let percent = 100;
         let detail = "";
+        let cardClass = "";
 
  if(pc){
 
@@ -2203,16 +2242,32 @@ computers.find(c =>
             pc.lifeCycle || 5
         )
     );
+if(daysLeft <= 0){
 
-    daysLeft =
-    Math.ceil(
-        (
-            expire -
-            new Date()
-        )
-        /
-        86400000
-    );
+    cardClass =
+    "expired-card-bg";
+
+}
+else if(daysLeft <= 365){
+
+    cardClass =
+    "replace-card-bg";
+
+}
+else if(daysLeft <= 730){
+
+    cardClass =
+    "warning-card-bg";
+
+}
+else{
+
+    cardClass =
+    "healthy-card-bg";
+
+}
+
+}
 
     const totalDays =
     parseInt(
@@ -2278,8 +2333,7 @@ ${new Date(pc.installDate)
 `;}
 
         html += `
-
-        <div class="line-card">
+<div class="line-card ${cardClass}">
 
         <div class="line-name">
 
