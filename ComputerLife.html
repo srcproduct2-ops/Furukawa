@@ -677,31 +677,41 @@ RESPONSIVE
     }
 
 }
-    .pc-detail{
+.pc-detail{
 
-    font-size:11px;
+    position:absolute;
 
-    color:#64748b;
+    left:50%;
 
-    line-height:1.5;
+    top:100%;
 
-    margin-top:10px;
+    transform:translateX(-50%);
 
-    max-height:0;
+    width:240px;
 
-    overflow:hidden;
+    background:white;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:12px;
+
+    padding:12px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
 
     opacity:0;
 
-    transition:.3s;
+    visibility:hidden;
+
+    z-index:999;
 
 }
 
 .line-card:hover .pc-detail{
 
-    max-height:200px;
-
     opacity:1;
+
+    visibility:visible;
 
 }
 
