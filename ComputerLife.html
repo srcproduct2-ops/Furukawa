@@ -1206,74 +1206,6 @@ RESPONSIVE
 
 </div>
 
-<!-- SEARCH -->
-
-<div class="panel">
-
-    <div class="panel-title">
-
-        🔍 Search & Filter
-
-    </div>
-
-    <div class="filter-grid">
-
-        <input
-        type="text"
-        id="search"
-        placeholder="Search Asset Tag / PC / Brand / program"
-        onkeyup="render()">
-
-        <select
-        id="filterLine"
-        onchange="render()">
-
-            <option value="">
-                All Lines
-            </option>
-
-            <option>HMR</option>
-            <option>GMR</option>
-            <option>TMR1</option>
-            <option>TMR2</option>
-            <option>MIR</option>
-            <option>ISR</option>
-            <option>SP</option>
-            <option>HS</option>
-
-        </select>
-
-        <select
-        id="filterStatus"
-        onchange="render()">
-
-            <option value="">
-                All Status
-            </option>
-
-            <option value="Healthy">
-                Healthy
-            </option>
-
-            <option value="Warning">
-                Warning
-            </option>
-
-            <option value="Replace Soon">
-                Replace Soon
-            </option>
-
-            <option value="Expired">
-                Expired
-            </option>
-
-        </select>
-
-    </div>
-
-</div>
-
-
 
 <!-- LINE DASHBOARD -->
 
@@ -1950,22 +1882,11 @@ function render(){
         HS:0
 
     };
+const keyword = "";
 
-    const keyword =
-    document
-    .getElementById("search")
-    .value
-    .toLowerCase();
+const filterLine = "";
 
-    const filterLine =
-    document
-    .getElementById("filterLine")
-    .value;
-
-    const filterStatus =
-    document
-    .getElementById("filterStatus")
-    .value;
+const filterStatus = "";
 
     const today =
     new Date();
