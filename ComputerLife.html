@@ -2224,7 +2224,7 @@ computers.find(c =>
         let detail = "";
         let cardClass = "";
 
-if(pc)
+if(pc){
 
     const install =
     new Date(pc.installDate);
@@ -2306,46 +2306,39 @@ if(pc)
     detail = `
     <div class="pc-detail">
 
-        ...
+        <b>Asset :</b>
+        ${pc.assetTag}
+
+        <br>
+
+        <b>Computer :</b>
+        ${pc.pcName}
+
+        <br>
+
+        <b>Brand :</b>
+        ${pc.brand}
+
+        <br>
+
+        <b>Program :</b>
+        ${pc.program}
+
+        <br>
+
+        <b>OS :</b>
+        ${pc.os}
+
+        <br>
+
+        <b>Install :</b>
+        ${new Date(pc.installDate)
+            .toLocaleDateString("en-GB")}
 
     </div>
     `;
 
 }
-detail = `
-<div class="pc-detail">
-
-    <b>Asset :</b>
-    ${pc.assetTag}
-
-    <br>
-
-    <b>Computer :</b>
-    ${pc.pcName}
-
-    <br>
-
-    <b>Brand :</b>
-    ${pc.brand}
-
-    <br>
-
-    <b>Program :</b>
-    ${pc.program}
-
-    <br>
-
-    <b>OS :</b>
-    ${pc.os}
-
-    <br>
-
- <b>Install :</b>
-${new Date(pc.installDate)
-    .toLocaleDateString("en-GB")}
-
-</div>
-`;}
 
         html += `
 <div class="line-card ${cardClass}">
