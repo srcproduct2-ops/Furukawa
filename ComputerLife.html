@@ -553,24 +553,17 @@ table{
 }
 
 th{
-
-    background:#111827;
-
-    color:white;
-
-    padding:14px;
-
-    text-align:left;
-
+    font-size:13px;
 }
 
 td{
+    font-size:12px;
+    padding:8px;
+}
 
-    padding:12px;
-
-    border-bottom:
-    1px solid #e5e7eb;
-
+.btn{
+    font-size:12px;
+    padding:8px 12px;
 }
 
 tbody tr:hover{
@@ -1399,7 +1392,12 @@ document.getElementById(
 ).value;
 
 const duplicate =
-computers.find(pc =>
+computers.find(
+(pc,index) =>
+
+    index !== editIndex
+
+    &&
 
     String(pc.line).trim()
     ===
