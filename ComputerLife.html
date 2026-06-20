@@ -1388,7 +1388,40 @@ async function saveComputer(){
     document.getElementById(
         "assetTag"
     ).value.trim();
+     const line =
+document.getElementById(
+    "line"
+).value;
 
+const pcNumber =
+document.getElementById(
+    "pcNumber"
+).value;
+
+const duplicate =
+computers.find(pc =>
+
+    String(pc.line).trim()
+    ===
+    String(line).trim()
+
+    &&
+
+    String(pc.pcNumber).trim()
+    ===
+    String(pcNumber).trim()
+
+);
+
+if(duplicate){
+
+    alert(
+        `${line}-${pcNumber} already exists`
+    );
+
+    return;
+
+}
     const pcName =
     document.getElementById(
         "pcName"
