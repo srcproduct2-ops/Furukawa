@@ -784,7 +784,82 @@ RESPONSIVE
     rgba(220,38,38,.18);
 
 }
+#loadingOverlay{
 
+    position:fixed;
+
+    inset:0;
+
+    background:
+    rgba(255,255,255,.85);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:999999;
+
+    backdrop-filter:
+    blur(3px);
+
+}
+
+.loading-box{
+
+    text-align:center;
+
+}
+
+.spinner{
+
+    width:70px;
+
+    height:70px;
+
+    border:6px solid #e5e7eb;
+
+    border-top:6px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:
+    spin 1s linear infinite;
+
+    margin:auto;
+
+}
+
+.loading-text{
+
+    margin-top:15px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#2563eb;
+
+}
+
+@keyframes spin{
+
+    0%{
+
+        transform:
+        rotate(0deg);
+
+    }
+
+    100%{
+
+        transform:
+        rotate(360deg);
+
+    }
+
+}
 
 </style>
 
@@ -1297,9 +1372,33 @@ const API_URL =
 let computers = [];
 let editIndex = -1;
     let editId = "";
+
+    function showLoading(){
+
+    document
+    .getElementById(
+        "loadingOverlay"
+    )
+    .style.display =
+    "flex";
+
+}
+
+function hideLoading(){
+
+    document
+    .getElementById(
+        "loadingOverlay"
+    )
+    .style.display =
+    "none";
+
+}
 async function loadData(){
 
     try{
+
+        showLoading();
 
         const response =
         await fetch(
@@ -1321,6 +1420,11 @@ async function loadData(){
         alert(
             "Load Data Error"
         );
+
+    }
+    finally{
+
+        hideLoading();
 
     }
 
@@ -1523,7 +1627,7 @@ if(duplicate){
     console.log(
         computer
     );
-
+showLoading();
     const response =
     await fetch(
         API_URL,
@@ -1545,7 +1649,7 @@ if(duplicate){
         clearForm();
 
         await loadData();
-
+hideLoading();
     }
 
 }
@@ -2470,5 +2574,24 @@ loadData();
 
 </script>
 
+
+<div id="loadingOverlay">
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <div class="loading-text">
+
+            Loading Data...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    
 </body>
 </html>
