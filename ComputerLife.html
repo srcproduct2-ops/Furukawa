@@ -1213,7 +1213,11 @@ id="addComputerPanel">
         id="assetTag"
         placeholder="Asset Tag">
 
-        <select id="line">
+<select
+id="line"
+onchange="
+updatePcNumberOptions()
+">
 
             <option>HMR</option>
             <option>GMR</option>
@@ -1515,7 +1519,7 @@ async function loadData(){
 
         renderLinePC();
         renderLineSummary();
-
+        updatePcNumberOptions();
     }
     catch(error){
 
@@ -1753,6 +1757,7 @@ showLoading();
         clearForm();
 
         await loadData();
+        updatePcNumberOptions();
 hideLoading();
     }
 
@@ -2879,6 +2884,81 @@ function selectPC(
     });
 
 }
+
+function updatePcNumberOptions(){
+
+    const line =
+    document.getElementById(
+        "line"
+    ).value;
+
+    const select =
+    document.getElementById(
+        "pcNumber"
+    );
+
+    const maxPc = {
+
+        HMR:9,
+        GMR:9,
+        TMR1:9,
+        TMR2:9,
+        MIR:9,
+        ISR:9,
+        SP:9,
+        HS:3
+
+    };
+
+    const currentValue =
+    select.value;
+
+    select.innerHTML = "";
+
+    for(
+        let i=1;
+        i<=maxPc[line];
+        i++
+    ){
+
+        const pc =
+        `PC${i}`;
+
+        const exists =
+        computers.some(item =>
+
+            item.line === line
+
+            &&
+
+            item.pcNumber === pc
+
+            &&
+
+            item.id != editId
+
+        );
+
+        if(!exists){
+
+            select.innerHTML +=
+            `<option value="${pc}">
+                ${pc}
+            </option>`;
+
+        }
+
+    }
+
+    if(currentValue){
+
+        select.value =
+        currentValue;
+
+    }
+
+}
+    
 
 </script>
     
