@@ -212,6 +212,79 @@ KPI
     gap:12px;
 
 }
+    .dashboard-wrapper{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 450px;
+
+    gap:20px;
+
+    margin-bottom:30px;
+
+}
+
+.line-summary-card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    border:1px solid var(--border);
+
+    box-shadow:
+    0 2px 12px rgba(0,0,0,.05);
+
+}
+
+.line-summary-card h3{
+
+    margin-bottom:15px;
+
+}
+
+.line-row{
+
+    margin-bottom:12px;
+
+}
+
+.line-row-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:4px;
+
+}
+
+.line-row-bar{
+
+    height:10px;
+
+    background:#e5e7eb;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+.line-row-fill{
+
+    height:100%;
+
+    background:#22c55e;
+
+}
 
 .card{
 
@@ -977,7 +1050,9 @@ RESPONSIVE
 
 <!-- KPI -->
 
-<div class="dashboard">
+<div class="dashboard-wrapper">
+
+    <div class="dashboard">
 
     <div class="card total-card">
 
@@ -1060,6 +1135,19 @@ RESPONSIVE
     </div>
 
 
+
+</div>
+    <div class="line-summary-card">
+
+    <h3>
+        📊 PC Status By Line
+    </h3>
+
+    <div id="lineSummaryChart">
+
+    </div>
+
+</div>
 
 </div>
 
@@ -1386,6 +1474,7 @@ async function loadData(){
         render();
 
         renderLinePC();
+        renderLineSummary();
 
     }
     catch(error){
@@ -2588,6 +2677,123 @@ function exportExcel(){
         workbook,
         "ComputerLife.xlsx"
     );
+
+} 
+    function renderLineSummary(){
+
+    const lines = {
+
+        HMR:9,
+        GMR:9,
+        TMR1:9,
+        TMR2:9,
+        MIR:9,
+        ISR:9,
+        SP:9,
+        HS:3
+
+    };
+
+    let html = "";
+
+    Object.keys(lines)
+    .forEach(line => {
+
+        const total =
+        lines[line];
+
+        const healthy =
+        computers.filter(pc => {
+
+            if(pc.line !== line){
+
+                return false;
+
+            }
+
+            const install =
+            new Date(pc.installDate);
+
+            const expire =
+            new Date(install);
+
+            expire.setFullYear(
+                expire.getFullYear()
+                +
+                parseInt(pc.lifeCycle)
+            );
+
+            const remainingYears =
+
+            (
+                expire -
+                new Date()
+            )
+
+            /
+
+            (
+                1000*60*60*24*365
+            );
+
+            return(
+                getStatus(
+                    remainingYears
+                ).text
+                ===
+                "Healthy"
+            );
+
+        }).length;
+
+        const percent =
+        (
+            healthy
+            /
+            total
+        ) * 100;
+
+        html += `
+
+        <div class="line-row">
+
+            <div class="line-row-top">
+
+                <span>
+
+                    ${line}
+
+                </span>
+
+                <span>
+
+                    ${healthy}/${total}
+
+                </span>
+
+            </div>
+
+            <div class="line-row-bar">
+
+                <div
+                class="line-row-fill"
+                style="width:${percent}%">
+                </div>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+    document
+    .getElementById(
+        "lineSummaryChart"
+    )
+    .innerHTML =
+    html;
 
 }
 
