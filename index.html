@@ -208,52 +208,7 @@ td{
     to{transform:rotate(360deg);}
 }
 
-#pageLoading{
 
-    position:fixed;
-
-    top:0;
-    left:0;
-
-    width:100%;
-    height:100%;
-
-    background:
-    rgba(255,255,255,.9);
-
-    display:none;
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:99999;
-
-}
-
-.loading-box{
-
-    text-align:center;
-
-}
-
-.spinner{
-
-    width:50px;
-
-    height:50px;
-
-    border:5px solid #ddd;
-
-    border-top:5px solid #2563eb;
-
-    border-radius:50%;
-
-    animation:spin 1s linear infinite;
-
-    margin:auto auto 15px;
-
-}
 
 @keyframes spin{
 
@@ -299,14 +254,13 @@ td{
             📊 Dashboard
         </button>
 
-      <button
+    <button
 class="menu-btn"
-onclick="openComputerLife()">
+onclick="window.location.href='ComputerLife.html'">
 
     💻 Computer Life
 
 </button>
-
         <button
         class="menu-btn"
         onclick="scrollToSection('archiveSection')">
@@ -1990,24 +1944,7 @@ if(
 
 }
 
-    function openComputerLife(){
-
-    document
-    .getElementById(
-        "pageLoading"
-    )
-    .style.display =
-    "flex";
-
-    setTimeout(() => {
-
-        window.location.href =
-        "ComputerLife.html";
-
-    },300);
-
-}
-    
+  
 applyLanguage();
 updateDate();
 
@@ -2028,18 +1965,6 @@ Loading...
 </div>
 
 </div>
-<div id="pageLoading">
 
-    <div class="loading-box">
-
-        <div class="spinner"></div>
-
-        <div>
-            Loading Computer Life...
-        </div>
-
-    </div>
-
-</div>
 </body>
 </html>
