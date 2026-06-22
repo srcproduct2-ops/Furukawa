@@ -2505,52 +2505,49 @@ if(pc){
 
 }
 html += `
+
 <div
 class="line-card ${cardClass}"
 onclick="selectPC('${line}','PC${i}')">
-`
-        <div class="line-name">
 
-    ${line}-PC${i}
+    <div class="line-name">
 
-    ${
-        pc
-        ?
-        `<span class="pc-program">
-            ${pc.pcName}
-        </span>`
-        :
-        ""
-    }
+        ${line}-PC${i}
+
+        ${
+            pc
+            ?
+            `<span class="pc-program">
+                ${pc.pcName}
+            </span>`
+            :
+            ""
+        }
+
+    </div>
+
+    <div class="line-count">
+
+        ${daysLeft}
+        Days Remaining
+
+    </div>
+
+    ${detail}
+
+    <div class="progress-bar">
+
+        <div
+        class="progress-fill"
+        style="width:${percent}%;">
+        </div>
+
+    </div>
 
 </div>
 
-            <div class="line-count">
-
-                ${daysLeft}
-                Days Remaining
-
-            </div>
-
-            ${detail}
-
-            <div class="progress-bar">
-
-                <div
-                class="progress-fill"
-                style="
-                width:${percent}%;
-                ">
-                </div>
-
-            </div>
-
-        </div>
-
-        `;
-
+`;
     }
-
     document
     .getElementById(
         "lineGrid"
