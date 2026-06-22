@@ -1026,7 +1026,79 @@ RESPONSIVE
     gap:12px;
 
 }
+.line-summary-grid{
 
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:15px;
+
+}
+
+.line-status-card{
+
+    background:white;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:16px;
+
+    padding:15px;
+
+    box-shadow:
+    0 2px 10px rgba(0,0,0,.05);
+
+}
+
+.line-status-title{
+
+    font-size:16px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+.line-status-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:6px;
+
+    font-size:14px;
+
+}
+
+.health-bar{
+
+    height:8px;
+
+    background:#e5e7eb;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+    margin-top:8px;
+
+}
+
+.health-fill{
+
+    height:100%;
+
+    background:#22c55e;
+
+}
+
+
+
+    
 </style>
 
 </head>
@@ -2755,7 +2827,7 @@ function exportExcel(){
     );
 
 } 
-    function renderLineSummary(){
+ function renderLineSummary(){
 
     const lines = {
 
@@ -2770,7 +2842,8 @@ function exportExcel(){
 
     };
 
-    let html = "";
+    let html =
+    '<div class="line-summary-grid">';
 
     Object.keys(lines)
     .forEach(line => {
@@ -2778,14 +2851,14 @@ function exportExcel(){
         const total =
         lines[line];
 
-        const healthy =
-        computers.filter(pc => {
+        let healthy = 0;
+        let warning = 0;
+        let replaceSoon = 0;
+        let expired = 0;
 
-            if(pc.line !== line){
+        computers.forEach(pc => {
 
-                return false;
-
-            }
+            if(pc.line !== line) return;
 
             const install =
             new Date(pc.installDate);
@@ -2800,59 +2873,69 @@ function exportExcel(){
             );
 
             const remainingYears =
-
             (
                 expire -
                 new Date()
             )
-
             /
-
             (
                 1000*60*60*24*365
             );
 
-            return(
-                getStatus(
-                    remainingYears
-                ).text
-                ===
-                "Healthy"
-            );
+            const status =
+            getStatus(
+                remainingYears
+            ).text;
 
-        }).length;
+            if(status==="Healthy") healthy++;
+            else if(status==="Warning") warning++;
+            else if(status==="Replace Soon") replaceSoon++;
+            else expired++;
+
+        });
 
         const percent =
-        (
-            healthy
-            /
-            total
-        ) * 100;
+        Math.round(
+            (healthy/total) * 100
+        );
 
         html += `
 
-        <div class="line-row">
+        <div class="line-status-card">
 
-            <div class="line-row-top">
-
-                <span>
-
-                    ${line}
-
-                </span>
-
-                <span>
-
-                    ${healthy}/${total}
-
-                </span>
-
+            <div class="line-status-title">
+                ${line}
             </div>
 
-            <div class="line-row-bar">
+            <div class="line-status-row">
+                <span>🟢 Healthy</span>
+                <b>${healthy}</b>
+            </div>
+
+            <div class="line-status-row">
+                <span>🟡 Warning</span>
+                <b>${warning}</b>
+            </div>
+
+            <div class="line-status-row">
+                <span>🟣 Replace</span>
+                <b>${replaceSoon}</b>
+            </div>
+
+            <div class="line-status-row">
+                <span>🔴 Expired</span>
+                <b>${expired}</b>
+            </div>
+
+            <div class="line-status-row">
+                <span>Health</span>
+                <b>${percent}%</b>
+            </div>
+
+            <div class="health-bar">
 
                 <div
-                class="line-row-fill"
+                class="health-fill"
                 style="width:${percent}%">
                 </div>
 
@@ -2864,6 +2947,8 @@ function exportExcel(){
 
     });
 
+    html += "</div>";
+
     document
     .getElementById(
         "lineSummaryChart"
@@ -2872,35 +2957,11 @@ function exportExcel(){
     html;
 
 }
-
-
-
-
-updateDate();
-
-loadData();
-
-    if(role !== "Admin"){
-
-    document
-    .getElementById(
-        "addComputerPanel"
-    )
-    .style.display =
-    "none";
-
-    document
-    .getElementById(
-        "exportBtn"
-    )
-    .style.display =
-    "none";
-
-}
 function selectPC(
     line,
     pcNumber
-){
+)
+{
 
     selectedPC =
     `${line}-${pcNumber}`;
