@@ -1216,7 +1216,8 @@ id="addComputerPanel">
 <select
 id="line"
 onchange="
-updatePcNumberOptions()
+updatePcNumberOptions();
+updatePcNameOptions();
 ">
 
             <option>HMR</option>
@@ -1244,12 +1245,7 @@ updatePcNumberOptions()
     <option>PC9</option>
 
 </select>
-<select
-id="line"
-onchange="
-updatePcNumberOptions();
-updatePcNameOptions();
-">
+<select id="pcName">
 
     <option value="">
         Select Computer Name
@@ -1524,6 +1520,7 @@ async function loadData(){
         renderLinePC();
         renderLineSummary();
         updatePcNumberOptions();
+        updatePcNameOptions();
     }
     catch(error){
 
