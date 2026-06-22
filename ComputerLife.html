@@ -2532,10 +2532,19 @@ role === "Admin"
 
 :
 
-"-"
+`
+
+<button
+class="btn btn-edit"
+onclick="editComputer(${realIndex})">
+
+    Edit
+
+</button>
+
+`
 
 }
-
 </td>
 
         </tr>
@@ -3160,7 +3169,18 @@ function updatePcNumberOptions(){
     updateDate();
 
 loadData();
-    
+    if(role !== "Admin"){
+
+    document
+    .getElementById(
+        "exportBtn"
+    )
+    .style.display =
+    "none";
+
+}
+
+แต่ถ้ามึงต้องการ
 
 </script>
     
