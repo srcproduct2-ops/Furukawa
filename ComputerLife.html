@@ -1577,24 +1577,53 @@ async function loadData(){
 
         showLoading();
 
+        console.log(
+            "LOAD DATA START"
+        );
+
         const response =
         await fetch(
             API_URL
         );
 
+        console.log(
+            "STATUS =",
+            response.status
+        );
+
+        const text =
+        await response.text();
+
+        console.log(
+            "RAW DATA =",
+            text
+        );
+
         computers =
-        await response.json();
+        JSON.parse(text);
+
+        console.log(
+            "COMPUTERS =",
+            computers
+        );
 
         render();
 
         renderLinePC();
+
         renderLineSummary();
+
         updatePcNumberOptions();
+
         updatePcNameOptions();
+
     }
     catch(error){
 
-        console.error(error);
+        console.error(
+            "LOAD ERROR =",
+            error
+        );
 
         alert(
             "Load Data Error"
@@ -1608,7 +1637,6 @@ async function loadData(){
     }
 
 }
-
 function updateDate(){
 
     const now =
