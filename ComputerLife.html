@@ -1044,7 +1044,7 @@ RESPONSIVE
 
     padding:18px;
 
-    min-height:170px;
+    min-height:140px;
 
     box-shadow:
     0 2px 10px rgba(0,0,0,.05);
@@ -2970,12 +2970,16 @@ else if(percent <= 50){
                 <b>${percent}%</b>
             </div>
 
-           <div
-class="health-fill"
-style="
-width:${percent}%;
-background:${barColor};
-">
+          <div class="health-bar">
+
+    <div
+    class="health-fill"
+    style="
+    width:${percent}%;
+    background:${barColor};
+    ">
+    </div>
+
 </div>
         </div>
 
