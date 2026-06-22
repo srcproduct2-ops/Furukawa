@@ -867,7 +867,40 @@ RESPONSIVE
     padding-right:35px;
 
 }
-    
+   .selected-row{
+
+    background:
+    rgba(34,197,94,.25)
+    !important;
+
+    animation:
+    blinkRow 1s ease;
+
+}
+
+.selected-row td{
+
+    font-weight:700;
+
+}
+
+@keyframes blinkRow{
+
+    0%{
+
+        background:
+        rgba(34,197,94,.6);
+
+    }
+
+    100%{
+
+        background:
+        rgba(34,197,94,.25);
+
+    }
+
+} 
 
 </style>
 
@@ -1303,6 +1336,7 @@ localStorage.getItem(
 let computers = [];
 let editIndex = -1;
     let editId = "";
+    let selectedPC = "";
 
  function showLoading(){
 
@@ -2133,9 +2167,23 @@ computers.forEach(pc=>{
         const realIndex =
         computers.indexOf(pc);
 
-        html += `
+   const rowClass =
 
-        <tr>
+selectedPC ===
+`${pc.line}-${pc.pcNumber}`
+
+?
+
+"selected-row"
+
+:
+
+"";
+
+html += `
+<tr
+class="${rowClass}"
+data-pc="${pc.line}-${pc.pcNumber}">
 
             <td>${pc.assetTag}</td>
 
@@ -2456,10 +2504,11 @@ if(pc){
     `;
 
 }
-
-        html += `
-<div class="line-card ${cardClass}">
-
+html += `
+<div
+class="line-card ${cardClass}"
+onclick="selectPC('${line}','PC${i}')">
+`
         <div class="line-name">
 
     ${line}-PC${i}
@@ -2567,6 +2616,25 @@ loadData();
     )
     .style.display =
     "none";
+
+}
+function selectPC(
+    line,
+    pcNumber
+){
+
+    selectedPC =
+    `${line}-${pcNumber}`;
+
+    render();
+
+    document
+    .getElementById(
+        "computerSection"
+    )
+    .scrollIntoView({
+        behavior:"smooth"
+    });
 
 }
 
