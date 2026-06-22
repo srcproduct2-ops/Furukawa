@@ -1244,8 +1244,12 @@ updatePcNumberOptions()
     <option>PC9</option>
 
 </select>
-
-       <select id="pcName">
+<select
+id="line"
+onchange="
+updatePcNumberOptions();
+updatePcNameOptions();
+">
 
     <option value="">
         Select Computer Name
@@ -2893,7 +2897,6 @@ function selectPC(
     `${line}-${pcNumber}`;
 
     render();
-
     document
     .getElementById(
         "computerSection"
@@ -2975,6 +2978,72 @@ function updatePcNumberOptions(){
         currentValue;
 
     }
+
+}
+
+    function updatePcNameOptions(){
+
+    const line =
+    document.getElementById(
+        "line"
+    ).value;
+
+    const select =
+    document.getElementById(
+        "pcName"
+    );
+
+    const names = [
+
+        "Pigtail Welding",
+        "FFC1 Welding (L)",
+        "FFC1 Welding (R)",
+        "FFC2 Welding (L)",
+        "FFC2 Welding (R)",
+        "Function Tester",
+        "Electric Tester",
+        "Final Tester",
+        "Image Filing"
+
+    ];
+
+    const currentValue =
+    select.value;
+
+    select.innerHTML =
+    '<option value="">Select Computer Name</option>';
+
+    names.forEach(name => {
+
+        const exists =
+        computers.some(pc =>
+
+            pc.line === line
+
+            &&
+
+            pc.pcName === name
+
+            &&
+
+            pc.id != editId
+
+        );
+
+        if(!exists){
+
+            select.innerHTML +=
+
+            `<option value="${name}">
+                ${name}
+            </option>`;
+
+        }
+
+    });
+
+    select.value =
+    currentValue;
 
 }
     
