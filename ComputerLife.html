@@ -1879,18 +1879,37 @@ new Date(
 DELETE
 ===================== */
 
-function deleteComputer(index){
+async function deleteComputer(index){
 
-    alert(
-    "Delete ยังไม่ได้ทำใน Google Sheet"
-    );
+    if(
+        !confirm(
+            "Delete this computer ?"
+        )
+    ) return;
+
+    const pc =
+    computers[index];
+
+    try{
+
+        await fetch(
+            `${API_URL}?action=delete&id=${pc.id}`
+        );
+
+        await loadData();
+
+        updatePcNumberOptions();
+
+        updatePcNameOptions();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
 
 }
-
-/* =====================
-CLEAR FORM
-===================== */
-
 function clearForm(){
 
     document
