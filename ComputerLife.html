@@ -330,27 +330,27 @@ KPI
 
 .card{
 
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    min-height:65px;
+
+    padding:12px 18px;
+
     background:white;
 
     border-radius:16px;
-
-     padding:12px 16px;
-
-        min-height:70px;
 
     border:1px solid var(--border);
 
     box-shadow:
     0 2px 12px rgba(0,0,0,.05);
 
-    transition:.25s;
-
-    
-
-
-
-   
 }
+
 
 .card:hover{
 
@@ -364,21 +364,17 @@ KPI
 
 .card-title{
 
-    color:#6b7280;
+    font-size:14px;
 
-    font-size:13px;
-
-    font-weight:500;
+    font-weight:600;
 
 }
+
 .card-value{
 
-    font-size:24px;
+    font-size:28px;
 
     font-weight:800;
-
-    margin-top:6px;
-
 
 }
 
@@ -1107,38 +1103,79 @@ RESPONSIVE
 
 <div class="dashboard-wrapper">
 
-    <div class="summary-card">
+<div class="kpi-column">
 
-        <div class="summary-title">
-            💻 Computer Summary
+    <div class="card total-card">
+
+        <div class="card-title">
+            💻 Total PCs
         </div>
 
-        <div class="summary-row">
-            <span>Total PCs</span>
-            <strong id="totalPcCount">0</strong>
-        </div>
-
-        <div class="summary-row">
-            <span>Healthy</span>
-            <strong id="healthyCount">0</strong>
-        </div>
-
-        <div class="summary-row">
-            <span>Warning</span>
-            <strong id="warningCount">0</strong>
-        </div>
-
-        <div class="summary-row">
-            <span>Replace Soon</span>
-            <strong id="replaceCount">0</strong>
-        </div>
-
-        <div class="summary-row">
-            <span>Expired</span>
-            <strong id="expiredCount">0</strong>
+        <div
+        class="card-value"
+        id="totalPcCount">
+            0
         </div>
 
     </div>
+
+    <div class="card healthy-card">
+
+        <div class="card-title">
+            🟢 Healthy
+        </div>
+
+        <div
+        class="card-value"
+        id="healthyCount">
+            0
+        </div>
+
+    </div>
+
+    <div class="card warning-card">
+
+        <div class="card-title">
+            🟡 Warning
+        </div>
+
+        <div
+        class="card-value"
+        id="warningCount">
+            0
+        </div>
+
+    </div>
+
+    <div class="card replace-card">
+
+        <div class="card-title">
+            🟣 Replace Soon
+        </div>
+
+        <div
+        class="card-value"
+        id="replaceCount">
+            0
+        </div>
+
+    </div>
+
+    <div class="card expired-card">
+
+        <div class="card-title">
+            🔴 Expired
+        </div>
+
+        <div
+        class="card-value"
+        id="expiredCount">
+            0
+        </div>
+
+    </div>
+
+</div>
 
     <div class="line-summary-card">
 
