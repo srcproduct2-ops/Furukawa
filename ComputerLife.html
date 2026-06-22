@@ -219,12 +219,9 @@ KPI
     display:grid;
 
     grid-template-columns:
-    280px 1fr;
+    320px 1fr;
 
     gap:20px;
-    
-    align-items:start;
-    margin-bottom:20px;
 
 }
 
@@ -1045,13 +1042,14 @@ RESPONSIVE
 
     border-radius:16px;
 
-    padding:15px;
+    padding:18px;
+
+    min-height:170px;
 
     box-shadow:
     0 2px 10px rgba(0,0,0,.05);
 
 }
-
 .line-status-title{
 
     font-size:16px;
@@ -2899,13 +2897,28 @@ function exportExcel(){
             (healthy/total) * 100
         );
 
+        let barColor = "#22c55e";
+
+if(percent <= 20){
+
+    barColor = "#dc2626";
+
+}
+else if(percent <= 50){
+
+    barColor = "#f59e0b";
+
+}
+
         html += `
 
         <div class="line-status-card">
 
-            <div class="line-status-title">
-                ${line}
-            </div>
+         <div class="line-status-title">
+
+    🏭 ${line}
+
+</div>
 
             <div class="line-status-row">
                 <span>🟢 Healthy</span>
@@ -2932,15 +2945,13 @@ function exportExcel(){
                 <b>${percent}%</b>
             </div>
 
-            <div class="health-bar">
-
-                <div
-                class="health-fill"
-                style="width:${percent}%">
-                </div>
-
-            </div>
-
+           <div
+class="health-fill"
+style="
+width:${percent}%;
+background:${barColor};
+">
+</div>
         </div>
 
         `;
