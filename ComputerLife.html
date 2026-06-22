@@ -1009,18 +1009,16 @@ RESPONSIVE
 @keyframes blinkRow{
 
     0%{
-
         background:
         rgba(34,197,94,.6);
-
     }
 
     100%{
-
         background:
         rgba(34,197,94,.25);
-
     }
+
+}
 
 .kpi-column{
 
@@ -2382,42 +2380,40 @@ role === "Admin"
     .innerHTML =
     html;
 
-    document
-    .getElementById(
-        "totalPC"
-    )
-    .innerText =
-    computers.length;
+   document
+.getElementById(
+    "totalPcCount"
+)
+.innerText =
+computers.length;
 
-    document
-    .getElementById(
-        "healthyPC"
-    )
-    .innerText =
-    healthy;
+document
+.getElementById(
+    "healthyCount"
+)
+.innerText =
+healthy;
 
-    document
-    .getElementById(
-        "warningPC"
-    )
-    .innerText =
-    warning;
+document
+.getElementById(
+    "warningCount"
+)
+.innerText =
+warning;
 
-    document
-    .getElementById(
-        "replaceSoonPC"
-    )
-    .innerText =
-    replaceSoon;
+document
+.getElementById(
+    "replaceCount"
+)
+.innerText =
+replaceSoon;
 
-    document
-    .getElementById(
-        "expiredPC"
-    )
-    .innerText =
-    expired;
-}
-
+document
+.getElementById(
+    "expiredCount"
+)
+.innerText =
+expired;
 function renderLinePC(){
 
     const line =
