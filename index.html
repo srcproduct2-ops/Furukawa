@@ -509,9 +509,44 @@ id="dashboardSection">
             Task Details
         </label>
 
+      <div
+style="
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:12px;
+align-items:start;
+">
+
+    <div>
+
+        <label>รายละเอียดงาน</label>
+
         <textarea
-        id="detail">
+        id="detail"
+        rows="3"
+        style="
+        resize:none;
+        height:90px;
+        ">
         </textarea>
+
+    </div>
+
+    <div>
+
+        <label>แนบไฟล์</label>
+
+        <input
+        type="file"
+        id="taskFile"
+        style="
+        height:90px;
+        padding:10px;
+        ">
+
+    </div>
+
+</div>
 
     </div>
 
@@ -977,6 +1012,11 @@ async function saveTask(){
     :
 
     USERNAME;
+
+    const file =
+document.getElementById(
+    "taskFile"
+).files[0];
 
     const task = {
 
