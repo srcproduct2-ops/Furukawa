@@ -1688,7 +1688,15 @@ Delete
 
 <td>${task.owner || "-"}</td>
 
-<td>${task.title || ""}</td>
+<td>
+<a
+href="#"
+onclick="viewTask(${tasks.indexOf(task)})">
+
+${task.title || ""}
+
+</a>
+</td>
 
 <td>${task.category || ""}</td>
 
@@ -1979,6 +1987,58 @@ if(
     th[13].innerText = "สถานะ";
     th[14].innerText = "วันที่สร้าง";
 
+} 
+    function viewTask(index){
+
+    const task =
+    tasks[index];
+
+    document
+    .getElementById("modalTitle")
+    .innerText =
+    task.title || "";
+
+    document
+    .getElementById("modalDetail")
+    .innerText =
+    task.detail || "";
+
+    let fileHtml = "";
+
+    if(task.fileUrl){
+
+        fileHtml = `
+        <a
+        href="${task.fileUrl}"
+        target="_blank"
+        class="btn btn-save">
+
+        Download File
+
+        </a>
+        `;
+
+    }
+
+    document
+    .getElementById("modalFile")
+    .innerHTML =
+    fileHtml;
+
+    document
+    .getElementById("taskModal")
+    .style.display =
+    "block";
+
+}
+
+function closeTaskModal(){
+
+    document
+    .getElementById("taskModal")
+    .style.display =
+    "none";
+
 }
 
   
@@ -2002,6 +2062,48 @@ Loading...
 </div>
 
 </div>
+<div
+id="taskModal"
+style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+z-index:9999;
+">
 
+<div
+style="
+background:#fff;
+width:700px;
+max-width:95%;
+margin:50px auto;
+padding:20px;
+border-radius:12px;
+">
+
+<h3 id="modalTitle"></h3>
+
+<p id="modalDetail"></p>
+
+<div id="modalFile"></div>
+
+<br>
+
+<button
+class="btn btn-cancel"
+onclick="closeTaskModal()">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+
+
+    
 </body>
 </html>
