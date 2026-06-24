@@ -1584,7 +1584,15 @@ String(
 
 <td>${task.owner || "-"}</td>
 
-<td>${task.title || ""}</td>
+<td>
+<a
+href="#"
+onclick="viewTask(${tasks.indexOf(task)})">
+
+${task.title || ""}
+
+</a>
+</td>
 
 <td>${task.category || ""}</td>
 
