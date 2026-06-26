@@ -261,11 +261,7 @@ onclick="window.location.href='ComputerLife.html'">
     💻 Computer Life
 
 </button>
-        <button
-        class="menu-btn"
-        onclick="scrollToSection('archiveSection')">
-            📦 Archived
-        </button>
+   
 
     </div>
 
@@ -720,7 +716,6 @@ localStorage.getItem(
 
         dashboard:"Dashboard",
         computer:"Computer Life",
-        archived:"Archived",
         addTask:"Add New Task",
         search:"Search & Filter",
         active:"Active Tasks",
@@ -734,7 +729,6 @@ localStorage.getItem(
 
         dashboard:"แดชบอร์ด",
         computer:"อายุการใช้งานคอมพิวเตอร์",
-        archived:"งานที่เก็บถาวร",
         addTask:"เพิ่มงานใหม่",
         search:"ค้นหาและกรอง",
         active:"งานที่กำลังดำเนินการ",
@@ -1843,8 +1837,6 @@ if(
     document.querySelectorAll(".menu-btn")[1].innerHTML =
     "💻 อายุการใช้งานคอมพิวเตอร์";
 
-    document.querySelectorAll(".menu-btn")[2].innerHTML =
-    "📦 งานที่เก็บถาวร";
 
     /* Header */
 
@@ -1967,10 +1959,6 @@ if(
 
     document.querySelectorAll(".panel-title")[2].innerText =
     "📋 งานที่กำลังดำเนินการ";
-
-    document.querySelectorAll(".panel-title")[3].innerText =
-    "📦 งานที่เก็บถาวร";
-
     const th =
     document.querySelectorAll("th");
 
