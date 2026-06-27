@@ -62,7 +62,11 @@ button{padding:11px 16px;border:none;border-radius:10px;background:#2563eb;color
 <div class="group"><label>Drawing</label><input type="file" id="drawing"></div>
 
 <div class="actions">
-<button onclick="saveModel()">💾 Save</button>
+<button onclick="saveModel()">
+
+💾 Save / Update
+
+</button>
 <button onclick="clearForm()">🧹 Clear</button>
 </div>
 </div>
@@ -77,28 +81,62 @@ button{padding:11px 16px;border:none;border-radius:10px;background:#2563eb;color
 
 <script>
 
- const API_URL =
-
-"https://script.google.com/macros/s/AKfycbywADYOVqjcJNvklAmDaoPDf0Gmw2rfT4_GxsE1-_gkeZpB95_KSt-8Qzfp3izxXeao/exec";
+ const API_URL ="https://script.google.com/macros/s/AKfycbzf35w54HFoYuM_NwfsjowryhZbvtWAC4JKZxaopR4Y4HIQ6UvN13xlbYHCowztXRPI/exec";
   let models = [];
+ let editId = "";
 
 function render(){
- const layout=document.getElementById("layout");
- layout.innerHTML="";
- models.forEach((m,i)=>{
-   const d=document.createElement("div");
-   let cls="ok";
-   if(m.status==="Modify") cls="modify";
-   if(m.status==="Problem") cls="problem";
-   d.className="machine "+cls;
-   d.innerHTML=`${m.machine}<br><small>${m.status}</small>`;
-   d.onclick=()=>alert(
-`Model : ${m.model}
-Machine : ${m.machine}
-Status : ${m.status}
-PIC : ${m.pic}`);
-   layout.appendChild(d);
- });
+
+    const layout =
+    document.getElementById("layout");
+
+    layout.innerHTML="";
+
+    models.forEach(m=>{
+
+        const card =
+        document.createElement("div");
+
+        let cls="ok";
+
+        if(m.status=="Modify")
+            cls="modify";
+
+        if(m.status=="Problem")
+            cls="problem";
+
+        card.className=
+        "machine "+cls;
+
+        card.innerHTML=
+
+        `
+        <b>${m.machine}</b><br>
+
+        ${m.status}
+
+        <br><br>
+
+        <button
+        onclick="editModel('${m.id}')">
+
+        Edit
+
+        </button>
+
+        <button
+        onclick="deleteModel('${m.id}')">
+
+        Delete
+
+        </button>
+
+        `;
+
+        layout.appendChild(card);
+
+    });
+
 }
 
 function saveModel(){
@@ -121,12 +159,23 @@ const m = {
     remark:document.getElementById("remark").value
 
 };
+
+ let action="saveNewModel";
+
+let id=Date.now();
+
+if(editId!=""){
+
+    action="updateNewModel";
+
+    id=editId;
+
+}
  
  const params = new URLSearchParams({
+action:action,
 
-action:"saveNewModel",
-
-id:Date.now(),
+id:id,
 
 model:m.model,
 
@@ -161,6 +210,41 @@ fetch(API_URL+"?"+params)
 });
 }
 
+ async function editModel(id){
+
+    const model =
+    models.find(x=>x.id==id);
+
+    if(!model) return;
+
+    editId=id;
+
+    document.getElementById("modelName").value=
+    model.model;
+
+    document.getElementById("line").value=
+    model.line;
+
+    document.getElementById("machine").value=
+    model.machine;
+
+    document.getElementById("status").value=
+    model.status;
+
+    document.getElementById("startDate").value=
+    model.startDate;
+
+    document.getElementById("finishDate").value=
+    model.finishDate;
+
+    document.getElementById("pic").value=
+    model.pic;
+
+    document.getElementById("remark").value=
+    model.remark;
+
+}
+
 
 function clearForm(){
  ["modelName","pic","remark","startDate","finishDate"].forEach(id=>document.getElementById(id).value="");
@@ -189,6 +273,33 @@ function clearForm(){
         alert("Load Failed");
 
     }
+
+}
+
+
+ async function deleteModel(id){
+
+    if(!confirm("Delete ?"))
+        return;
+
+    const params=
+    new URLSearchParams({
+
+        action:"deleteNewModel",
+
+        id:id
+
+    });
+
+    await fetch(
+
+        API_URL+
+        "?"+
+        params
+
+    );
+
+    loadModels();
 
 }
 
