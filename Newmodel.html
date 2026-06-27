@@ -259,10 +259,13 @@ function clearForm(){
         const response =
         await fetch(API_URL + "?action=loadNewmodel");
 
-        models =
-        await response.json();
+       const data = await response.json();
 
-        render();
+console.log(data);
+
+models = data;
+
+render();
 
     }
 
