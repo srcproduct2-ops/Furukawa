@@ -160,13 +160,13 @@ const m = {
 
 };
 
- let action="saveNewModel";
+ let action="saveNewmodel";
 
 let id=Date.now();
 
 if(editId!=""){
 
-    action="updateNewModel";
+    action="updateNewmodel";
 
     id=editId;
 
@@ -257,7 +257,7 @@ function clearForm(){
     try{
 
         const response =
-        await fetch(API_URL + "?action=loadNewModel");
+        await fetch(API_URL + "?action=loadNewmodel");
 
         models =
         await response.json();
@@ -285,7 +285,7 @@ function clearForm(){
     const params=
     new URLSearchParams({
 
-        action:"deleteNewModel",
+        action:"deleteNewmodel",
 
         id:id
 
