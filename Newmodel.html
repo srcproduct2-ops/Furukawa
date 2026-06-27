@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NewModel V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#eef3f8;color:#1f2937}
+.header{background:#0f172a;color:#fff;padding:18px 28px;font-size:24px;font-weight:700}
+.container{padding:24px}
+.grid{display:grid;grid-template-columns:420px 1fr;gap:24px}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 10px 25px rgba(0,0,0,.08)}
+.card h2{margin-bottom:16px}
+.group{margin-bottom:12px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #d7dce2;border-radius:10px}
+textarea{height:80px;resize:none}
+button{padding:11px 16px;border:none;border-radius:10px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
+.actions{display:flex;gap:10px}
+.layout{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.machine{padding:16px;border-radius:12px;color:#fff;font-weight:700;text-align:center;cursor:pointer}
+.ok{background:#22c55e}.modify{background:#f59e0b}.problem{background:#ef4444}
+</style>
+</head>
+<body>
+<div class="header">🏭 Factory Dashboard - New Model V2</div>
+
+<div class="container">
+<div class="grid">
+
+<div class="card">
+<h2>New Model Information</h2>
+
+<div class="group"><label>Model Name</label><input id="modelName"></div>
+<div class="group"><label>Production Line</label>
+<select id="line">
+<option>HMR</option><option>GMR</option><option>TMR1</option><option>TMR2</option>
+<option>MIR</option><option>ISR</option><option>SP</option><option>HS</option>
+</select></div>
+
+<div class="group"><label>Machine</label>
+<select id="machine">
+<option>Pigtail welding</option>
+<option>FFC welding 1</option>
+<option>Electric tester</option>
+<option>Final tester</option>
+</select></div>
+
+<div class="group"><label>Status</label>
+<select id="status">
+<option value="OK">🟢 OK</option>
+<option value="Modify">🟡 Modify</option>
+<option value="Problem">🔴 Problem</option>
+</select></div>
+
+<div class="group"><label>Start Date</label><input type="date" id="startDate"></div>
+<div class="group"><label>Finish Date</label><input type="date" id="finishDate"></div>
+<div class="group"><label>PIC</label><input id="pic"></div>
+<div class="group"><label>Remark</label><textarea id="remark"></textarea></div>
+<div class="group"><label>Drawing</label><input type="file" id="drawing"></div>
+
+<div class="actions">
+<button onclick="saveModel()">💾 Save</button>
+<button onclick="clearForm()">🧹 Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Production Line Layout</h2>
+<div id="layout" class="layout"></div>
+</div>
+
+</div>
+</div>
+
+<script>
+let models = JSON.parse(localStorage.getItem("newModels")||"[]");
+
+function render(){
+ const layout=document.getElementById("layout");
+ layout.innerHTML="";
+ models.forEach((m,i)=>{
+   const d=document.createElement("div");
+   let cls="ok";
+   if(m.status==="Modify") cls="modify";
+   if(m.status==="Problem") cls="problem";
+   d.className="machine "+cls;
+   d.innerHTML=`${m.machine}<br><small>${m.status}</small>`;
+   d.onclick=()=>alert(
+`Model : ${m.model}
+Machine : ${m.machine}
+Status : ${m.status}
+PIC : ${m.pic}`);
+   layout.appendChild(d);
+ });
+}
+
+function saveModel(){
+ const m={
+  id:Date.now(),
+  model:document.getElementById("modelName").value,
+  line:document.getElementById("line").value,
+  machine:document.getElementById("machine").value,
+  status:document.getElementById("status").value,
+  start:document.getElementById("startDate").value,
+  finish:document.getElementById("finishDate").value,
+  pic:document.getElementById("pic").value,
+  remark:document.getElementById("remark").value
+ };
+ models.push(m);
+ localStorage.setItem("newModels",JSON.stringify(models));
+ render();
+ clearForm();
+}
+
+function clearForm(){
+ ["modelName","pic","remark","startDate","finishDate"].forEach(id=>document.getElementById(id).value="");
+ document.getElementById("status").selectedIndex=0;
+ document.getElementById("machine").selectedIndex=0;
+}
+
+render();
+</script>
+</body>
+</html>
