@@ -76,7 +76,11 @@ button{padding:11px 16px;border:none;border-radius:10px;background:#2563eb;color
 </div>
 
 <script>
-let models = JSON.parse(localStorage.getItem("newModels")||"[]");
+
+ const API_URL =
+
+"https://script.google.com/macros/s/AKfycbywADYOVqjcJNvklAmDaoPDf0Gmw2rfT4_GxsE1-_gkeZpB95_KSt-8Qzfp3izxXeao/exec";
+  let models = [];
 
 function render(){
  const layout=document.getElementById("layout");
@@ -98,22 +102,65 @@ PIC : ${m.pic}`);
 }
 
 function saveModel(){
- const m={
-  id:Date.now(),
-  model:document.getElementById("modelName").value,
-  line:document.getElementById("line").value,
-  machine:document.getElementById("machine").value,
-  status:document.getElementById("status").value,
-  start:document.getElementById("startDate").value,
-  finish:document.getElementById("finishDate").value,
-  pic:document.getElementById("pic").value,
-  remark:document.getElementById("remark").value
- };
- models.push(m);
- localStorage.setItem("newModels",JSON.stringify(models));
- render();
- clearForm();
+const m = {
+
+    model:document.getElementById("modelName").value,
+
+    line:document.getElementById("line").value,
+
+    machine:document.getElementById("machine").value,
+
+    status:document.getElementById("status").value,
+
+    start:document.getElementById("startDate").value,
+
+    finish:document.getElementById("finishDate").value,
+
+    pic:document.getElementById("pic").value,
+
+    remark:document.getElementById("remark").value
+
+};
+ 
+ const params = new URLSearchParams({
+
+action:"saveNewModel",
+
+id:Date.now(),
+
+model:m.model,
+
+line:m.line,
+
+machine:m.machine,
+
+status:m.status,
+
+startDate:m.start,
+
+finishDate:m.finish,
+
+pic:m.pic,
+
+remark:m.remark,
+
+drawingName:"",
+
+drawingUrl:""
+
+});
+
+fetch(API_URL+"?"+params)
+.then(r=>r.json())
+.then(res=>{
+
+   loadModels();
+
+    clearForm();
+
+});
 }
+
 
 function clearForm(){
  ["modelName","pic","remark","startDate","finishDate"].forEach(id=>document.getElementById(id).value="");
@@ -121,7 +168,35 @@ function clearForm(){
  document.getElementById("machine").selectedIndex=0;
 }
 
-render();
+ async function loadModels(){
+
+    try{
+
+        const response =
+        await fetch(API_URL + "?action=loadNewModel");
+
+        models =
+        await response.json();
+
+        render();
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        alert("Load Failed");
+
+    }
+
+}
+
+loadModels();
+
+
+
+ 
 </script>
 </body>
 </html>
