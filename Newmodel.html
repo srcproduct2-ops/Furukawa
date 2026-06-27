@@ -256,9 +256,17 @@ function clearForm(){
 
     try{
 
-        const response =
-        await fetch(API_URL + "?action=loadNewmodel");
+     const response =
+await fetch(API_URL + "?action=loadNewModel");
 
+console.log(response.status);
+
+const text =
+await response.text();
+
+console.log(text);
+
+return;
        const data = await response.json();
 
 console.log(data);
@@ -269,13 +277,15 @@ render();
 
     }
 
-    catch(err){
+   catch(err){
 
-        console.error(err);
+    console.log(err);
 
-        alert("Load Failed");
+    console.log(err.message);
 
-    }
+    console.log(err.stack);
+
+}
 
 }
 
