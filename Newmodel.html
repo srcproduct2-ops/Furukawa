@@ -1,326 +1,512 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NewModel V2</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>Factory Dashboard - New Model V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:#eef3f8;color:#1f2937}
-.header{background:#0f172a;color:#fff;padding:18px 28px;font-size:24px;font-weight:700}
-.container{padding:24px}
-.grid{display:grid;grid-template-columns:420px 1fr;gap:24px}
-.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 10px 25px rgba(0,0,0,.08)}
-.card h2{margin-bottom:16px}
-.group{margin-bottom:12px}
-label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
-input,select,textarea{width:100%;padding:10px;border:1px solid #d7dce2;border-radius:10px}
-textarea{height:80px;resize:none}
-button{padding:11px 16px;border:none;border-radius:10px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
-.actions{display:flex;gap:10px}
-.layout{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.machine{padding:16px;border-radius:12px;color:#fff;font-weight:700;text-align:center;cursor:pointer}
-.ok{background:#22c55e}.modify{background:#f59e0b}.problem{background:#ef4444}
+:root{A
+  --bg:#eef2f7;
+  --ink:#0f172a;
+  --muted:#64748b;
+  --line:#dbe2ea;
+  --card:#ffffff;
+  --accent:#2563eb;
+  --accent-dark:#1d4ed8;
+  --ok:#16a34a;
+  --ok-bg:#dcfce7;
+  --modify:#d97706;
+  --modify-bg:#fef3c7;
+  --problem:#dc2626;
+  --problem-bg:#fee2e2;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--ink)}
+
+.header{
+  background:var(--ink);
+  color:#fff;
+  padding:18px 28px;
+  font-size:21px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.header .sub{font-size:12.5px;font-weight:500;color:#94a3b8;margin-top:2px}
+
+.container{padding:22px;max-width:1400px;margin:0 auto}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:20px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
+  border:1px solid var(--line);
+}
+.card h2{
+  margin-bottom:16px;
+  font-size:15px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.group{margin-bottom:13px}
+label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#334155}
+input,select,textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;
+  font-size:13.5px;background:#fbfcfe;color:var(--ink);
+  transition:border-color .15s, box-shadow .15s;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12);
+  background:#fff;
+}
+textarea{height:70px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.required-mark{color:var(--problem);margin-left:2px}
+.field-error{font-size:11.5px;color:var(--problem);margin-top:4px;display:none}
+
+.actions{display:flex;gap:8px;margin-top:6px}
+button{
+  padding:10px 16px;border:none;border-radius:9px;font-weight:700;font-size:13.5px;
+  cursor:pointer;transition:transform .08s, opacity .15s;
+}
+button:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-dark)}
+.btn-secondary{background:#f1f5f9;color:#334155}
+.btn-secondary:hover{background:#e2e8f0}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+button:disabled{opacity:.55;cursor:not-allowed}
+
+.edit-banner{
+  background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:12.5px;font-weight:600;
+  padding:8px 10px;border-radius:9px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:8px;
+}
+.edit-banner.show{display:flex}
+.edit-banner button{padding:4px 8px;font-size:11.5px;background:#fff;color:#1d4ed8;border:1px solid #bfdbfe}
+
+/* layout card */
+.layout-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.layout-head h2{margin-bottom:0}
+.filter-row{display:flex;gap:8px;align-items:center}
+.filter-row select{width:auto;padding:7px 10px;font-size:12.5px}
+
+.summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.pill{
+  font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;display:flex;gap:6px;align-items:center;
+}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.modify{background:var(--modify-bg);color:var(--modify)}
+.pill.problem{background:var(--problem-bg);color:var(--problem)}
+.pill.total{background:#f1f5f9;color:#334155}
+
+.layout{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+
+.machine{
+  border-radius:12px;background:#fff;border:1px solid var(--line);
+  border-top:4px solid transparent;padding:14px;position:relative;
+  box-shadow:0 1px 2px rgba(15,23,42,.04);
+}
+.machine.ok{border-top-color:var(--ok)}
+.machine.modify{border-top-color:var(--modify)}
+.machine.problem{border-top-color:var(--problem)}
+
+.machine .line-tag{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.machine .m-name{font-size:14px;font-weight:700;margin:4px 0 2px}
+.machine .model-name{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.status-badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
+  padding:3px 9px;border-radius:999px;margin-bottom:8px;
+}
+.status-badge.ok{background:var(--ok-bg);color:var(--ok)}
+.status-badge.modify{background:var(--modify-bg);color:var(--modify)}
+.status-badge.problem{background:var(--problem-bg);color:var(--problem)}
+.meta-line{font-size:11.5px;color:var(--muted);margin-bottom:2px}
+.card-actions{display:flex;gap:6px;margin-top:10px}
+.card-actions button{padding:6px 10px;font-size:11.5px;border-radius:7px}
+
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted);
+}
+.empty-state .big{font-size:34px;margin-bottom:8px}
+
+.loading-row{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13.5px}
+.toast{
+  position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:11px 18px;
+  border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.2);
+  opacity:0;transform:translateY(10px);transition:opacity .2s, transform .2s;pointer-events:none;z-index:999;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.error{background:var(--problem)}
+.toast.success{background:var(--ok)}
 </style>
 </head>
 <body>
-<div class="header">🏭 Factory Dashboard - New Model V2</div>
+
+<div class="header">
+  <div>
+    <div>🏭 Factory Dashboard — New Model V2</div>
+    <div class="sub">Production line model status tracker</div>
+  </div>
+</div>
 
 <div class="container">
 <div class="grid">
 
-<div class="card">
-<h2>New Model Information</h2>
+  <div class="card">
+    <h2>📋 New Model Information</h2>
 
-<div class="group"><label>Model Name</label><input id="modelName"></div>
-<div class="group"><label>Production Line</label>
-<select id="line">
-<option>HMR</option><option>GMR</option><option>TMR1</option><option>TMR2</option>
-<option>MIR</option><option>ISR</option><option>SP</option><option>HS</option>
-</select></div>
+    <div class="edit-banner" id="editBanner">
+      <span>✏️ Editing record</span>
+      <button onclick="cancelEdit()">Cancel</button>
+    </div>
 
-<div class="group"><label>Machine</label>
-<select id="machine">
-<option>Pigtail welding</option>
-<option>FFC welding 1</option>
-<option>Electric tester</option>
-<option>Final tester</option>
-</select></div>
+    <div class="group">
+      <label>Model Name<span class="required-mark">*</span></label>
+      <input id="modelName" placeholder="e.g. NM-2024-A">
+      <div class="field-error" id="err-modelName">Please enter a model name.</div>
+    </div>
 
-<div class="group"><label>Status</label>
-<select id="status">
-<option value="OK">🟢 OK</option>
-<option value="Modify">🟡 Modify</option>
-<option value="Problem">🔴 Problem</option>
-</select></div>
+    <div class="row2">
+      <div class="group">
+        <label>Production Line</label>
+        <select id="line">
+          <option>HMR</option><option>GMR</option><option>TMR1</option><option>TMR2</option>
+          <option>MIR</option><option>ISR</option><option>SP</option><option>HS</option>
+        </select>
+      </div>
+      <div class="group">
+        <label>Machine</label>
+        <select id="machine">
+          <option>Pigtail welding</option>
+          <option>FFC welding 1</option>
+          <option>Electric tester</option>
+          <option>Final tester</option>
+        </select>
+      </div>
+    </div>
 
-<div class="group"><label>Start Date</label><input type="date" id="startDate"></div>
-<div class="group"><label>Finish Date</label><input type="date" id="finishDate"></div>
-<div class="group"><label>PIC</label><input id="pic"></div>
-<div class="group"><label>Remark</label><textarea id="remark"></textarea></div>
-<div class="group"><label>Drawing</label><input type="file" id="drawing"></div>
+    <div class="group">
+      <label>Status</label>
+      <select id="status">
+        <option value="OK">🟢 OK</option>
+        <option value="Modify">🟡 Modify</option>
+        <option value="Problem">🔴 Problem</option>
+      </select>
+    </div>
 
-<div class="actions">
-<button onclick="saveModel()">
+    <div class="row2">
+      <div class="group">
+        <label>Start Date</label>
+        <input type="date" id="startDate">
+      </div>
+      <div class="group">
+        <label>Finish Date</label>
+        <input type="date" id="finishDate">
+      </div>
+    </div>
 
-💾 Save / Update
+    <div class="group"><label>PIC</label><input id="pic" placeholder="Person in charge"></div>
+    <div class="group"><label>Remark</label><textarea id="remark" placeholder="Notes..."></textarea></div>
+    <div class="group">
+      <label>Drawing</label>
+      <input type="file" id="drawing">
+    </div>
 
-</button>
-<button onclick="clearForm()">🧹 Clear</button>
+    <div class="actions">
+      <button class="btn-primary" id="saveBtn" onclick="saveModel()">💾 Save</button>
+      <button class="btn-secondary" onclick="clearForm()">🧹 Clear</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="layout-head">
+      <h2>🗺️ Production Line Layout</h2>
+      <div class="filter-row">
+        <label style="margin:0">Filter:</label>
+        <select id="filterLine" onchange="render()">
+          <option value="">All lines</option>
+          <option>HMR</option><option>GMR</option><option>TMR1</option><option>TMR2</option>
+          <option>MIR</option><option>ISR</option><option>SP</option><option>HS</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+    <div id="layout" class="layout"></div>
+  </div>
+
 </div>
 </div>
 
-<div class="card">
-<h2>Production Line Layout</h2>
-<div id="layout" class="layout"></div>
-</div>
-
-</div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbych87C6rFEkEy5GYxec76Pk9l8XkKp8gl5mjONZvvZkzmyuZ06divjQv_AK9wy3FvB/exec";
+let models = [];
+let editId = "";
 
- const API_URL ="https://script.google.com/macros/s/AKfycbych87C6rFEkEy5GYxec76Pk9l8XkKp8gl5mjONZvvZkzmyuZ06divjQv_AK9wy3FvB/exec";
-  let models = [];
- let editId = "";
+/* ---------- toast ---------- */
+function showToast(msg, type=""){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show " + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove("show"), 2800);
+}
 
+/* ---------- rendering ---------- */
 function render(){
+  const layout = document.getElementById("layout");
+  const filterLine = document.getElementById("filterLine").value;
+  const filtered = filterLine ? models.filter(m => m.line === filterLine) : models;
 
-    const layout =
-    document.getElementById("layout");
+  // summary pills
+  const counts = { OK:0, Modify:0, Problem:0 };
+  filtered.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
+  document.getElementById("summary").innerHTML = `
+    <span class="pill total">Total: ${filtered.length}</span>
+    <span class="pill ok">🟢 OK: ${counts.OK}</span>
+    <span class="pill modify">🟡 Modify: ${counts.Modify}</span>
+    <span class="pill problem">🔴 Problem: ${counts.Problem}</span>
+  `;
 
-    layout.innerHTML="";
+  layout.innerHTML = "";
 
-    models.forEach(m=>{
+  if (filtered.length === 0){
+    layout.innerHTML = `
+      <div class="empty-state">
+        <div class="big">📭</div>
+        <div>No records yet${filterLine ? " for " + filterLine : ""}.</div>
+      </div>`;
+    return;
+  }
 
-        const card =
-        document.createElement("div");
+  filtered.forEach(m => {
+    const cls = m.status === "Modify" ? "modify" : m.status === "Problem" ? "problem" : "ok";
+    const statusIcon = cls === "ok" ? "🟢" : cls === "modify" ? "🟡" : "🔴";
 
-        let cls="ok";
-
-        if(m.status=="Modify")
-            cls="modify";
-
-        if(m.status=="Problem")
-            cls="problem";
-
-        card.className=
-        "machine "+cls;
-
-        card.innerHTML=
-
-        `
-        <b>${m.machine}</b><br>
-
-        ${m.status}
-
-        <br><br>
-
-        <button
-        onclick="editModel('${m.id}')">
-
-        Edit
-
-        </button>
-
-        <button
-        onclick="deleteModel('${m.id}')">
-
-        Delete
-
-        </button>
-
-        `;
-
-        layout.appendChild(card);
-
-    });
-
+    const card = document.createElement("div");
+    card.className = "machine " + cls;
+    card.innerHTML = `
+      <div class="line-tag">${escapeHtml(m.line || "—")}</div>
+      <div class="m-name">${escapeHtml(m.machine || "—")}</div>
+      <div class="model-name">${escapeHtml(m.model || "Untitled model")}</div>
+      <div class="status-badge ${cls}">${statusIcon} ${escapeHtml(m.status || "")}</div>
+      ${m.pic ? `<div class="meta-line">👤 ${escapeHtml(m.pic)}</div>` : ""}
+      ${(m.startDate || m.finishDate) ? `<div class="meta-line">📅 ${escapeHtml(m.startDate||"?")} → ${escapeHtml(m.finishDate||"?")}</div>` : ""}
+      ${m.drawingUrl ? `<div class="meta-line">📎 <a href="${escapeHtml(m.drawingUrl)}" target="_blank" rel="noopener">${escapeHtml(m.drawingName || "Drawing")}</a></div>` : ""}
+      <div class="card-actions">
+        <button class="btn-secondary" onclick="editModel('${m.id}')">✏️ Edit</button>
+        <button class="btn-ghost" onclick="deleteModel('${m.id}')">🗑️ Delete</button>
+      </div>
+    `;
+    layout.appendChild(card);
+  });
 }
 
-function saveModel(){
-const m = {
-
-    model:document.getElementById("modelName").value,
-
-    line:document.getElementById("line").value,
-
-    machine:document.getElementById("machine").value,
-
-    status:document.getElementById("status").value,
-
-    start:document.getElementById("startDate").value,
-
-    finish:document.getElementById("finishDate").value,
-
-    pic:document.getElementById("pic").value,
-
-    remark:document.getElementById("remark").value
-
-};
-
- let action="saveNewModel";
-
-let id=Date.now();
-
-if(editId!=""){
-
-    action="updateNewModel";
-
-    id=editId;
-
-}
- 
- const params = new URLSearchParams({
-action:action,
-
-id:id,
-
-model:m.model,
-
-line:m.line,
-
-machine:m.machine,
-
-status:m.status,
-
-startDate:m.start,
-
-finishDate:m.finish,
-
-pic:m.pic,
-
-remark:m.remark,
-
-drawingName:"",
-
-drawingUrl:""
-
-});
-
-fetch(API_URL+"?"+params)
-.then(r=>r.json())
-.then(res=>{
-
-   loadModels();
-
-    clearForm();
-
-});
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
- async function editModel(id){
-
-    const model =
-    models.find(x=>x.id==id);
-
-    if(!model) return;
-
-    editId=id;
-
-    document.getElementById("modelName").value=
-    model.model;
-
-    document.getElementById("line").value=
-    model.line;
-
-    document.getElementById("machine").value=
-    model.machine;
-
-    document.getElementById("status").value=
-    model.status;
-
-    document.getElementById("startDate").value=
-    model.startDate;
-
-    document.getElementById("finishDate").value=
-    model.finishDate;
-
-    document.getElementById("pic").value=
-    model.pic;
-
-    document.getElementById("remark").value=
-    model.remark;
-
+/* ---------- save / update ---------- */
+function validateForm(){
+  const modelName = document.getElementById("modelName").value.trim();
+  const errEl = document.getElementById("err-modelName");
+  if (!modelName){
+    errEl.style.display = "block";
+    document.getElementById("modelName").focus();
+    return false;
+  }
+  errEl.style.display = "none";
+  return true;
 }
 
-
-function clearForm(){
- ["modelName","pic","remark","startDate","finishDate"].forEach(id=>document.getElementById(id).value="");
- document.getElementById("status").selectedIndex=0;
- document.getElementById("machine").selectedIndex=0;
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]); // strip data: prefix
+    reader.onerror = () => reject(new Error("Could not read file"));
+    reader.readAsDataURL(file);
+  });
 }
 
- async function loadModels(){
+async function uploadDrawingFile(file){
+  const base64 = await fileToBase64(file);
+  const res = await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "uploadDrawing",
+      base64: base64,
+      fileName: file.name,
+      mimeType: file.type
+    })
+  });
+  if (!res.ok) throw new Error("Upload request failed: " + res.status);
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || "Upload failed");
+  return { drawingName: data.drawingName, drawingUrl: data.drawingUrl };
+}
 
-    try{
+async function saveModel(){
+  if (!validateForm()) return;
 
-     const response =
-await fetch(API_URL + "?action=loadNewModel");
+  const m = {
+    model: document.getElementById("modelName").value.trim(),
+    line: document.getElementById("line").value,
+    machine: document.getElementById("machine").value,
+    status: document.getElementById("status").value,
+    start: document.getElementById("startDate").value,
+    finish: document.getElementById("finishDate").value,
+    pic: document.getElementById("pic").value.trim(),
+    remark: document.getElementById("remark").value.trim()
+  };
 
-console.log(response.status);
+  let action = "saveNewModel";
+  let id = Date.now();
+  if (editId !== ""){
+    action = "updateNewModel";
+    id = editId;
+  }
 
-const text =
-await response.text();
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
 
-console.log(text);
+  // upload drawing first, if a new file was chosen
+  let drawingName = "";
+  let drawingUrl = "";
+  const fileInput = document.getElementById("drawing");
+  const file = fileInput.files[0];
 
-return;
-       const data = await response.json();
-
-console.log(data);
-
-models = data;
-
-render();
-
+  try{
+    if (file){
+      saveBtn.textContent = "Uploading file...";
+      const uploaded = await uploadDrawingFile(file);
+      drawingName = uploaded.drawingName;
+      drawingUrl = uploaded.drawingUrl;
     }
 
-   catch(err){
+    saveBtn.textContent = "Saving...";
 
-    console.log(err);
-
-    console.log(err.message);
-
-    console.log(err.stack);
-
-}
-
-}
-
-
- async function deleteModel(id){
-
-    if(!confirm("Delete ?"))
-        return;
-
-    const params=
-    new URLSearchParams({
-
-        action:"deleteNewModel",
-
-        id:id
-
+    const params = new URLSearchParams({
+      action, id,
+      model: m.model, line: m.line, machine: m.machine, status: m.status,
+      startDate: m.start, finishDate: m.finish, pic: m.pic, remark: m.remark,
+      drawingName, drawingUrl
     });
 
-    await fetch(
+    const res = await fetch(API_URL + "?" + params);
+    if (!res.ok) throw new Error("Request failed: " + res.status);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || "Save failed");
 
-        API_URL+
-        "?"+
-        params
+    showToast(editId !== "" ? "Updated successfully" : "Saved successfully", "success");
+    clearForm();
+    await loadModels();
+  } catch(err){
+    console.error(err);
+    showToast(err.message, "error");
+  } finally{
+    saveBtn.disabled = false;
+    saveBtn.textContent = "💾 Save";
+  }
+}
 
-    );
+/* ---------- edit ---------- */
+function editModel(id){
+  const model = models.find(x => String(x.id) === String(id));
+  if (!model) return;
 
-    loadModels();
+  editId = id;
+  document.getElementById("modelName").value = model.model || "";
+  document.getElementById("line").value = model.line || "HMR";
+  document.getElementById("machine").value = model.machine || "Pigtail welding";
+  document.getElementById("status").value = model.status || "OK";
+  document.getElementById("startDate").value = model.startDate || "";
+  document.getElementById("finishDate").value = model.finishDate || "";
+  document.getElementById("pic").value = model.pic || "";
+  document.getElementById("remark").value = model.remark || "";
 
+  document.getElementById("editBanner").classList.add("show");
+  document.getElementById("saveBtn").textContent = "💾 Update";
+  document.querySelector(".card").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function cancelEdit(){
+  editId = "";
+  document.getElementById("editBanner").classList.remove("show");
+  document.getElementById("saveBtn").textContent = "💾 Save";
+  clearFormFields();
+}
+
+/* ---------- clear ---------- */
+function clearFormFields(){
+  ["modelName","pic","remark","startDate","finishDate"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("status").selectedIndex = 0;
+  document.getElementById("machine").selectedIndex = 0;
+  document.getElementById("drawing").value = "";
+  document.getElementById("err-modelName").style.display = "none";
+}
+
+function clearForm(){
+  clearFormFields();
+  editId = "";
+  document.getElementById("editBanner").classList.remove("show");
+  document.getElementById("saveBtn").textContent = "💾 Save";
+}
+
+/* ---------- load ---------- */
+async function loadModels(){
+  const layout = document.getElementById("layout");
+  layout.innerHTML = `<div class="loading-row">Loading records...</div>`;
+
+  try{
+    const response = await fetch(API_URL + "?action=loadNewModel");
+    if (!response.ok) throw new Error("Server returned " + response.status);
+    const data = await response.json();
+    if (Array.isArray(data)){
+      models = data;
+    } else if (data && data.success === false){
+      throw new Error(data.message || "Failed to load data");
+    } else {
+      models = data.data || [];
+    }
+    render();
+  } catch(err){
+    console.error(err);
+    layout.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><div>Couldn't load data: ${escapeHtml(err.message)}</div></div>`;
+    showToast("Failed to load data", "error");
+  }
+}
+
+/* ---------- delete ---------- */
+async function deleteModel(id){
+  if (!confirm("Delete this record?")) return;
+
+  const params = new URLSearchParams({ action: "deleteNewModel", id });
+  try{
+    const res = await fetch(API_URL + "?" + params);
+    if (!res.ok) throw new Error("Request failed: " + res.status);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || "Delete failed");
+    showToast("Deleted", "success");
+    await loadModels();
+  } catch(err){
+    console.error(err);
+    showToast(err.message, "error");
+  }
 }
 
 loadModels();
-
-
-
- 
 </script>
 </body>
 </html>
