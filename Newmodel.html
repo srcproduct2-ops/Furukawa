@@ -349,6 +349,32 @@ margin-top:25px;
 text-align:center;
 
 }
+
+ .purchase-status{
+
+    display:flex;
+
+    gap:18px;
+
+    margin:6px 0;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.purchase-ok{
+
+    color:#22c55e;
+
+}
+
+.purchase-no{
+
+    color:#ef4444;
+
+}
 </style>
 </head>
 <body>
@@ -523,6 +549,7 @@ ondblclick="showDetail('${m.id}')">
       <div class="entry-model">${escapeHtml(m.model || "Untitled model")}</div>
       ${m.pic ? `<div class="meta-line">👤 ${escapeHtml(m.pic)}</div>` : ""}
      ${(m.startDate || m.finishDate)? `<div class="meta-line">📅 ${formatDate(m.startDate)} → ${formatDate(m.finishDate)}</div>`: ""}
+     ${renderPurchaseStatus(m)}
       ${m.drawingUrl ? `<div class="meta-line">📎 <a href="${escapeHtml(m.drawingUrl)}" target="_blank" rel="noopener">${escapeHtml(m.drawingName || "Drawing")}</a></div>` : ""}
       <div class="entry-actions">
         <button class="btn-secondary" onclick="editModel('${m.id}')">✏️ Edit</button>
@@ -1178,6 +1205,36 @@ function formatDate(date){
     d.getFullYear();
 
     return `${day} ${month} ${year}`;
+
+}
+
+function renderPurchaseStatus(m){
+
+    const pr =
+    m.pr && String(m.pr).trim() !== "";
+
+    const po =
+    m.po && String(m.po).trim() !== "";
+
+    return `
+
+    <div class="purchase-status">
+
+        <span class="${pr ? "purchase-ok" : "purchase-no"}">
+
+            ● PR
+
+        </span>
+
+        <span class="${po ? "purchase-ok" : "purchase-no"}">
+
+            ● PO
+
+        </span>
+
+    </div>
+
+    `;
 
 }
   
