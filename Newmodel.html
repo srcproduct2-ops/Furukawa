@@ -315,7 +315,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbych87C6rFEkEy5GYxec76Pk9l8XkKp8gl5mjONZvvZkzmyuZ06divjQv_AK9wy3FvB/exec";
-const MACHINES = [ "Stator clip assembly jig", "Clamp assembly jig", "Rotator handling jig", "Barcode pasting jig", "Barcode feeder", "Harness length measurement jig", "Window feeder","Neutral window pasting jig", "Lcc inspection", "function tester", "Electric tester", "Final tester"];
+const MACHINES = [ "Stator clip assembly jig", "Clamp assembly jig", "Rotator handling jig", "Barcode pasting jig", "Barcode feeder", "Harness length measurement jig", "Window feeder","Neutral window pasting jig", "Lcc inspection", "Function tester", "Electric tester", "Final tester"];
 let models = [];
 let editId = "";
 
@@ -419,7 +419,7 @@ function render(){
   renderMachineOverview(filtered);
 
   // summary pills
-  const counts = { New:0,  Current:0, Modify:0, Problem: };
+  const counts = { New:0,  Current:0, Modify:0, Problem:0 };
   filtered.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
   document.getElementById("summary").innerHTML = `
     <span class="pill total">Total: ${filtered.length}</span>
