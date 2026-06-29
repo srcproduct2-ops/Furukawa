@@ -351,7 +351,11 @@ function renderMachineOverview(filtered){
     const records = filtered.filter(m => m.machine === machine);
     const pcts = records.map(r => calcProgress(r.startDate, r.finishDate)).filter(p => p !== null);
     const hasProgress = pcts.length > 0;
-    const avgPct = hasProgress ? pcts.reduce((a,b) => a+b, 0) / pcts.length : 0;
+    const avgPct = hasProgress
+    ? Math.round(
+        pcts.reduce((a,b)=>a+b,0)/pcts.length
+      )
+    : 0;
     const colorClass = progressColorClass(avgPct);
 
     const entriesHtml = records.length
@@ -369,7 +373,7 @@ function renderMachineOverview(filtered){
         <div class="progress-fill ${colorClass}" style="width:${hasProgress ? avgPct : 0}%"></div>
       </div>
       <div class="ov-pct">
-        <span>${hasProgress ? Math.round(avgPct) + "% complete" : "—"}</span>
+        <span>${hasProgress ? avgPct + "% complete" : "—"}</span>
         ${!hasProgress ? `<span class="muted-label">${records.length ? "no dates set" : "no records"}</span>` : ""}
       </div>
       <div class="entry-list">${entriesHtml}</div>
@@ -631,6 +635,38 @@ async function deleteModel(id){
     console.error(err);
     showToast(err.message, "error");
   }
+}
+
+  function calcProgress(startDate, finishDate){
+
+    if(!startDate || !finishDate)
+        return null;
+
+    const start = new Date(startDate);
+    const finish = new Date(finishDate);
+    const today = new Date();
+
+    // ลบเวลาออก
+    start.setHours(0,0,0,0);
+    finish.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
+
+    const totalDays =
+        Math.ceil((finish - start) / 86400000);
+
+    if(totalDays <= 0)
+        return 100;
+
+    const usedDays =
+        Math.ceil((today - start) / 86400000);
+
+    let percent =
+        (usedDays / totalDays) * 100;
+
+    percent = Math.max(0, Math.min(100, percent));
+
+    return Math.round(percent);
+
 }
 
 loadModels();
