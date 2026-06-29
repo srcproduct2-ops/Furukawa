@@ -505,6 +505,8 @@ async function saveModel(){
     start: document.getElementById("startDate").value,
     finish: document.getElementById("finishDate").value,
     pic: document.getElementById("pic").value.trim(),
+    pr:document.getElementById("pr").value.trim(),
+po:document.getElementById("po").value.trim(),
     remark: document.getElementById("remark").value.trim()
   };
 
@@ -572,7 +574,8 @@ else if(editId){
     const params = new URLSearchParams({
       action, id,
       model: m.model, line: m.line, machine: m.machine, status: m.status,
-      startDate: m.start, finishDate: m.finish, pic: m.pic, remark: m.remark,
+      startDate: m.start, finishDate: m.finish, pic: m.pic,pr:m.pr,
+po:m.po, remark: m.remark,
 drawingName,
 drawingUrl,
     });
@@ -607,8 +610,9 @@ function editModel(id){
   document.getElementById("startDate").value = model.startDate || "";
   document.getElementById("finishDate").value = model.finishDate || "";
   document.getElementById("pic").value = model.pic || "";
+document.getElementById("pr").value = model.pr || "";
+document.getElementById("po").value = model.po || "";
   document.getElementById("remark").value = model.remark || "";
-
   document.getElementById("editBanner").classList.add("show");
   document.getElementById("saveBtn").textContent = "💾 Update";
   document.querySelector(".card").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -623,7 +627,7 @@ function cancelEdit(){
 
 /* ---------- clear ---------- */
 function clearFormFields(){
-  ["modelName","pic","remark","startDate","finishDate"].forEach(id => document.getElementById(id).value = "");
+  ["modelName","pic","pr","po","remark","startDate","finishDate"].forEach(id => document.getElementById(id).value = "");
   document.getElementById("status").selectedIndex = 0;
   document.getElementById("machine").selectedIndex = 0;
   document.getElementById("drawing").value = "";
