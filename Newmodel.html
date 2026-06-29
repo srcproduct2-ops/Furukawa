@@ -201,6 +201,154 @@ button:disabled{opacity:.55;cursor:not-allowed}
     background:var(--current-bg);
     color:var(--current);
 }
+
+  /* ===========================
+DETAIL POPUP
+=========================== */
+
+.detail-modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    z-index:9999;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.detail-box{
+
+    width:950px;
+
+    max-width:95%;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    animation:popup .2s;
+
+}
+
+@keyframes popup{
+
+from{
+
+transform:scale(.95);
+
+opacity:0;
+
+}
+
+to{
+
+transform:scale(1);
+
+opacity:1;
+
+}
+
+}
+
+.detail-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
+
+}
+
+.close-btn{
+
+background:none;
+
+border:none;
+
+font-size:22px;
+
+cursor:pointer;
+
+color:#64748b;
+
+}
+
+.detail-grid{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:25px;
+
+margin-bottom:20px;
+
+}
+
+.detail-card{
+
+background:#f8fafc;
+
+border:1px solid #e2e8f0;
+
+border-radius:12px;
+
+padding:15px;
+
+}
+
+.detail-card h3{
+
+margin-bottom:12px;
+
+font-size:15px;
+
+}
+
+.detail-item{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:6px 0;
+
+border-bottom:1px dashed #e2e8f0;
+
+font-size:13px;
+
+}
+
+.detail-item:last-child{
+
+border-bottom:none;
+
+}
+
+.detail-footer{
+
+margin-top:25px;
+
+text-align:center;
+
+}
 </style>
 </head>
 <body>
@@ -366,7 +514,8 @@ else if(m.status === "Problem"){
 }
 
   return `
-    <div class="entry-row ${cls}">
+    <div class="entry-row ${cls}"
+ondblclick="showDetail('${m.id}')">
       <div class="entry-top">
         <span class="line-tag">${escapeHtml(m.line || "—")}</span>
         <span class="status-badge ${cls}">${statusIcon} ${escapeHtml(m.status || "")}</span>
@@ -714,8 +863,334 @@ async function deleteModel(id){
     return Math.round(percent);
 
 }
+function showDetail(id){
+
+    const m =
+    models.find(x=>String(x.id)===String(id));
+
+    if(!m) return;
+
+    const progress =
+    calcProgress(
+        m.startDate,
+        m.finishDate
+    );
+
+    document.getElementById("detailBody").innerHTML=
+
+`
+<div class="detail-grid">
+
+<div class="detail-card">
+
+<h3>📦 General Information</h3>
+
+<div class="detail-item">
+
+<b>Model</b>
+
+<span>${m.model||"-"}</span>
+
+</div>
+
+<div class="detail-item">
+
+<b>Line</b>
+
+<span>${m.line||"-"}</span>
+
+</div>
+
+<div class="detail-item">
+
+<b>Machine</b>
+
+<span>${m.machine||"-"}</span>
+
+</div>
+
+<div class="detail-item">
+
+<b>Status</b>
+
+<span class="${getStatusClass(m.status)}">
+
+${getStatusIcon(m.status)}
+
+${m.status||"-"}
+
+</span>
+</div>
+
+</div>
+
+<div class="detail-card">
+
+<h3>📅 Schedule</h3>
+
+<div class="detail-item">
+
+<b>Start</b>
+
+<span>${m.startDate||"-"}</span>
+
+</div>
+
+<div class="detail-item">
+
+<b>Finish</b>
+
+<span>${m.finishDate||"-"}</span>
+
+</div>
+
+<div class="detail-item">
+
+<b>Progress</b>
+
+<span>
+
+${progress===null ? "-" : progress+"%"}
+
+</span>
+
+</div>
+
+<div
+style="height:10px;
+background:#e5e7eb;
+border-radius:20px;
+overflow:hidden;
+margin-top:10px;">
+
+<div
+style="
+height:100%;
+width:${progress===null?0:progress}%;
+background:${progressColor(progress===null?0:progress)};
+transition:.4s;">
+
+</div>
+
+</div>
+
+</div>
+
+<div class="detail-card">
+
+<h3>👤 Person</h3>
+
+<div class="detail-item">
+
+<b>Maker</b>
+
+<span>${m.pic||"-"}</span>
+
+</div>
+
+</div>
+
+<div class="detail-card">
+
+<h3>📄 Purchasing</h3>
+
+<div class="detail-item">
+
+<b>PR</b>
+
+<span>${m.pr||"-"}</span>
+
+</div>
+
+<div class="detail-item">
+
+<b>PO</b>
+
+<span>${m.po||"-"}</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="detail-card">
+
+<h3>📝 Remark</h3>
+
+<p>
+
+${m.remark||"-"}
+
+</p>
+
+</div>
+
+<br>
+
+<div class="detail-card">
+
+<h3>📎 Drawing</h3>
+
+${renderDrawingLinks(m)}
+
+</div>
+
+`;
+
+document.getElementById("detailModal").style.display="flex";
+
+}
+  function closeDetail(){
+
+document.getElementById(
+"detailModal"
+).style.display="none";
+
+} 
+  function renderDrawingLinks(m){
+
+if(!m.drawingUrl)
+return "-";
+
+const names =
+String(m.drawingName)
+.split("|");
+
+const urls =
+String(m.drawingUrl)
+.split("|");
+
+let html="";
+
+for(let i=0;i<urls.length;i++){
+
+html+=`
+
+<div style="margin:6px 0;">
+
+<a href="${urls[i]}"
+
+target="_blank">
+
+📎 ${names[i]}
+
+</a>
+
+</div>
+
+`;
+
+}
+
+return html;
+
+}
+
+  function getStatusClass(status){
+
+    switch(status){
+
+        case "New":
+
+            return "pill New";
+
+        case "Current":
+
+            return "pill current";
+
+        case "Modify":
+
+            return "pill modify";
+
+        case "Problem":
+
+            return "pill problem";
+
+        default:
+
+            return "pill";
+
+    }
+
+}
+
+function getStatusIcon(status){
+
+    switch(status){
+
+        case "New":
+
+            return "🟢";
+
+        case "Current":
+
+            return "🔵";
+
+        case "Modify":
+
+            return "🟡";
+
+        case "Problem":
+
+            return "🔴";
+
+        default:
+
+            return "⚪";
+
+    }
+
+}
+  function progressColor(percent){
+
+    if(percent < 20)
+        return "#dc2626";
+
+    if(percent < 50)
+        return "#d97706";
+
+    return "#16a34a";
+
+}
+
+  
 
 loadModels();
 </script>
+
+<div id="detailModal" class="detail-modal">
+
+    <div class="detail-box">
+
+        <div class="detail-header">
+
+            <h2>📋 New Model Detail</h2>
+
+            <button class="close-btn"
+                onclick="closeDetail()">
+                ✕
+            </button>
+
+        </div>
+
+        <div id="detailBody"></div>
+
+        <div class="detail-footer">
+
+            <button
+                class="btn-primary"
+                onclick="closeDetail()">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+  
 </body>
 </html>
