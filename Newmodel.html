@@ -301,18 +301,7 @@ const MACHINES = [ "Stator clip assembly jig", "Clamp assembly jig", "Rotator ha
 let models = [];
 let editId = "";
 
-/* ---------- progress helper ---------- */
-// Progress = how far along today is between startDate and finishDate.
-function calcProgress(startDate, finishDate){
-  if (!startDate || !finishDate) return null;
-  const start = new Date(startDate).getTime();
-  const finish = new Date(finishDate).getTime();
-  if (isNaN(start) || isNaN(finish) || finish <= start) return null;
 
-  const now = Date.now();
-  let pct = ((now - start) / (finish - start)) * 100;
-  return Math.max(0, Math.min(100, pct));
-}
 
 function progressColorClass(pct){
   if (pct < 20) return "bar-red";
@@ -446,7 +435,7 @@ async function uploadDrawingFile(file){
       mimeType: file.type
     })
   });
-  if (!res.New) throw new Error("Upload request failed: " + res.status);
+  if (!res.ok) throw new Error("Upload request failed: " + res.status);
   const data = await res.json();
   if (!data.success) throw new Error(data.message || "Upload failed");
   return { drawingName: data.drawingName, drawingUrl: data.drawingUrl };
@@ -536,7 +525,7 @@ drawingUrl,
     });
 
     const res = await fetch(API_URL + "?" + params);
-    if (!res.New) throw new Error("Request failed: " + res.status);
+    if (!res.ok) throw new Error("Request failed: " + res.status);
     const data = await res.json();
     if (!data.success) throw new Error(data.message || "Save failed");
 
@@ -602,7 +591,7 @@ async function loadModels(){
 
   try{
     const response = await fetch(API_URL + "?action=loadNewModel");
-    if (!response.New) throw new Error("Server returned " + response.status);
+    if (!response.ok) throw new Error("Server returned " + response.status);
     const data = await response.json();
     if (Array.isArray(data)){
       models = data;
@@ -626,7 +615,7 @@ async function deleteModel(id){
   const params = new URLSearchParams({ action: "deleteNewModel", id });
   try{
     const res = await fetch(API_URL + "?" + params);
-    if (!res.New) throw new Error("Request failed: " + res.status);
+    if (!res.ok) throw new Error("Request failed: " + res.status);
     const data = await res.json();
     if (!data.success) throw new Error(data.message || "Delete failed");
     showToast("Deleted", "success");
