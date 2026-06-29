@@ -14,8 +14,8 @@
   --card:#ffffff;
   --accent:#2563eb;
   --accent-dark:#1d4ed8;
-  --ok:#16a34a;
-  --ok-bg:#dcfce7;
+  --New:#16a34a;
+  --New-bg:#dcfce7;
   --modify:#d97706;
   --modify-bg:#fef3c7;
   --problem:#dc2626;
@@ -121,7 +121,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .ov-count{font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:999px}
 .progress-track{height:10px;background:#eef2f7;border-radius:999px;overflow:hidden;margin-bottom:6px}
 .progress-fill{height:100%;border-radius:999px;transition:width .5s ease, background-color .3s ease}
-.bar-green{background:var(--ok)}
+.bar-green{background:var(--New)}
 .bar-yellow{background:var(--modify)}
 .bar-red{background:var(--problem)}
 .ov-pct{font-size:12px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
@@ -141,7 +141,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   background:#fff;
   box-shadow:0 4px 12px rgba(15,23,42,.08);
 }
-.entry-row.ok{border-left-color:var(--ok)}
+.entry-row.New{border-left-color:var(--New)}
 .entry-row.modify{border-left-color:var(--modify)}
 .entry-row.problem{border-left-color:var(--problem)}
 .entry-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
@@ -153,7 +153,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .pill{
   font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;display:flex;gap:6px;align-items:center;
 }
-.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.New{background:var(--New-bg);color:var(--New)}
 .pill.modify{background:var(--modify-bg);color:var(--modify)}
 .pill.problem{background:var(--problem-bg);color:var(--problem)}
 .pill.total{background:#f1f5f9;color:#334155}
@@ -163,7 +163,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
   padding:3px 9px;border-radius:999px;margin-bottom:8px;
 }
-.status-badge.ok{background:var(--ok-bg);color:var(--ok)}
+.status-badge.New{background:var(--New-bg);color:var(--New)}
 .status-badge.modify{background:var(--modify-bg);color:var(--modify)}
 .status-badge.problem{background:var(--problem-bg);color:var(--problem)}
 .meta-line{font-size:11.5px;color:var(--muted);margin-bottom:2px}
@@ -183,7 +183,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 }
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.error{background:var(--problem)}
-.toast.success{background:var(--ok)}
+.toast.success{background:var(--New)}
 </style>
 </head>
 <body>
@@ -242,7 +242,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
     <div class="group">
       <label>Status</label>
       <select id="status">
-        <option value="OK">🟢 New</option>
+        <option value="New">🟢 New</option>
         <option value="Modify">🟡 Modified</option>
         <option value="Problem">🔴 Problem</option>
       </select>
@@ -321,8 +321,8 @@ function progressColorClass(pct){
 }
 
 function entryRowHtml(m){
-  const cls = m.status === "Modify" ? "modify" : m.status === "Problem" ? "problem" : "ok";
-  const statusIcon = cls === "ok" ? "🟢" : cls === "modify" ? "🟡" : "🔴";
+  const cls = m.status === "Modify" ? "modify" : m.status === "Problem" ? "problem" : "New";
+  const statusIcon = cls === "New" ? "🟢" : cls === "modify" ? "🟡" : "🔴";
 
   return `
     <div class="entry-row ${cls}">
@@ -399,11 +399,11 @@ function render(){
   renderMachineOverview(filtered);
 
   // summary pills
-  const counts = { OK:0, Modify:0, Problem:0 };
+  const counts = { New:0, Modify:0, Problem:0 };
   filtered.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
   document.getElementById("summary").innerHTML = `
     <span class="pill total">Total: ${filtered.length}</span>
-    <span class="pill ok">🟢 OK: ${counts.OK}</span>
+    <span class="pill New">🟢 New: ${counts.New}</span>
     <span class="pill modify">🟡 Modify: ${counts.Modify}</span>
     <span class="pill problem">🔴 Problem: ${counts.Problem}</span>
   `;
@@ -446,7 +446,7 @@ async function uploadDrawingFile(file){
       mimeType: file.type
     })
   });
-  if (!res.ok) throw new Error("Upload request failed: " + res.status);
+  if (!res.New) throw new Error("Upload request failed: " + res.status);
   const data = await res.json();
   if (!data.success) throw new Error(data.message || "Upload failed");
   return { drawingName: data.drawingName, drawingUrl: data.drawingUrl };
@@ -536,7 +536,7 @@ drawingUrl,
     });
 
     const res = await fetch(API_URL + "?" + params);
-    if (!res.ok) throw new Error("Request failed: " + res.status);
+    if (!res.New) throw new Error("Request failed: " + res.status);
     const data = await res.json();
     if (!data.success) throw new Error(data.message || "Save failed");
 
@@ -561,7 +561,7 @@ function editModel(id){
   document.getElementById("modelName").value = model.model || "";
   document.getElementById("line").value = model.line || "HMR";
   document.getElementById("machine").value = model.machine || "Pigtail welding";
-  document.getElementById("status").value = model.status || "OK";
+  document.getElementById("status").value = model.status || "New";
   document.getElementById("startDate").value = model.startDate || "";
   document.getElementById("finishDate").value = model.finishDate || "";
   document.getElementById("pic").value = model.pic || "";
@@ -602,7 +602,7 @@ async function loadModels(){
 
   try{
     const response = await fetch(API_URL + "?action=loadNewModel");
-    if (!response.ok) throw new Error("Server returned " + response.status);
+    if (!response.New) throw new Error("Server returned " + response.status);
     const data = await response.json();
     if (Array.isArray(data)){
       models = data;
@@ -626,7 +626,7 @@ async function deleteModel(id){
   const params = new URLSearchParams({ action: "deleteNewModel", id });
   try{
     const res = await fetch(API_URL + "?" + params);
-    if (!res.ok) throw new Error("Request failed: " + res.status);
+    if (!res.New) throw new Error("Request failed: " + res.status);
     const data = await res.json();
     if (!data.success) throw new Error(data.message || "Delete failed");
     showToast("Deleted", "success");
