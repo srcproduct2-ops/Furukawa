@@ -21,6 +21,8 @@
   --problem:#dc2626;
   --problem-bg:#fee2e2;
   --radius:14px;
+  --current:#2563eb;
+  --current-bg:#dbeafe;
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 body{background:var(--bg);color:var(--ink)}
@@ -184,6 +186,21 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.error{background:var(--problem)}
 .toast.success{background:var(--New)}
+
+
+  .entry-row.current{
+    border-left-color:var(--current);
+}
+
+.pill.current{
+    background:var(--current-bg);
+    color:var(--current);
+}
+
+.status-badge.current{
+    background:var(--current-bg);
+    color:var(--current);
+}
 </style>
 </head>
 <body>
@@ -243,6 +260,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
       <label>Status</label>
       <select id="status">
         <option value="New">🟢 New</option>
+         <option value="Current">🔵 Current</option>
         <option value="Modify">🟡 Modified</option>
         <option value="Problem">🔴 Problem</option>
       </select>
@@ -310,8 +328,21 @@ function progressColorClass(pct){
 }
 
 function entryRowHtml(m){
-  const cls = m.status === "Modify" ? "modify" : m.status === "Problem" ? "problem" : "New";
-  const statusIcon = cls === "New" ? "🟢" : cls === "modify" ? "🟡" : "🔴";
+ let cls = "New";
+let statusIcon = "🟢";
+
+if(m.status === "Current"){
+    cls = "current";
+    statusIcon = "🔵";
+}
+else if(m.status === "Modify"){
+    cls = "modify";
+    statusIcon = "🟡";
+}
+else if(m.status === "Problem"){
+    cls = "problem";
+    statusIcon = "🔴";
+}
 
   return `
     <div class="entry-row ${cls}">
@@ -388,11 +419,12 @@ function render(){
   renderMachineOverview(filtered);
 
   // summary pills
-  const counts = { New:0, Modify:0, Problem:0 };
+  const counts = { New:0,  Current:0, Modify:0, Problem: };
   filtered.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
   document.getElementById("summary").innerHTML = `
     <span class="pill total">Total: ${filtered.length}</span>
     <span class="pill New">🟢 New: ${counts.New}</span>
+    <span class="pill current">🔵 Current: ${counts.Current}</span>
     <span class="pill modify">🟡 Modify: ${counts.Modify}</span>
     <span class="pill problem">🔴 Problem: ${counts.Problem}</span>
   `;
