@@ -6,7 +6,7 @@
 <title>Factory Dashboard - New Model V2</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{A
+:root{
   --bg:#eef2f7;
   --ink:#0f172a;
   --muted:#64748b;
@@ -101,6 +101,55 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .filter-row select{width:auto;padding:7px 10px;font-size:12.5px}
 
 .summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+
+/* machine overview cards */
+.machine-overview{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:14px;margin-bottom:20px;
+}
+.overview-card{
+  background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.overview-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 14px 28px rgba(15,23,42,.12);
+  border-color:#c7d2e0;
+}
+.ov-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.ov-name{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:6px}
+.ov-count{font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:999px}
+.progress-track{height:10px;background:#eef2f7;border-radius:999px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;border-radius:999px;transition:width .5s ease, background-color .3s ease}
+.bar-green{background:var(--ok)}
+.bar-yellow{background:var(--modify)}
+.bar-red{background:var(--problem)}
+.ov-pct{font-size:12px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
+.ov-pct .muted-label{font-weight:500;color:var(--muted);font-size:11px}
+
+.entry-list{
+  margin-top:12px;border-top:1px solid var(--line);padding-top:10px;
+  max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;
+}
+.entry-row{
+  border:1px solid var(--line);border-left:3px solid transparent;border-radius:9px;
+  padding:10px 11px;background:#fbfcfe;
+  transition:transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+.entry-row:hover{
+  transform:translateX(2px);
+  background:#fff;
+  box-shadow:0 4px 12px rgba(15,23,42,.08);
+}
+.entry-row.ok{border-left-color:var(--ok)}
+.entry-row.modify{border-left-color:var(--modify)}
+.entry-row.problem{border-left-color:var(--problem)}
+.entry-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
+.entry-model{font-size:13px;font-weight:700;margin-bottom:4px}
+.entry-empty{font-size:12px;color:var(--muted);text-align:center;padding:14px 4px}
+.entry-actions{display:flex;gap:6px;margin-top:8px}
+.entry-actions button{padding:5px 9px;font-size:11px;border-radius:7px}
+
 .pill{
   font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;display:flex;gap:6px;align-items:center;
 }
@@ -109,20 +158,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .pill.problem{background:var(--problem-bg);color:var(--problem)}
 .pill.total{background:#f1f5f9;color:#334155}
 
-.layout{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-
-.machine{
-  border-radius:12px;background:#fff;border:1px solid var(--line);
-  border-top:4px solid transparent;padding:14px;position:relative;
-  box-shadow:0 1px 2px rgba(15,23,42,.04);
-}
-.machine.ok{border-top-color:var(--ok)}
-.machine.modify{border-top-color:var(--modify)}
-.machine.problem{border-top-color:var(--problem)}
-
-.machine .line-tag{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.machine .m-name{font-size:14px;font-weight:700;margin:4px 0 2px}
-.machine .model-name{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.line-tag{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .status-badge{
   display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
   padding:3px 9px;border-radius:999px;margin-bottom:8px;
@@ -189,17 +225,6 @@ button:disabled{opacity:.55;cursor:not-allowed}
         <select id="machine">
           <option>Pigtail welding</option>
           <option>FFC welding 1</option>
-          <option>FFC welding 2</option>
-            <option>Stator clip assembly jig</option>
-           <option>Clamp assembly jig</option>
-           <option>Rotator handling jig</option>
-           <option>Barcode pasting jig</option>
-           <option>Barcode feeder</option>
-           <option> Harness length measurement jig</option>
-           <option>Window feeder</option>
-          <option>Neutral window jig</option>
-          <option>LCC tester</option>
-          <option>Function tester</option>
           <option>Electric tester</option>
           <option>Final tester</option>
         </select>
@@ -252,8 +277,9 @@ button:disabled{opacity:.55;cursor:not-allowed}
       </div>
     </div>
 
+    <div id="machineOverview" class="machine-overview"></div>
+
     <div class="summary" id="summary"></div>
-    <div id="layout" class="layout"></div>
   </div>
 
 </div>
@@ -263,8 +289,86 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbych87C6rFEkEy5GYxec76Pk9l8XkKp8gl5mjONZvvZkzmyuZ06divjQv_AK9wy3FvB/exec";
+const MACHINES = ["Pigtail welding", "FFC welding 1", "Electric tester", "Final tester"];
 let models = [];
 let editId = "";
+
+/* ---------- progress helper ---------- */
+// Progress = how far along today is between startDate and finishDate.
+function calcProgress(startDate, finishDate){
+  if (!startDate || !finishDate) return null;
+  const start = new Date(startDate).getTime();
+  const finish = new Date(finishDate).getTime();
+  if (isNaN(start) || isNaN(finish) || finish <= start) return null;
+
+  const now = Date.now();
+  let pct = ((now - start) / (finish - start)) * 100;
+  return Math.max(0, Math.min(100, pct));
+}
+
+function progressColorClass(pct){
+  if (pct < 20) return "bar-red";
+  if (pct < 50) return "bar-yellow";
+  return "bar-green";
+}
+
+function entryRowHtml(m){
+  const cls = m.status === "Modify" ? "modify" : m.status === "Problem" ? "problem" : "ok";
+  const statusIcon = cls === "ok" ? "🟢" : cls === "modify" ? "🟡" : "🔴";
+
+  return `
+    <div class="entry-row ${cls}">
+      <div class="entry-top">
+        <span class="line-tag">${escapeHtml(m.line || "—")}</span>
+        <span class="status-badge ${cls}">${statusIcon} ${escapeHtml(m.status || "")}</span>
+      </div>
+      <div class="entry-model">${escapeHtml(m.model || "Untitled model")}</div>
+      ${m.pic ? `<div class="meta-line">👤 ${escapeHtml(m.pic)}</div>` : ""}
+      ${(m.startDate || m.finishDate) ? `<div class="meta-line">📅 ${escapeHtml(m.startDate||"?")} → ${escapeHtml(m.finishDate||"?")}</div>` : ""}
+      ${m.drawingUrl ? `<div class="meta-line">📎 <a href="${escapeHtml(m.drawingUrl)}" target="_blank" rel="noopener">${escapeHtml(m.drawingName || "Drawing")}</a></div>` : ""}
+      <div class="entry-actions">
+        <button class="btn-secondary" onclick="editModel('${m.id}')">✏️ Edit</button>
+        <button class="btn-ghost" onclick="deleteModel('${m.id}')">🗑️ Delete</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- machine overview (card per machine, with its records nested inside) ---------- */
+function renderMachineOverview(filtered){
+  const container = document.getElementById("machineOverview");
+  container.innerHTML = "";
+
+  MACHINES.forEach(machine => {
+    const records = filtered.filter(m => m.machine === machine);
+    const pcts = records.map(r => calcProgress(r.startDate, r.finishDate)).filter(p => p !== null);
+    const hasProgress = pcts.length > 0;
+    const avgPct = hasProgress ? pcts.reduce((a,b) => a+b, 0) / pcts.length : 0;
+    const colorClass = progressColorClass(avgPct);
+
+    const entriesHtml = records.length
+      ? records.map(entryRowHtml).join("")
+      : `<div class="entry-empty">No records yet for this machine.</div>`;
+
+    const card = document.createElement("div");
+    card.className = "overview-card";
+    card.innerHTML = `
+      <div class="ov-head">
+        <div class="ov-name">⚙️ ${escapeHtml(machine)}</div>
+        <div class="ov-count">${records.length} record${records.length !== 1 ? "s" : ""}</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${colorClass}" style="width:${hasProgress ? avgPct : 0}%"></div>
+      </div>
+      <div class="ov-pct">
+        <span>${hasProgress ? Math.round(avgPct) + "% complete" : "—"}</span>
+        ${!hasProgress ? `<span class="muted-label">${records.length ? "no dates set" : "no records"}</span>` : ""}
+      </div>
+      <div class="entry-list">${entriesHtml}</div>
+    `;
+    container.appendChild(card);
+  });
+}
 
 /* ---------- toast ---------- */
 function showToast(msg, type=""){
@@ -277,9 +381,10 @@ function showToast(msg, type=""){
 
 /* ---------- rendering ---------- */
 function render(){
-  const layout = document.getElementById("layout");
   const filterLine = document.getElementById("filterLine").value;
   const filtered = filterLine ? models.filter(m => m.line === filterLine) : models;
+
+  renderMachineOverview(filtered);
 
   // summary pills
   const counts = { OK:0, Modify:0, Problem:0 };
@@ -290,39 +395,6 @@ function render(){
     <span class="pill modify">🟡 Modify: ${counts.Modify}</span>
     <span class="pill problem">🔴 Problem: ${counts.Problem}</span>
   `;
-
-  layout.innerHTML = "";
-
-  if (filtered.length === 0){
-    layout.innerHTML = `
-      <div class="empty-state">
-        <div class="big">📭</div>
-        <div>No records yet${filterLine ? " for " + filterLine : ""}.</div>
-      </div>`;
-    return;
-  }
-
-  filtered.forEach(m => {
-    const cls = m.status === "Modify" ? "modify" : m.status === "Problem" ? "problem" : "ok";
-    const statusIcon = cls === "ok" ? "🟢" : cls === "modify" ? "🟡" : "🔴";
-
-    const card = document.createElement("div");
-    card.className = "machine " + cls;
-    card.innerHTML = `
-      <div class="line-tag">${escapeHtml(m.line || "—")}</div>
-      <div class="m-name">${escapeHtml(m.machine || "—")}</div>
-      <div class="model-name">${escapeHtml(m.model || "Untitled model")}</div>
-      <div class="status-badge ${cls}">${statusIcon} ${escapeHtml(m.status || "")}</div>
-      ${m.pic ? `<div class="meta-line">👤 ${escapeHtml(m.pic)}</div>` : ""}
-      ${(m.startDate || m.finishDate) ? `<div class="meta-line">📅 ${escapeHtml(m.startDate||"?")} → ${escapeHtml(m.finishDate||"?")}</div>` : ""}
-      ${m.drawingUrl ? `<div class="meta-line">📎 <a href="${escapeHtml(m.drawingUrl)}" target="_blank" rel="noopener">${escapeHtml(m.drawingName || "Drawing")}</a></div>` : ""}
-      <div class="card-actions">
-        <button class="btn-secondary" onclick="editModel('${m.id}')">✏️ Edit</button>
-        <button class="btn-ghost" onclick="deleteModel('${m.id}')">🗑️ Delete</button>
-      </div>
-    `;
-    layout.appendChild(card);
-  });
 }
 
 function escapeHtml(str){
@@ -477,8 +549,8 @@ function clearForm(){
 
 /* ---------- load ---------- */
 async function loadModels(){
-  const layout = document.getElementById("layout");
-  layout.innerHTML = `<div class="loading-row">Loading records...</div>`;
+  const container = document.getElementById("machineOverview");
+  container.innerHTML = `<div class="loading-row">Loading records...</div>`;
 
   try{
     const response = await fetch(API_URL + "?action=loadNewModel");
@@ -494,7 +566,7 @@ async function loadModels(){
     render();
   } catch(err){
     console.error(err);
-    layout.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><div>Couldn't load data: ${escapeHtml(err.message)}</div></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="big">⚠️</div><div>Couldn't load data: ${escapeHtml(err.message)}</div></div>`;
     showToast("Failed to load data", "error");
   }
 }
