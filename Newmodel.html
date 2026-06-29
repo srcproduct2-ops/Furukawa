@@ -350,13 +350,13 @@ text-align:center;
 
 }
 
- .purchase-status{
+.purchase-status{
 
     display:flex;
 
     gap:18px;
 
-    margin:6px 0;
+    margin:8px 0;
 
     font-size:12px;
 
@@ -364,15 +364,39 @@ text-align:center;
 
 }
 
-.purchase-ok{
+.purchase-status span{
 
-    color:#22c55e;
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    color:#334155;
 
 }
 
-.purchase-no{
+.dot-green{
 
-    color:#ef4444;
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#22c55e;
+
+}
+
+.dot-red{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#ef4444;
 
 }
 </style>
@@ -1220,15 +1244,19 @@ function renderPurchaseStatus(m){
 
     <div class="purchase-status">
 
-        <span class="${pr ? "purchase-ok" : "purchase-no"}">
+        <span>
 
-            ● PR
+            <span class="${pr?"dot-green":"dot-red"}"></span>
+
+            PR
 
         </span>
 
-        <span class="${po ? "purchase-ok" : "purchase-no"}">
+        <span>
 
-            ● PO
+            <span class="${po?"dot-green":"dot-red"}"></span>
+
+            PO
 
         </span>
 
@@ -1237,7 +1265,6 @@ function renderPurchaseStatus(m){
     `;
 
 }
-  
 
 loadModels();
 </script>
