@@ -473,8 +473,7 @@ async function saveModel(){
   saveBtn.disabled = true;
 
   // upload drawing first, if a new file was chosen
-  let drawingName = "";
-  let drawingUrl = "";
+ 
   const fileInput = document.getElementById("drawing");
   const files = [...fileInput.files];
 
@@ -496,24 +495,40 @@ if(files.length){
 }
 
   try{
-    if (file){
-      saveBtn.textContent = "Uploading file...";
-      const uploaded = await uploadDrawingFile(file);
-      drawingName = uploaded.drawingName;
-      drawingUrl = uploaded.drawingUrl;
-    }
+
 
     saveBtn.textContent = "Saving...";
+let drawingName = "";
+let drawingUrl = "";
+
+if(drawings.length){
+
+    drawingName =
+    drawings.map(x=>x.drawingName).join("|");
+
+    drawingUrl =
+    drawings.map(x=>x.drawingUrl).join("|");
+
+}
+else if(editId){
+
+    const old =
+    models.find(x=>String(x.id)===String(editId));
+
+    drawingName =
+    old?.drawingName || "";
+
+    drawingUrl =
+    old?.drawingUrl || "";
+
+}
 
     const params = new URLSearchParams({
       action, id,
       model: m.model, line: m.line, machine: m.machine, status: m.status,
       startDate: m.start, finishDate: m.finish, pic: m.pic, remark: m.remark,
-      drawingName:
-drawings.map(x=>x.drawingName).join("|"),
-
-drawingUrl:
-drawings.map(x=>x.drawingUrl).join("|"),
+drawingName,
+drawingUrl,
     });
 
     const res = await fetch(API_URL + "?" + params);
