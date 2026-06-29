@@ -263,7 +263,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
     <div class="group"><label>Remark</label><textarea id="remark" placeholder="Notes..."></textarea></div>
     <div class="group">
       <label>Drawing</label>
-      <input type="file" id="drawing">
+      <input type="file" id="drawing" multiple>
     </div>
 
     <div class="actions">
@@ -476,7 +476,24 @@ async function saveModel(){
   let drawingName = "";
   let drawingUrl = "";
   const fileInput = document.getElementById("drawing");
-  const file = fileInput.files[0];
+  const files = [...fileInput.files];
+
+let drawings = [];
+
+if(files.length){
+
+    saveBtn.textContent="Uploading...";
+
+    for(const file of files){
+
+        const uploaded =
+        await uploadDrawingFile(file);
+
+        drawings.push(uploaded);
+
+    }
+
+}
 
   try{
     if (file){
@@ -492,7 +509,11 @@ async function saveModel(){
       action, id,
       model: m.model, line: m.line, machine: m.machine, status: m.status,
       startDate: m.start, finishDate: m.finish, pic: m.pic, remark: m.remark,
-      drawingName, drawingUrl
+      drawingName:
+drawings.map(x=>x.drawingName).join("|"),
+
+drawingUrl:
+drawings.map(x=>x.drawingUrl).join("|"),
     });
 
     const res = await fetch(API_URL + "?" + params);
