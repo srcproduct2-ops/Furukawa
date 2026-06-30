@@ -369,6 +369,7 @@ function entryRowHtml(m){
       ${renderPurchaseStatus(m)}
       ${m.remark ? `<div class="meta-line">📝 ${escapeHtml(m.remark)}</div>` : ""}
       ${m.drawingUrl ? `<div class="meta-line">📎 <b>Drawing</b>${String(m.drawingUrl).split("|").map((u,i)=>`<div style="margin-left:14px">${i+1}.<a href="${escapeHtml(u)}" target="_blank" rel="noopener">${escapeHtml(String(m.drawingName||"file").split("|")[i]||"file")}</a></div>`).join("")}</div>` : ""}
+      ${m.photoUrl ? `<div class="meta-line">🖼️ <b>Picture</b> (${String(m.photoUrl).split("|").filter(s=>s!=="").length}) — double-click to preview</div>` : ""}
       <div class="entry-actions">
         <button class="btn-secondary" onclick="editModel('${m.id}')">✏️ Edit</button>
         <button class="btn-ghost" onclick="deleteModel('${m.id}')">🗑️ Delete</button>
@@ -475,6 +476,18 @@ async function uploadDrawingFile(file){
   return { drawingName: data.drawingName, drawingUrl: data.drawingUrl };
 }
 
+async function uploadPhotoFile(file){
+  const base64 = await fileToBase64(file);
+  const res = await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "uploadPhoto", base64: base64, fileName: file.name, mimeType: file.type })
+  });
+  if (!res.ok) throw new Error("Upload request failed: " + res.status);
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || "Upload failed");
+  return { photoName: data.photoName, photoUrl: data.photoUrl };
+}
+
 async function saveModel(){
   if (!validateForm()) return;
 
@@ -500,38 +513,70 @@ async function saveModel(){
 
   const fileInput = document.getElementById("drawing");
   const photoInput = document.getElementById("photo");
-  const files = [...fileInput.files, ...photoInput.files];
+  const drawingFiles = [...fileInput.files];
+  const photoFiles = [...photoInput.files];
+
+  // existing files on the record being edited (to skip duplicate names)
+  let existingDrawingNames = [];
+  let existingPhotoNames = [];
+  if(editId){
+    const old = models.find(x => String(x.id) === String(editId));
+    if(old){
+      existingDrawingNames = String(old.drawingName || "").split("|").filter(s => s !== "");
+      existingPhotoNames = String(old.photoName || "").split("|").filter(s => s !== "");
+    }
+  }
 
   let drawings = [];
+  let photos = [];
 
-  if(files.length){
-    saveBtn.textContent = "Uploading...";
-    for(const file of files){
+  try{
+    if(drawingFiles.length || photoFiles.length){
+      saveBtn.textContent = "Uploading...";
+    }
+
+    for(const file of drawingFiles){
+      if(existingDrawingNames.indexOf(file.name) !== -1){
+        showToast(`"${file.name}" already attached, skipped`, "");
+        continue;
+      }
       const uploaded = await uploadDrawingFile(file);
       drawings.push(uploaded);
     }
+
+    for(const file of photoFiles){
+      if(existingPhotoNames.indexOf(file.name) !== -1){
+        showToast(`"${file.name}" already attached, skipped`, "");
+        continue;
+      }
+      const uploaded = await uploadPhotoFile(file);
+      photos.push(uploaded);
+    }
+  } catch(err){
+    console.error(err);
+    showToast(err.message, "error");
+    saveBtn.disabled = false;
+    saveBtn.textContent = "💾 Save";
+    return;
   }
 
   try{
     saveBtn.textContent = "Saving...";
-    let drawingName = "";
-    let drawingUrl = "";
 
-    if(drawings.length){
-      drawingName = drawings.map(x=>x.drawingName).join("|");
-      drawingUrl = drawings.map(x=>x.drawingUrl).join("|");
-    }
-    else if(editId){
-      const old = models.find(x=>String(x.id)===String(editId));
-      drawingName = old?.drawingName || "";
-      drawingUrl = old?.drawingUrl || "";
-    }
+    // Send ONLY the newly uploaded files. On update the backend merges
+    // these with whatever is already stored (existing files never lost,
+    // duplicate filenames skipped). On a new save there's nothing to merge.
+    const drawingName = drawings.map(x=>x.drawingName).join("|");
+    const drawingUrl  = drawings.map(x=>x.drawingUrl).join("|");
+    const photoName   = photos.map(x=>x.photoName).join("|");
+    const photoUrl    = photos.map(x=>x.photoUrl).join("|");
 
     const params = new URLSearchParams({
       action, id,
       model: m.model, line: m.line, machine: m.machine, status: m.status,
       startDate: m.start, finishDate: m.finish, pic: m.pic, pr: m.pr,
-      po: m.po, remark: m.remark, drawingName, drawingUrl
+      po: m.po, remark: m.remark,
+      drawingName, drawingUrl, photoName, photoUrl
     });
 
     const res = await fetch(API_URL + "?" + params);
@@ -743,17 +788,17 @@ function renderDrawingFileLinks(m){
   return html;
 }
 
-/* right column (circled area): image files shown as previews */
+/* right column (circled area): photo files shown as previews */
 function renderDrawingPreviews(m){
-  if(!m.drawingUrl) return `<p style="color:#6b7385;font-size:13px;">No image attached.</p>`;
+  if(!m.photoUrl) return `<p style="color:#6b7385;font-size:13px;">No image attached.</p>`;
 
-  const names = String(m.drawingName || "").split("|");
-  const urls = String(m.drawingUrl).split("|");
+  const names = String(m.photoName || "").split("|");
+  const urls = String(m.photoUrl).split("|");
 
   let html = "";
   for(let i=0;i<urls.length;i++){
-    const name = names[i] || "file";
-    if(!_isImage(name)) continue;
+    if(urls[i] === "") continue;
+    const name = names[i] || "image";
 
     const url = urls[i];
     const id = _driveId(url);
