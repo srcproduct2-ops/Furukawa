@@ -1,3211 +1,780 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Life Dashboard</title>
 
-<meta charset="U
-    TF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>
-Computer Life Dashboard 
-</title>
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-
-
 <style>
-
-    
 :root{
+  --ink:#0c1117;
+  --sidebar:#0b1220;
+  --sidebar-line:#1b2536;
+  --sidebar-text:#aab4c8;
+  --bg:#f1f3f8;
+  --card:#ffffff;
+  --line:#e3e7ef;
+  --muted:#6b7385;
 
-    --primary:#2563eb;
-    --success:#16a34a;
-    --warning:#f59e0b;
-    --danger:#dc2626;
-    --purple:#7c3aed;
+  --accent:#3461fd;
+  --accent-dark:#2347d6;
+  --accent-soft:#e8edff;
 
-    --bg:#f3f4f6;
-    --card:#ffffff;
-    --border:#e5e7eb;
-    --sidebar:#0f172a;
+  --success:#15a364;
+  --success-soft:#dcf6e8;
+  --warning:#d97706;
+  --warning-soft:#fef3c7;
+  --danger:#e0392c;
+  --danger-soft:#fde6e3;
+  --purple:#7c5cf0;
+  --purple-soft:#ece7fd;
 
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow-sm:0 1px 2px rgba(13,18,30,.04), 0 6px 16px rgba(13,18,30,.05);
+  --shadow-md:0 10px 30px rgba(13,18,30,.10);
 }
 
-*{
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Inter',sans-serif;
-
-}
-
-body{
-
-    background:var(--bg);
-    color:#111827;
-
-}
-
-/* =========================
-SIDEBAR
-========================= */
-
+/* ===== SIDEBAR (shared) ===== */
 .sidebar{
-
-    position:fixed;
-
-    left:0;
-    top:0;
-
-    width:260px;
-
-    height:100vh;
-
-    background:var(--sidebar);
-
-    color:white;
-
-    padding:25px;
-
-    z-index:1000;
-
-    box-shadow:
-    5px 0 25px rgba(0,0,0,.15);
-
+  position:fixed;left:0;top:0;width:260px;height:100vh;background:var(--sidebar);color:#fff;
+  padding:24px 18px;z-index:1000;display:flex;flex-direction:column;border-right:1px solid var(--sidebar-line);
 }
-
-.sidebar-logo{
-
-    font-size:24px;
-
-    font-weight:800;
-
-    margin-bottom:25px;
-
-}
-
-.sidebar-menu{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:10px;
-
-}
-
-.menu-btn{
-
-    border:none;
-
-    background:transparent;
-
-    color:white;
-
-    text-align:left;
-
-    padding:14px;
-
-    border-radius:12px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    font-size:15px;
-
-}
-
-.menu-btn:hover{
-
-    background:#1e293b;
-
-    transform:
-    translateX(5px);
-
-}
-
-.menu-btn.active{
-
-    background:var(--primary);
-
-}
-
-/* =========================
-MAIN
-========================= */
-
-.main-content{
-
-    margin-left:260px;
-
-}
-
-.container{
-
-    max-width:1900px;
-
-    margin:auto;
-
-    padding:25px;
-
-}
-
-/* =========================
-HEADER
-========================= */
-
-.header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:25px;
-
-}
-
-.header-left h1{
-
-    font-size:24px;
-
-    font-weight:800;
-
-}
-
-.header-left p{
-
-    color:#6b7280;
-
-    margin-top:6px;
-
-}
-
-.header-right{
-
-    color:#6b7280;
-
-    font-weight:600;
-
-}
-
-/* =========================
-KPI
-========================= */
-
-.dashboard{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(5,1fr);
-
-    gap:12px;
-
-}
-
-
-.dashboard-wrapper{
-
-    display:grid;
-
-    grid-template-columns:
-    320px 1fr;
-
-    gap:20px;
-
-}
-
-
-
-.line-summary-card{
-
-
-    background:white;
-
-    border-radius:16px;
-
-    padding:20px;
-
-    border:1px solid var(--border);
-
-    box-shadow:
-    0 2px 12px rgba(0,0,0,.05);
-
-}
-    .summary-card{
-
-    background:white;
-
-    border-radius:16px;
-
-    padding:20px;
-
-    border:1px solid var(--border);
-
-    box-shadow:
-    0 2px 12px rgba(0,0,0,.05);
-
-}
-
-.summary-title{
-
-    font-size:12px;
-
-    font-weight:700;
-
-    margin-bottom:15px;
-
-}
-
-.summary-row{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    padding:8px 0;
-
-    border-bottom:
-    1px solid #f1f5f9;
-
-}
-
-.line-summary-card h3{
-
-    margin-bottom:15px;
-
-}
-
-.line-row{
-
-    margin-bottom:12px;
-
-}
-
-.line-row-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    font-size:13px;
-
-    font-weight:600;
-
-    margin-bottom:4px;
-
-}
-
-.line-row-bar{
-
-    height:10px;
-
-    background:#e5e7eb;
-
-    border-radius:999px;
-
-    overflow:hidden;
-
-}
-
-.line-row-fill{
-
-    height:100%;
-
-    background:#22c55e;
-
-}
-
+.sidebar-logo{font-size:19px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;margin-bottom:22px;padding:0 6px}
+.sidebar-logo .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(155deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+.status-strip{display:flex;align-items:center;gap:8px;padding:9px 12px;margin-bottom:18px;background:#10182b;border:1px solid var(--sidebar-line);border-radius:999px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(21,163,100,.55)}70%{box-shadow:0 0 0 6px rgba(21,163,100,0)}100%{box-shadow:0 0 0 0 rgba(21,163,100,0)}}
+.status-strip span{font-size:11px;font-weight:700;letter-spacing:.06em;color:#8fe3b8;text-transform:uppercase}
+.sidebar-section-label{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#566077;margin:6px 8px 10px}
+.sidebar-menu{display:flex;flex-direction:column;gap:4px}
+.menu-btn{border:none;background:transparent;color:var(--sidebar-text);text-align:left;padding:11px 14px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;transition:background .15s,color .15s;width:100%}
+.menu-btn:hover{background:#131c30;color:#fff}
+.menu-btn.active{background:var(--accent);color:#fff}
+.menu-btn .ic{font-size:16px;width:18px;text-align:center;flex:none}
+.sidebar-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--sidebar-line)}
+.sidebar-foot small{color:#566077;font-size:11px}
+.menu-toggle{display:none}
+
+/* ===== MAIN ===== */
+.main-content{margin-left:260px}
+.container{max-width:1900px;margin:auto;padding:26px 28px 60px}
+
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:14px}
+.header-left h1{font-size:23px;font-weight:800;letter-spacing:-.01em}
+.header-left p{color:var(--muted);margin-top:4px;font-size:13.5px}
+.header-right{font-size:12.5px;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:999px}
+
+/* ===== KPI ===== */
+.dashboard-wrapper{display:grid;grid-template-columns:320px 1fr;gap:18px}
+@media (max-width:1100px){.dashboard-wrapper{grid-template-columns:1fr}}
+
+.kpi-column{display:flex;flex-direction:column;gap:12px}
 .card{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    min-height:95px;
-
-    padding:12px 18px;
-
-    background:white;
-
-    border-radius:16px;
-
-    border:1px solid var(--border);
-
-    box-shadow:
-    0 2px 12px rgba(0,0,0,.05);
-
-}
-
-
-.card:hover{
-
-    transform:
-    translateY(-4px);
-
-    box-shadow:
-    0 15px 35px rgba(0,0,0,.12);
-
-}
-
-.card-title{
-
-    font-size:14px;
-
-    font-weight:600;
-
-}
-
-.card-value{
-
-    font-size:28px;
-
-    font-weight:800;
-
-}
-
-.total-card{
-    border-left:5px solid var(--primary);
-}
-
-.healthy-card{
-    border-left:5px solid var(--success);
-}
-
-.warning-card{
-    border-left:5px solid var(--warning);
-}
-
-.replace-card{
-    border-left:5px solid var(--purple);
-}
-
-.expired-card{
-    border-left:5px solid var(--danger);
-}
-
-/* =========================
-PANEL
-========================= */
-
-.panel{
-
-    background:white;
-    
-    border-radius:16px;
-
-    padding:20px;
-    margin-top:30px;
-    margin-bottom:20px;
-
-    border:1px solid var(--border);
-
-    box-shadow:
-    0 2px 12px rgba(0,0,0,.05);
-
-}
-
-.panel-title{
-
-    font-size:20px;
-
-    font-weight:700;
-
-    margin-bottom:15px;
-
-}
-
-/* =========================
-FORM
-========================= */
-
-.form-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
-    gap:12px;
-
-}
-
-input,
-select{
-
-    width:100%;
-
-    padding:12px;
-
-    border:1px solid #d1d5db;
-
-    border-radius:10px;
-
-    font-size:14px;
-
-}
-
-input:focus,
-select:focus{
-
-    outline:none;
-
-    border-color:#2563eb;
-
-    box-shadow:
-    0 0 0 4px rgba(37,99,235,.15);
-
-}
-
-/* =========================
-BUTTON
-========================= */
-
-.btn{
-
-    border:none;
-
-    border-radius:10px;
-
-    padding:12px 18px;
-
-    color:white;
-
-    cursor:pointer;
-
-    font-weight:600;
-
-    transition:.25s;
-
-}
-
-.btn:hover{
-
-    transform:
-    translateY(-2px);
-
-}
-
-.btn-save{
-    background:#2563eb;
-}
-
-.btn-export{
-    background:#16a34a;
-}
-
-.btn-edit{
-    background:#f59e0b;
-}
-
-.btn-delete{
-    background:#dc2626;
-}
-
-.btn-replace{
-    background:#7c3aed;
-}
-
-/* =========================
-SEARCH FILTER
-========================= */
-
-.filter-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
-    gap:12px;
-
-}
-
-/* =========================
-CHART
-========================= */
-
-.chart-wrapper{
-
-    width:100%;
-
-    max-width:450px;
-
-    margin:auto;
-
-}
-
-canvas{
-
-    max-width:100%;
-
-}
-
-/* =========================
-LINE DASHBOARD
-========================= */
-
-.line-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(260px,1fr));
-
-    gap:15px;
-
-}
-
-.line-card{
-
-    background:#ffffff;
-
-    border:1px solid #e5e7eb;
-
-    border-radius:18px;
-
-    padding:20px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    box-shadow:
-    0 4px 12px rgba(0,0,0,.05);
-
-    position:relative;
-
-    overflow:visible;
-
-}
-.line-card:hover{
-
-    transform:
-    translateY(-5px);
-
-    box-shadow:
-    0 15px 30px rgba(0,0,0,.12);
-
-    border-color:#2563eb;
-
-}
-
-
-
-.line-name{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    font-size:12px;
-
-    font-weight:700;
-
-}
-.line-count{
-
-    font-size:14px;
-
-    color:#6b7280;
-
-    margin-bottom:12px;
-
-}
-
-.progress-bar{
-
-    height:12px;
-
-    background:#e5e7eb;
-
-    border-radius:999px;
-
-    overflow:hidden;
-
-}
-
-.progress-fill{
-
-    height:100%;
-
-    background:
-    linear-gradient(
-        90deg,
-        #22c55e,
-        #16a34a
-    );
-
-    border-radius:999px;
-
-    transition:.4s;
-
-}
-
-/* =========================
-TABLE
-========================= */
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-}
-
-th{
-    font-size:13px;
-}
-
-td{
-    font-size:12px;
-    padding:8px;
-}
-
-.btn{
-    font-size:12px;
-    padding:8px 12px;
-}
-
-tbody tr:hover{
-
-    background:#f8fafc;
-
-}
-
-.status-good{
-
-    color:#16a34a;
-
-    font-weight:700;
-
-}
-
-.status-warning{
-
-    color:#f59e0b;
-
-    font-weight:700;
-
-}
-
-.status-replace{
-
-    color:#7c3aed;
-
-    font-weight:700;
-
-}
-
-.status-expired{
-
-    color:#dc2626;
-
-    font-weight:700;
-
-}
-
-.action-buttons{
-
-    display:flex;
-
-    gap:8px;
-
-    flex-wrap:wrap;
-
-}
-
-}
-
-/* =========================
-RESPONSIVE
-========================= */
-
-@media(max-width:768px){
-
-    .sidebar{
-
-        position:relative;
-
-        width:100%;
-
-        height:auto;
-
-    }
-
-    .main-content{
-
-        margin-left:0;
-
-    }
-
-    .dashboard{
-
-        grid-template-columns:1fr;
-
-    }
-
-    table{
-
-        display:block;
-
-        overflow-x:auto;
-
-    }
-
-}
-.pc-detail{
-
-    position:absolute;
-
-    bottom:110%;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:260px;
-
-    background:#ffffff;
-
-    border:1px solid #e5e7eb;
-
-    border-radius:12px;
-
-    padding:12px;
-
-    font-size:10px;
-
-    line-height:1.5;
-
-    box-shadow:
-    0 12px 35px rgba(0,0,0,.15);
-
-    opacity:0;
-
-    visibility:hidden;
-
-    transition:.25s;
-
-    z-index:99999;
-
-    text-align:left;
-
-}
-  .line-card{
-
-    background:#ffffff;
-
-    border:1px solid #e5e7eb;
-
-    border-radius:18px;
-
-    padding:20px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    box-shadow:
-    0 4px 12px rgba(0,0,0,.05);
-
-    position:relative;
-
-    overflow:visible;
-
-    z-index:1;
-
-}
-
-.line-card:hover{
-
-    z-index:9999;
-
-}
-.line-card:hover .pc-detail{
-
-    opacity:1;
-
-    visibility:visible;
-
-}
-
-    .pc-program{
-
-    font-size:11px;
-
-    font-weight:600;
-
-    color:#64748b;
-
-    background:#f1f5f9;
-
-    padding:4px 8px;
-
-    border-radius:999px;
-
-    white-space:nowrap;
-
-}
-
-    .expired-card-bg{
-
-    background:
-    rgba(220,38,38,.08);
-
-    border:
-    1px solid rgba(220,38,38,.35);
-
-}
-
-.healthy-card-bg{
-
-    background:
-    rgba(34,197,94,.18);
-
-}
-
-.warning-card-bg{
-
-    background:
-    rgba(245,158,11,.18);
-
-}
-
-.replace-card-bg{
-
-    background:
-    rgba(124,58,237,.18);
-
-}
-
-.expired-card-bg{
-
-    background:
-    rgba(220,38,38,.18);
-
-}
-#loadingOverlay{
-
-    position:fixed;
-
-    inset:0;
-
-    background:
-    rgba(255,255,255,.85);
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:999999;
-
-    backdrop-filter:
-    blur(3px);
-
-}
-
-.loading-box{
-
-    text-align:center;
-
-}
-
-.spinner{
-
-    width:70px;
-
-    height:70px;
-
-    border:6px solid #e5e7eb;
-
-    border-top:6px solid #2563eb;
-
-    border-radius:50%;
-
-    animation:
-    spin 1s linear infinite;
-
-    margin:auto;
-
-}
-
-.loading-text{
-
-    margin-top:15px;
-
-    font-size:18px;
-
-    font-weight:600;
-
-    color:#2563eb;
-
-}
-
-@keyframes spin{
-
-    0%{
-
-        transform:
-        rotate(0deg);
-
-    }
-
-    100%{
-
-        transform:
-        rotate(360deg);
-
-    }
-
-}
-    .computer-list-panel{
-
-    padding-left:35px;
-
-    padding-right:35px;
-
-}
-   .selected-row{
-
-    background:
-    rgba(34,197,94,.25)
-    !important;
-
-    animation:
-    blinkRow 1s ease;
-
-}
-
-.selected-row td{
-
-    font-weight:700;
-
-}
-
-@keyframes blinkRow{
-
-    0%{
-        background:
-        rgba(34,197,94,.6);
-    }
-
-    100%{
-        background:
-        rgba(34,197,94,.25);
-    }
-
-}
-
-.kpi-column{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:12px;
-
-}
-.line-summary-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(4,1fr);
-
-    gap:15px;
-
-}
-
-.line-status-card{
-
-    background:white;
-
-    border:1px solid #e5e7eb;
-
-    border-radius:16px;
-
-    padding:18px;
-
-    min-height:140px;
-
-    box-shadow:
-    0 2px 10px rgba(0,0,0,.05);
-
-}
-.line-status-title{
-
-    font-size:16px;
-
-    font-weight:700;
-
-    margin-bottom:10px;
-
-}
-
-.line-status-row{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    margin-bottom:6px;
-
-    font-size:14px;
-
-}
-
-.health-bar{
-
-    height:8px;
-
-    background:#e5e7eb;
-
-    border-radius:999px;
-
-    overflow:hidden;
-
-    margin-top:8px;
-
-}
-
-.health-fill{
-
-    height:100%;
-
-    background:#22c55e;
-
+  display:flex;justify-content:space-between;align-items:center;min-height:88px;padding:16px 20px;
+  background:var(--card);border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow-sm);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.card-title{font-size:12.5px;font-weight:700;color:#3a4150}
+.card-value{font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:700;letter-spacing:-.02em}
+.total-card{border-left:4px solid var(--accent)}
+.healthy-card{border-left:4px solid var(--success)}
+.warning-card{border-left:4px solid var(--warning)}
+.replace-card{border-left:4px solid var(--purple)}
+.expired-card{border-left:4px solid var(--danger)}
+
+.line-summary-card,.summary-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.summary-title{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.line-summary-card h3{margin-bottom:15px}
+
+.line-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+@media (max-width:1400px){.line-summary-grid{grid-template-columns:repeat(2,1fr)}}
+.line-status-card{background:#fbfcfe;border:1px solid var(--line);border-radius:var(--radius-sm);padding:15px;min-height:140px}
+.line-status-title{font-size:14px;font-weight:700;margin-bottom:10px;font-family:'IBM Plex Mono',monospace}
+.line-status-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:12.5px}
+.health-bar{height:7px;background:#e5e9f0;border-radius:999px;overflow:hidden;margin-top:8px}
+.health-fill{height:100%;background:var(--success);border-radius:999px;transition:width .4s ease}
+
+/* ===== PANEL ===== */
+.panel{background:var(--card);border-radius:var(--radius);padding:22px;margin-top:24px;margin-bottom:0;border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.panel-title{font-size:16px;font-weight:700;margin-bottom:16px}
+
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px}
+input,select{width:100%;padding:11px 12px;border:1px solid #d7dce6;border-radius:var(--radius-sm);font-size:13.5px;background:#fbfcfe;font-family:'Inter',sans-serif}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#fff}
+
+/* ===== BUTTON ===== */
+.btn{border:none;border-radius:var(--radius-sm);padding:11px 16px;color:#fff;cursor:pointer;font-weight:700;font-size:12.5px;transition:transform .08s ease, box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(13,18,30,.12)}
+.btn-save{background:var(--accent)}
+.btn-export{background:var(--success)}
+.btn-edit{background:var(--warning)}
+.btn-delete{background:var(--danger)}
+.btn-replace{background:var(--purple)}
+
+/* ===== LINE DASHBOARD ===== */
+.line-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.line-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;cursor:pointer;transition:.2s;box-shadow:var(--shadow-sm);position:relative;overflow:visible;z-index:1}
+.line-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:#c7d2e0;z-index:50}
+.line-name{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.line-count{font-size:12.5px;color:var(--muted);margin:8px 0 12px}
+.progress-bar{height:8px;background:#e5e9f0;border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:999px;transition:.4s}
+
+.pc-program{font-size:10.5px;font-weight:700;color:#3a4150;background:#eef1f7;padding:4px 8px;border-radius:999px;white-space:nowrap}
+.pc-detail{position:absolute;bottom:110%;left:50%;transform:translateX(-50%);width:250px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;font-size:11.5px;line-height:1.6;box-shadow:var(--shadow-md);opacity:0;visibility:hidden;transition:.2s;z-index:99999;text-align:left}
+.line-card:hover .pc-detail{opacity:1;visibility:visible}
+
+.expired-card-bg{background:rgba(224,57,44,.08);border:1px solid rgba(224,57,44,.3)}
+.healthy-card-bg{background:rgba(21,163,100,.10)}
+.warning-card-bg{background:rgba(217,119,6,.10)}
+.replace-card-bg{background:rgba(124,92,240,.10)}
+
+/* ===== TABLE ===== */
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#f6f7fb;color:#3a4150;padding:11px 12px;text-align:left;border-bottom:1px solid var(--line)}
+td{font-size:12px;padding:10px 12px;border-bottom:1px solid var(--line)}
+tbody tr:hover{background:#f8f9fc}
+.status-good{color:var(--success);font-weight:700}
+.status-warning{color:var(--warning);font-weight:700}
+.status-replace{color:var(--purple);font-weight:700}
+.status-expired{color:var(--danger);font-weight:700}
+.action-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.computer-list-panel{padding-left:22px;padding-right:22px}
+
+.selected-row{background:rgba(21,163,100,.18) !important;animation:blinkRow 1s ease}
+.selected-row td{font-weight:700}
+@keyframes blinkRow{0%{background:rgba(21,163,100,.45)}100%{background:rgba(21,163,100,.18)}}
+
+/* ===== LOADING ===== */
+#loadingOverlay{position:fixed;inset:0;background:rgba(255,255,255,.85);display:flex;justify-content:center;align-items:center;z-index:999999;backdrop-filter:blur(3px)}
+.loading-box{text-align:center}
+.spinner{width:54px;height:54px;border:5px solid #e5e7eb;border-top:5px solid var(--accent);border-radius:50%;animation:spin .9s linear infinite;margin:auto}
+.loading-text{margin-top:14px;font-size:15px;font-weight:600;color:var(--accent)}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:980px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s ease;box-shadow:var(--shadow-md)}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .menu-toggle{display:flex;align-items:center;justify-content:center;position:fixed;top:16px;left:16px;z-index:1100;width:42px;height:42px;border-radius:11px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;box-shadow:var(--shadow-md)}
+  .container{padding-top:74px}
 }
-
-
-
-    
 </style>
-
 </head>
-
 <body>
 
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
 <!-- SIDEBAR -->
-
 <div class="sidebar">
+  <div class="sidebar-logo"><span class="mark">💻</span> Computer Life</div>
+  <div class="status-strip"><span class="status-dot"></span><span>System Online</span></div>
 
-    <div class="sidebar-logo">
+  <div class="sidebar-section-label">Navigate</div>
+  <div class="sidebar-menu">
+    <button class="menu-btn" onclick="window.location.href='index.html'"><span class="ic">🏭</span> Factory Dashboard</button>
+    <button class="menu-btn active"><span class="ic">💻</span> Computer Life</button>
+    <button class="menu-btn" onclick="window.location.href='Newmodel.html'"><span class="ic">🆕</span> New Model</button>
+  </div>
 
-        💻 Computer Life
-
-    </div>
-
-    <div class="sidebar-menu">
-
-        <button
-        class="menu-btn"
-        onclick="window.location.href='index.html'">
-
-            🏭 Factory Dashboard
-
-        </button>
-
-        <button
-        class="menu-btn active">
-
-            💻 Computer Life
-
-        </button>
-
-      
-
-    </div>
-
+  <div class="sidebar-foot"><small>Furukawa · Internal Tool</small></div>
 </div>
 
 <!-- MAIN CONTENT -->
-
 <div class="main-content">
-
 <div class="container">
 
-<!-- HEADER -->
-
-<div class="header">
-
+  <div class="header">
     <div class="header-left">
-
-        <h1>
-
-            Computer Life 
-
-        </h1>
-
-        <p>
-
-    Computer Asset Lifecycle Management
-
-        </p>
-
+      <h1>Computer Life</h1>
+      <p>Computer Asset Lifecycle Management</p>
     </div>
+    <div class="header-right" id="todayDate"></div>
+  </div>
 
-    <div
-    class="header-right"
-    id="todayDate">
+  <!-- KPI -->
+  <div class="dashboard-wrapper">
 
+    <div class="kpi-column">
+      <div class="card total-card"><div class="card-title">💻 Total PCs</div><div class="card-value" id="totalPcCount">0</div></div>
+      <div class="card healthy-card"><div class="card-title">🟢 Healthy</div><div class="card-value" id="healthyCount">0</div></div>
+      <div class="card warning-card"><div class="card-title">🟡 Warning</div><div class="card-value" id="warningCount">0</div></div>
+      <div class="card replace-card"><div class="card-title">🟣 Replace Soon</div><div class="card-value" id="replaceCount">0</div></div>
+      <div class="card expired-card"><div class="card-title">🔴 Expired</div><div class="card-value" id="expiredCount">0</div></div>
     </div>
-
-</div>
-
-<!-- KPI -->
-
-<div class="dashboard-wrapper">
-
-<div class="kpi-column">
-
-    <div class="card total-card">
-
-        <div class="card-title">
-            💻 Total PCs
-        </div>
-
-        <div
-        class="card-value"
-        id="totalPcCount">
-            0
-        </div>
-
-    </div>
-
-    <div class="card healthy-card">
-
-        <div class="card-title">
-            🟢 Healthy
-        </div>
-
-        <div
-        class="card-value"
-        id="healthyCount">
-            0
-        </div>
-
-    </div>
-
-    <div class="card warning-card">
-
-        <div class="card-title">
-            🟡 Warning
-        </div>
-
-        <div
-        class="card-value"
-        id="warningCount">
-            0
-        </div>
-
-    </div>
-
-    <div class="card replace-card">
-
-        <div class="card-title">
-            🟣 Replace Soon
-        </div>
-
-        <div
-        class="card-value"
-        id="replaceCount">
-            0
-        </div>
-
-    </div>
-
-    <div class="card expired-card">
-
-        <div class="card-title">
-            🔴 Expired
-        </div>
-
-        <div
-        class="card-value"
-        id="expiredCount">
-            0
-        </div>
-
-    </div>
-
-</div>
 
     <div class="line-summary-card">
-
-        <div class="summary-title">
-            📊 PC Status By Line
-        </div>
-
-        <div id="lineSummaryChart"></div>
-
+      <div class="summary-title">📊 PC Status By Line</div>
+      <div id="lineSummaryChart"></div>
     </div>
 
-</div>
-  
+  </div>
 
-
-<!-- ADD COMPUTER -->
-
-<div
-class="panel"
-id="addComputerPanel">
-
-    <div
-    class="panel-title"
-    id="formTitle">
-
-        Add Computer
-
-    </div>
+  <!-- ADD COMPUTER -->
+  <div class="panel" id="addComputerPanel">
+    <div class="panel-title" id="formTitle">Add Computer</div>
 
     <div class="form-grid">
+      <input type="text" id="assetTag" placeholder="Asset Tag">
 
-        <input
-        type="text"
-        id="assetTag"
-        placeholder="Asset Tag">
+      <select id="line" onchange="updatePcNumberOptions(); updatePcNameOptions();">
+        <option>HMR</option><option>GMR</option><option>TMR1</option><option>TMR2</option>
+        <option>MIR</option><option>ISR</option><option>SP</option><option>HS</option>
+      </select>
 
-<select
-id="line"
-onchange="
-updatePcNumberOptions();
-updatePcNameOptions();
-">
+      <select id="pcNumber">
+        <option>PC1</option><option>PC2</option><option>PC3</option><option>PC4</option>
+        <option>PC5</option><option>PC6</option><option>PC7</option><option>PC8</option><option>PC9</option>
+      </select>
 
-            <option>HMR</option>
-            <option>GMR</option>
-            <option>TMR1</option>
-            <option>TMR2</option>
-            <option>MIR</option>
-            <option>ISR</option>
-            <option>SP</option>
-            <option>HS</option>
+      <select id="pcName">
+        <option value="">Select Computer Name</option>
+        <option>Pigtail Welding</option>
+        <option>FFC1 Welding (L)</option>
+        <option>FFC1 Welding (R)</option>
+        <option>FFC2 Welding (L)</option>
+        <option>FFC2 Welding (R)</option>
+        <option>Function Tester</option>
+        <option>Electric Tester</option>
+        <option>Final Tester</option>
+        <option>Image Filing</option>
+      </select>
 
+      <input type="text" id="brand" placeholder="Brand">
+      <input type="text" id="program" placeholder="program">
 
-        </select>
+      <select id="os">
+        <option>Windows XP</option>
+        <option>Windows 7</option>
+        <option>Windows 10</option>
+        <option>Windows 11</option>
+        <option>Windows Server</option>
+      </select>
 
-<select id="pcNumber">
+      <input type="date" id="installDate">
 
-    <option>PC1</option>
-    <option>PC2</option>
-    <option>PC3</option>
-    <option>PC4</option>
-    <option>PC5</option>
-    <option>PC6</option>
-    <option>PC7</option>
-    <option>PC8</option>
-    <option>PC9</option>
-
-</select>
-<select id="pcName">
-
-    <option value="">
-        Select Computer Name
-    </option>
-
-    <option>
-        Pigtail Welding
-    </option>
-
-    <option>
-        FFC1 Welding (L)
-    </option>
-
-    <option>
-        FFC1 Welding (R)
-    </option>
-
-    <option>
-        FFC2 Welding (L)
-    </option>
-
-    <option>
-        FFC2 Welding (R)
-    </option>
-
-    <option>
-        Function Tester
-    </option>
-
-    <option>
-        Electric Tester
-    </option>
-
-    <option>
-        Final Tester
-    </option>
-
-    <option>
-        Image Filing
-    </option>
-
-</select>
-        <input
-        type="text"
-        id="brand"
-        placeholder="Brand">
-
-        <input
-        type="text"
-        id="program"
-        placeholder="program">
-
-        <select id="os">
-
-            <option>
-                Windows XP
-            </option>
-            <option>
-                Windows 7
-            </option>
-            <option>
-                Windows 10
-            </option>
-
-            <option>
-                Windows 11
-            </option>
-
-            <option>
-                Windows Server
-            </option>
-
-        </select>
-
-        <input
-        type="date"
-        id="installDate">
-
-        <select id="lifeCycle">
-
-            <option value="3">
-                3 Years
-            </option>
-
-            <option value="5" selected>
-                5 Years
-            </option>
-
-            <option value="7">
-                7 Years
-            </option>
-
-            <option value="10">
-                10 Years
-            </option>
-
-        </select>
-
+      <select id="lifeCycle">
+        <option value="3">3 Years</option>
+        <option value="5" selected>5 Years</option>
+        <option value="7">7 Years</option>
+        <option value="10">10 Years</option>
+      </select>
     </div>
 
-    <br>
-
-    <button
-    class="btn btn-save"
-    id="saveBtn"
-    onclick="saveComputer()">
-
-        Save Computer
-
-    </button>
-
-  <button
-id="exportBtn"
-class="btn btn-export"
-onclick="exportExcel()">
-        Export Excel
-
-    </button>
-
-</div>
-
-
-<!-- LINE DASHBOARD -->
-
-<div
-class="panel"
-id="lineSection">
-
-    <div class="panel-title">
-
-        🏭 Production Line Health
-
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-save" id="saveBtn" onclick="saveComputer()">Save Computer</button>
+      <button id="exportBtn" class="btn btn-export" onclick="exportExcel()">Export Excel</button>
     </div>
+  </div>
 
-  <select
-id="lineSelector"
-onchange="renderLinePC()"
-style="
-width:250px;
-margin-bottom:15px;
-">
+  <!-- LINE DASHBOARD -->
+  <div class="panel" id="lineSection">
+    <div class="panel-title">🏭 Production Line Health</div>
 
-    <option value="HMR">HMR</option>
-    <option value="GMR">GMR</option>
-    <option value="TMR1">TMR1</option>
-    <option value="TMR2">TMR2</option>
-    <option value="MIR">MIR</option>
-    <option value="ISR">ISR</option>
-    <option value="SP">SP</option>
-    <option value="HS">HS</option>
+    <select id="lineSelector" onchange="renderLinePC()" style="width:230px;margin-bottom:16px;">
+      <option value="HMR">HMR</option><option value="GMR">GMR</option>
+      <option value="TMR1">TMR1</option><option value="TMR2">TMR2</option>
+      <option value="MIR">MIR</option><option value="ISR">ISR</option>
+      <option value="SP">SP</option><option value="HS">HS</option>
+    </select>
 
-</select>
+    <div class="line-grid" id="lineGrid"></div>
+  </div>
 
-
-<div
-class="line-grid"
-id="lineGrid">
-
-</div>
-    </div>
-
-</div>
-
-
-<!-- COMPUTER LIST -->
-
-<div
-class="panel computer-list-panel"
-id="computerSection">
-
-    <div class="panel-title">
-
-        🖥 Computer Life List
-
-    </div>
-
-    <table>
-
+  <!-- COMPUTER LIST -->
+  <div class="panel computer-list-panel" id="computerSection">
+    <div class="panel-title">🖥 Computer Life List</div>
+    <div class="table-scroll">
+      <table>
         <thead>
-
-            <tr>
-
-                <th>Asset Tag</th>
-                <th>Line</th>
-                <th>PC No.</th>
-                <th>Computer</th>
-                <th>Brand</th>
-                <th>program</th>
-                <th>OS</th>
-                <th>Install Date</th>
-                <th>Life Cycle</th>
-                <th>Expire Date</th>
-                <th>Remaining</th>
-                <th>Status</th>
-                <th>Actions</th>
-
-            </tr>
-
+          <tr>
+            <th>Asset Tag</th><th>Line</th><th>PC No.</th><th>Computer</th><th>Brand</th>
+            <th>program</th><th>OS</th><th>Install Date</th><th>Life Cycle</th>
+            <th>Expire Date</th><th>Remaining</th><th>Status</th><th>Actions</th>
+          </tr>
         </thead>
-
-        <tbody id="computerTable">
-
-        </tbody>
-
-    </table>
-
-</div>
+        <tbody id="computerTable"></tbody>
+      </table>
+    </div>
+  </div>
 
 </div>
 </div>
 
 <script>
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbxmtU1zd03XLkEAb7YlDaHim8Uogs30-dgt_CNyf1K9Ph7-nXRS8Fj0Vp_eB6iAwJEA/exec";
-const role =
-localStorage.getItem(
-    "role"
-) || "User";
+const API_URL = "https://script.google.com/macros/s/AKfycbxmtU1zd03XLkEAb7YlDaHim8Uogs30-dgt_CNyf1K9Ph7-nXRS8Fj0Vp_eB6iAwJEA/exec";
+const role = localStorage.getItem("role") || "User";
 let computers = [];
 let editIndex = -1;
-    let editId = "";
-    let selectedPC = "";
+let editId = "";
+let selectedPC = "";
 
- function showLoading(){
-
-    const overlay =
-    document.getElementById(
-        "loadingOverlay"
-    );
-
-    if(overlay){
-
-        overlay.style.display =
-        "flex";
-
-    }
-
+function showLoading(){
+  const overlay = document.getElementById("loadingOverlay");
+  if(overlay){ overlay.style.display = "flex"; }
 }
 
 function hideLoading(){
-
-    const overlay =
-    document.getElementById(
-        "loadingOverlay"
-    );
-
-    if(overlay){
-
-        overlay.style.display =
-        "none";
-
-    }
-
+  const overlay = document.getElementById("loadingOverlay");
+  if(overlay){ overlay.style.display = "none"; }
 }
+
 async function loadData(){
-
-    try{
-
-        showLoading();
-
-        console.log(
-            "LOAD DATA START"
-        );
-
-        const response =
-        await fetch(
-            API_URL
-        );
-
-        console.log(
-            "STATUS =",
-            response.status
-        );
-
-        const text =
-        await response.text();
-
-        console.log(
-            "RAW DATA =",
-            text
-        );
-
-        computers =
-        JSON.parse(text);
-
-        console.log(
-            "COMPUTERS =",
-            computers
-        );
-
-        render();
-
-        renderLinePC();
-
-        renderLineSummary();
-
-        updatePcNumberOptions();
-
-        updatePcNameOptions();
-
-    }
-    catch(error){
-
-        console.error(
-            "LOAD ERROR =",
-            error
-        );
-
-        alert(
-            "Load Data Error"
-        );
-
-    }
-    finally{
-
-        hideLoading();
-
-    }
-
-}
-function updateDate(){
-
-    const now =
-    new Date();
-
-    document
-    .getElementById(
-        "todayDate"
-    )
-    .innerText =
-
-    now.toLocaleDateString(
-        "en-US",
-        {
-            weekday:"long",
-            year:"numeric",
-            month:"long",
-            day:"numeric"
-        }
-    );
-
-}
-
-/* =====================
-SCROLL
-===================== */
-
-function scrollToSection(id){
-
-    const section =
-    document
-    .getElementById(id);
-
-    if(section){
-
-        section.scrollIntoView({
-            behavior:"smooth"
-        });
-
-    }
-
-}
-
-/* =====================
-SAVE
-===================== */
-
-async function saveComputer(){
-
-    const assetTag =
-    document.getElementById(
-        "assetTag"
-    ).value.trim();
-    
-
-console.log(
-    document.getElementById("line")
-);
-
-console.log(
-    document.getElementById("pcName")
-);
-
-
-    
-     const line =
-document.getElementById(
-    "line"
-).value;
-
-const pcNumber =
-document.getElementById(
-    "pcNumber"
-).value;
-
-const duplicate =
-computers.find(
-(pc,index) =>
-
-    index !== editIndex
-
-    &&
-
-    String(pc.line).trim()
-    ===
-    String(line).trim()
-
-    &&
-
-    String(pc.pcNumber).trim()
-    ===
-    String(pcNumber).trim()
-
-);
-
-if(duplicate){
-
-    alert(
-        `${line}-${pcNumber} already exists`
-    );
-
-    return;
-
-}
-    const pcName =
-    document.getElementById(
-        "pcName"
-    ).value.trim();
-
-    const installDate =
-    document.getElementById(
-        "installDate"
-    ).value;
-
-    if(assetTag===""){
-
-        alert(
-        "Please enter Asset Tag"
-        );
-
-        return;
-
-    }
-
-    if(pcName===""){
-
-        alert(
-        "Please enter Computer Name"
-        );
-
-        return;
-
-    }
-
-    if(installDate===""){
-
-        alert(
-        "Please select Install Date"
-        );
-
-        return;
-
-    }
-
-  const computer = {
-
-    id: editId,
-
-    assetTag:
-    document.getElementById(
-        "assetTag"
-    ).value,
-
-    line:
-    document.getElementById(
-        "line"
-    ).value,
-
-    pcNumber:
-    document.getElementById(
-        "pcNumber"
-    ).value,
-
-    pcName:
-    document.getElementById(
-        "pcName"
-    ).value,
-
-    brand:
-    document.getElementById(
-        "brand"
-    ).value,
-
-    program:
-    document.getElementById(
-        "program"
-    ).value,
-
-    os:
-    document.getElementById(
-        "os"
-    ).value,
-
-    installDate:
-    document.getElementById(
-        "installDate"
-    ).value,
-
-    lifeCycle:
-    parseInt(
-        document.getElementById(
-            "lifeCycle"
-        ).value
-    )
-
-};
-    try{
-
-    console.log(
-        "EDIT ID =",
-        editId
-    );
-
-    console.log(
-        computer
-    );
-showLoading();
-    const response =
-    await fetch(
-        API_URL,
-        {
-            method:"POST",
-            body:JSON.stringify(computer)
-        }
-    );
-
-    const result =
-    await response.json();
-
-    if(result.success){
-
-        alert(
-            "Save Success"
-        );
-
-        clearForm();
-
-        await loadData();
-        updatePcNumberOptions();
-hideLoading();
-    }
-
-}
-catch(error){
-
-    console.error(error);
-
-    alert(
-        "Cannot Save To Google Sheet"
-    );
-
-}
-}
-/* =====================
-EDIT / REPLACE
-===================== */
-
-function editComputer(index){
-
-    const pc =
-    computers[index];
-    editId = pc.id;
-    document
-    .getElementById(
-        "assetTag"
-    )
-    .value =
-    pc.assetTag;
-
-    document
-    .getElementById(
-        "line"
-    )    
-    .value =
-    pc.line;
-updatePcNumberOptions();
-
-updatePcNameOptions();
-    
-    document
-.getElementById(
-    "pcNumber"
-)
-.value =
-pc.pcNumber || "PC1";
-    
-
-    document
-    .getElementById(
-        "pcName"
-    )
-    .value =
-    pc.pcName;
-
-    document
-    .getElementById(
-        "brand"
-    )
-    .value =
-    pc.brand;
-
-    document
-    .getElementById(
-        "program"
-    )
-    .value =
-    pc.program;
-
-    document
-    .getElementById(
-        "os"
-    )
-    .value =
-    pc.os;
-
-    document
-.getElementById(
-    "installDate"
-)
-.value =
-new Date(
-    pc.installDate
-)
-.toISOString()
-.split("T")[0];
-
-    document
-    .getElementById(
-        "lifeCycle"
-    )
-    .value =
-    pc.lifeCycle;
-
-    editIndex =
-    index;
-
-    document
-    .getElementById(
-        "formTitle"
-    )
-    .innerText =
-    "Replace Computer";
-
-    document
-    .getElementById(
-        "saveBtn"
-    )
-    .innerText =
-    "Update Computer";
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-}
-
-/* =====================
-DELETE
-===================== */
-
-async function deleteComputer(index){
-
-    if(
-        !confirm(
-            "Delete this computer ?"
-        )
-    ) return;
-
-    const pc =
-    computers[index];
-
-    try{
-
-        await fetch(
-            `${API_URL}?action=delete&id=${pc.id}`
-        );
-
-        await loadData();
-
-        updatePcNumberOptions();
-
-        updatePcNameOptions();
-
-    }
-    catch(error){
-
-        console.error(error);
-
-    }
-
-}
-function clearForm(){
-
-    document
-    .getElementById(
-        "assetTag"
-    )
-    .value="";
-
-    document
-.getElementById(
-    "pcName"
-)
-.selectedIndex = 0;
-document
-.getElementById(
-    "pcNumber"
-)
-.selectedIndex = 0;
-
-
-    document
-    .getElementById(
-        "brand"
-    )
-    .value="";
-
-    document
-    .getElementById(
-        "program"
-    )
-    .value="";
-
-    document
-    .getElementById(
-        "installDate"
-    )
-    .value="";
-
-    document
-    .getElementById(
-        "line"
-    )
-    .selectedIndex=0;
-
-    document
-    .getElementById(
-        "os"
-    )
-    .selectedIndex=0;
-
-    document
-    .getElementById(
-        "lifeCycle"
-    )
-    .value="5";
-
-    editIndex = -1;
-editId = "";
-    document
-.getElementById(
-    "formTitle"
-)
-.innerText =
-"Add Computer";
-
-document
-.getElementById(
-    "saveBtn"
-)
-.innerText =
-"Save Computer";
-}
-
-/* =====================
-STATUS
-===================== */
-
-function getStatus(
-remainingYears
-){
-
-    if(
-        remainingYears <= 0
-    ){
-
-        return{
-            text:"Expired",
-            className:
-            "status-expired"
-        };
-
-    }
-
-    if(
-        remainingYears <= 1
-    ){
-
-        return{
-            text:"Replace Soon",
-            className:
-            "status-replace"
-        };
-
-    }
-
-    if(
-        remainingYears <= 2
-    ){
-
-        return{
-            text:"Warning",
-            className:
-            "status-warning"
-        };
-
-    }
-
-    return{
-
-        text:"Healthy",
-
-        className:
-        "status-good"
-
-    };
-
-}
-
-
-/* =====================
-RENDER
-===================== */
-
-function render(){
-
-    let html = "";
-
-    let healthy = 0;
-    let warning = 0;
-    let replaceSoon = 0;
-    let expired = 0;
-
-
-    const lineCapacity = {
-
-        HMR:9,
-        GMR:9,
-        TMR1:9,
-        TMR2:9,
-        MIR:9,
-        ISR:9,
-        SP:9,
-        HS:3
-
-    };
-
-    const lineHealthy = {
-
-        HMR:0,
-        GMR:0,
-        TMR1:0,
-        TMR2:0,
-        MIR:0,
-        ISR:0,
-        SP:0,
-        HS:0
-
-    };
-const keyword = "";
-
-const filterLine = "";
-
-const filterStatus = "";
-
-    const today =
-    new Date();
-
-    const currentYear =
-    today.getFullYear();
-
-computers.forEach(pc=>{
-
-    if(!pc.installDate){
-
-        return;
-
-    }
-
-        const install =
-        new Date(
-            pc.installDate
-        );
-
-        const expire =
-        new Date(
-            install
-        );
-
-        expire.setFullYear(
-            expire.getFullYear()
-            +
-            parseInt(
-                pc.lifeCycle
-            )
-        );
-
-        const remainingYears =
-
-        (
-            expire - today
-        )
-
-        /
-
-        (
-            1000 *
-            60 *
-            60 *
-            24 *
-            365
-        );
-
-        const status =
-        getStatus(
-            remainingYears
-        );
-
-        if(
-            status.text ===
-            "Healthy"
-        ){
-
-            healthy++;
-
-            lineHealthy[
-                pc.line
-            ]++;
-
-        }
-
-        if(
-            status.text ===
-            "Warning"
-        ){
-            warning++;
-        }
-
-        if(
-            status.text ===
-            "Replace Soon"
-        ){
-            replaceSoon++;
-        }
-
-        if(
-            status.text ===
-            "Expired"
-        ){
-            expired++;
-        }
-
-
-
-    });
-
-    const filteredData =
-
-    computers.filter(pc=>{
-
-        const install =
-        new Date(
-            pc.installDate
-        );
-
-        const expire =
-        new Date(
-            install
-        );
-
-        expire.setFullYear(
-            expire.getFullYear()
-            +
-            parseInt(
-                pc.lifeCycle
-            )
-        );
-
-        const remainingYears =
-
-        (
-            expire - today
-        )
-
-        /
-
-        (
-            1000 *
-            60 *
-            60 *
-            24 *
-            365
-        );
-
-        const status =
-        getStatus(
-            remainingYears
-        );
-
-        const matchKeyword =
-
-        pc.assetTag
-        .toLowerCase()
-        .includes(keyword)
-
-        ||
-
-        pc.pcName
-        .toLowerCase()
-        .includes(keyword)
-
-        ||
-
-        pc.brand
-        .toLowerCase()
-        .includes(keyword)
-
-        ||
-
-        pc.program
-            
-        .toLowerCase()
-        .includes(keyword);
-
-        const matchLine =
-
-        filterLine === ""
-
-        ||
-
-        pc.line === filterLine;
-
-        const matchStatus =
-
-        filterStatus === ""
-
-        ||
-
-        status.text === filterStatus;
-
-        return(
-
-            matchKeyword
-
-            &&
-
-            matchLine
-
-            &&
-
-            matchStatus
-
-        );
-
-    });
-
-    filteredData.forEach(
-    (pc,index)=>{
-
-        const install =
-        new Date(
-            pc.installDate
-        );
-
-        const expire =
-        new Date(
-            install
-        );
-
-        expire.setFullYear(
-            expire.getFullYear()
-            +
-            parseInt(
-                pc.lifeCycle
-            )
-        );
-
-        const remainingYears =
-
-        (
-            expire - today
-        )
-
-        /
-
-        (
-            1000 *
-            60 *
-            60 *
-            24 *
-            365
-        );
-
-        const status =
-        getStatus(
-            remainingYears
-        );
-
-        const realIndex =
-        computers.indexOf(pc);
-
-   const rowClass =
-
-selectedPC ===
-`${pc.line}-${pc.pcNumber}`
-
-?
-
-"selected-row"
-
-:
-
-"";
-
-html += `
-<tr
-class="${rowClass}"
-data-pc="${pc.line}-${pc.pcNumber}">
-
-            <td>${pc.assetTag}</td>
-
-            <td>${pc.line}</td>
-            <td>${pc.pcNumber || ""}</td>
-
-            <td>${pc.pcName}</td>
-
-            <td>${pc.brand}</td>
-
-            <td>${pc.program}</td>
-
-            <td>${pc.os}</td>
-
-            <td>
-${
-    new Date(
-        pc.installDate
-    )
-    .toLocaleDateString(
-        "en-GB"
-    )
-}
-</td>
-
-            <td>${pc.lifeCycle} Years</td>
-
-            <td>
-                ${expire
-                .toISOString()
-                .split("T")[0]}
-            </td>
-
-            <td>
-                ${remainingYears
-                .toFixed(1)}
-                Years
-            </td>
-
-            <td
-            class="${status.className}">
-
-                ${status.text}
-
-            </td>
-
-<td>
-
-${
-role === "Admin"
-
-?
-
-`
-
-<div class="action-buttons">
-
-    <button
-    class="btn btn-edit"
-    onclick="editComputer(${realIndex})">
-
-        Edit
-
-    </button>
-
-    <button
-    class="btn btn-replace"
-    onclick="editComputer(${realIndex})">
-
-        Replace
-
-    </button>
-
-    <button
-    class="btn btn-delete"
-    onclick="deleteComputer(${realIndex})">
-
-        Delete
-
-    </button>
-
-</div>
-
-`
-
-:
-
-`
-
-<button
-class="btn btn-edit"
-onclick="editComputer(${realIndex})">
-
-    Edit
-
-</button>
-
-`
-
-}
-</td>
-
-        </tr>
-
-        `;
-
-    });
-
-    document
-    .getElementById(
-        "computerTable"
-    )
-    .innerHTML =
-    html;
-
-   document
-.getElementById(
-    "totalPcCount"
-)
-.innerText =
-computers.length;
-
-document
-.getElementById(
-    "healthyCount"
-)
-.innerText =
-healthy;
-
-document
-.getElementById(
-    "warningCount"
-)
-.innerText =
-warning;
-
-document
-.getElementById(
-    "replaceCount"
-)
-.innerText =
-replaceSoon;
-
-document
-.getElementById(
-    "expiredCount"
-)
-.innerText =
-expired;
-}
-function renderLinePC(){
-
-    const line =
-    document.getElementById(
-        "lineSelector"
-    ).value;
-
-    const totalPC = {
-
-        HMR:9,
-        GMR:9,
-        TMR1:9,
-        TMR2:9,
-        MIR:9,
-        ISR:9,
-        SP:9,
-        HS:3
-
-    }[line];
-
-    let html = "";
-
-    for(
-        let i = 1;
-        i <= totalPC;
-        i++
-    ){
-
-   const pc =
-computers.find(c =>
-
-    String(c.line).trim()
-    ===
-    String(line).trim()
-
-    &&
-
-    (
-
-        String(c.pcNumber || "").trim()
-        ===
-        `PC${i}`
-
-        ||
-
-        String(c.pcName || "").trim()
-        ===
-        `${line}-PC${i}`
-
-        ||
-
-        String(c.pcName || "").trim()
-        ===
-        `PC${i}`
-
-    )
-
-);
-        let daysLeft = "-";
-        let percent = 100;
-        let detail = "";
-        let cardClass = "";
-
-if(pc){
-
-    const install =
-    new Date(pc.installDate);
-
-    const expire =
-    new Date(install);
-
-    expire.setFullYear(
-        expire.getFullYear()
-        +
-        parseInt(
-            pc.lifeCycle || 5
-        )
-    );
-
-    daysLeft =
-    Math.ceil(
-        (
-            expire -
-            new Date()
-        )
-        /
-        86400000
-    );
-
-    if(daysLeft <= 0){
-
-        cardClass =
-        "expired-card-bg";
-
-    }
-    else if(daysLeft <= 365){
-
-        cardClass =
-        "replace-card-bg";
-
-    }
-    else if(daysLeft <= 730){
-
-        cardClass =
-        "warning-card-bg";
-
-    }
-    else{
-
-        cardClass =
-        "healthy-card-bg";
-
-    }
-
-    const totalDays =
-    parseInt(
-        pc.lifeCycle || 5
-    ) * 365;
-
-    const usedDays =
-    (
-        new Date()
-        -
-        install
-    ) / 86400000;
-
-    percent =
-    Math.max(
-        0,
-        Math.min(
-            100,
-            (
-                (
-                    totalDays -
-                    usedDays
-                )
-                /
-                totalDays
-            ) * 100
-        )
-    );
-
-    detail = `
-    <div class="pc-detail">
-
-        <b>Asset :</b>
-        ${pc.assetTag}
-
-        <br>
-
-        <b>Computer :</b>
-        ${pc.pcName}
-
-        <br>
-
-        <b>Brand :</b>
-        ${pc.brand}
-
-        <br>
-
-        <b>program :</b>
-        ${pc.program}
-
-        <br>
-
-        <b>OS :</b>
-        ${pc.os}
-
-        <br>
-
-        <b>Install :</b>
-        ${new Date(pc.installDate)
-            .toLocaleDateString("en-GB")}
-
-    </div>
-    `;
-
-}
-html += `
-
-<div
-class="line-card ${cardClass}"
-onclick="selectPC('${line}','PC${i}')">
-
-    <div class="line-name">
-
-        ${line}-PC${i}
-
-        ${
-            pc
-            ?
-            `<span class="pc-program">
-                ${pc.pcName}
-            </span>`
-            :
-            ""
-        }
-
-    </div>
-
-    <div class="line-count">
-
-        ${daysLeft}
-        Days Remaining
-
-    </div>
-
-    ${detail}
-
-    <div class="progress-bar">
-
-        <div
-        class="progress-fill"
-        style="width:${percent}%;">
-        </div>
-
-    </div>
-
-</div>
-
-`;
-    }
-    document
-    .getElementById(
-        "lineGrid"
-    )
-    .innerHTML =
-    html;
-    }
-
-function exportExcel(){
-
-    const data = computers.map(pc => ({
-
-        "Asset Tag": pc.assetTag,
-        "Line": pc.line,
-        "PC No.": pc.pcNumber,
-        "Computer": pc.pcName,
-        "Brand": pc.brand,
-        "Program": pc.program,
-        "OS": pc.os,
-        "Install Date": pc.installDate,
-        "Life Cycle": pc.lifeCycle
-
-    }));
-
-    const worksheet =
-    XLSX.utils.json_to_sheet(data);
-
-    const workbook =
-    XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(
-        workbook,
-        worksheet,
-        "Computer Life"
-    );
-
-    XLSX.writeFile(
-        workbook,
-        "ComputerLife.xlsx"
-    );
-
-} 
- function renderLineSummary(){
-
-    const lines = {
-
-        HMR:9,
-        GMR:9,
-        TMR1:9,
-        TMR2:9,
-        MIR:9,
-        ISR:9,
-        SP:9,
-        HS:3
-
-    };
-
-    let html =
-    '<div class="line-summary-grid">';
-
-    Object.keys(lines)
-    .forEach(line => {
-
-        const total =
-        lines[line];
-
-        let healthy = 0;
-        let warning = 0;
-        let replaceSoon = 0;
-        let expired = 0;
-
-        computers.forEach(pc => {
-
-            if(pc.line !== line) return;
-
-            const install =
-            new Date(pc.installDate);
-
-            const expire =
-            new Date(install);
-
-            expire.setFullYear(
-                expire.getFullYear()
-                +
-                parseInt(pc.lifeCycle)
-            );
-
-            const remainingYears =
-            (
-                expire -
-                new Date()
-            )
-            /
-            (
-                1000*60*60*24*365
-            );
-
-            const status =
-            getStatus(
-                remainingYears
-            ).text;
-
-            if(status==="Healthy") healthy++;
-            else if(status==="Warning") warning++;
-            else if(status==="Replace Soon") replaceSoon++;
-            else expired++;
-
-        });
-
-        const percent =
-        Math.round(
-            (healthy/total) * 100
-        );
-
-        let barColor = "#22c55e";
-
-if(percent <= 20){
-
-    barColor = "#dc2626";
-
-}
-else if(percent <= 50){
-
-    barColor = "#f59e0b";
-
-}
-
-        html += `
-
-        <div class="line-status-card">
-
-         <div class="line-status-title">
-
-    💻 ${line}
-
-</div>
-
-            <div class="line-status-row">
-                <span>🟢 Healthy</span>
-                <b>${healthy}</b>
-            </div>
-
-            <div class="line-status-row">
-                <span>🟡 Warning</span>
-                <b>${warning}</b>
-            </div>
-
-            <div class="line-status-row">
-                <span>🟣 Replace</span>
-                <b>${replaceSoon}</b>
-            </div>
-
-            <div class="line-status-row">
-                <span>🔴 Expired</span>
-                <b>${expired}</b>
-            </div>
-
-            <div class="line-status-row">
-                <span>Health</span>
-                <b>${percent}%</b>
-            </div>
-
-          <div class="health-bar">
-
-    <div
-    class="health-fill"
-    style="
-    width:${percent}%;
-    background:${barColor};
-    ">
-    </div>
-
-</div>
-        </div>
-
-        `;
-
-    });
-
-    html += "</div>";
-
-    document
-    .getElementById(
-        "lineSummaryChart"
-    )
-    .innerHTML =
-    html;
-
-}
-function selectPC(
-    line,
-    pcNumber
-)
-{
-
-    selectedPC =
-    `${line}-${pcNumber}`;
+  try{
+    showLoading();
+    console.log("LOAD DATA START");
+    const response = await fetch(API_URL);
+    console.log("STATUS =", response.status);
+    const text = await response.text();
+    console.log("RAW DATA =", text);
+    computers = JSON.parse(text);
+    console.log("COMPUTERS =", computers);
 
     render();
-    document
-    .getElementById(
-        "computerSection"
-    )
-    .scrollIntoView({
-        behavior:"smooth"
+    renderLinePC();
+    renderLineSummary();
+    updatePcNumberOptions();
+    updatePcNameOptions();
+  }
+  catch(error){
+    console.error("LOAD ERROR =", error);
+    alert("Load Data Error");
+  }
+  finally{ hideLoading(); }
+}
+
+function updateDate(){
+  const now = new Date();
+  document.getElementById("todayDate").innerText =
+    now.toLocaleDateString("en-US", {weekday:"long",year:"numeric",month:"long",day:"numeric"});
+}
+
+function scrollToSection(id){
+  const section = document.getElementById(id);
+  if(section){ section.scrollIntoView({behavior:"smooth"}); }
+}
+
+async function saveComputer(){
+  const assetTag = document.getElementById("assetTag").value.trim();
+
+  const line = document.getElementById("line").value;
+  const pcNumber = document.getElementById("pcNumber").value;
+
+  const duplicate = computers.find((pc,index) =>
+    index !== editIndex
+    && String(pc.line).trim() === String(line).trim()
+    && String(pc.pcNumber).trim() === String(pcNumber).trim()
+  );
+
+  if(duplicate){
+    alert(`${line}-${pcNumber} already exists`);
+    return;
+  }
+
+  const pcName = document.getElementById("pcName").value.trim();
+  const installDate = document.getElementById("installDate").value;
+
+  if(assetTag === ""){ alert("Please enter Asset Tag"); return; }
+  if(pcName === ""){ alert("Please enter Computer Name"); return; }
+  if(installDate === ""){ alert("Please select Install Date"); return; }
+
+  const computer = {
+    id: editId,
+    assetTag: document.getElementById("assetTag").value,
+    line: document.getElementById("line").value,
+    pcNumber: document.getElementById("pcNumber").value,
+    pcName: document.getElementById("pcName").value,
+    brand: document.getElementById("brand").value,
+    program: document.getElementById("program").value,
+    os: document.getElementById("os").value,
+    installDate: document.getElementById("installDate").value,
+    lifeCycle: parseInt(document.getElementById("lifeCycle").value)
+  };
+
+  try{
+    console.log("EDIT ID =", editId);
+    console.log(computer);
+    showLoading();
+
+    const response = await fetch(API_URL, {method:"POST", body:JSON.stringify(computer)});
+    const result = await response.json();
+
+    if(result.success){
+      alert("Save Success");
+      clearForm();
+      await loadData();
+      updatePcNumberOptions();
+      hideLoading();
+    }
+  }
+  catch(error){
+    console.error(error);
+    alert("Cannot Save To Google Sheet");
+  }
+}
+
+function editComputer(index){
+  const pc = computers[index];
+  editId = pc.id;
+
+  document.getElementById("assetTag").value = pc.assetTag;
+  document.getElementById("line").value = pc.line;
+  updatePcNumberOptions();
+  updatePcNameOptions();
+
+  document.getElementById("pcNumber").value = pc.pcNumber || "PC1";
+  document.getElementById("pcName").value = pc.pcName;
+  document.getElementById("brand").value = pc.brand;
+  document.getElementById("program").value = pc.program;
+  document.getElementById("os").value = pc.os;
+  document.getElementById("installDate").value = new Date(pc.installDate).toISOString().split("T")[0];
+  document.getElementById("lifeCycle").value = pc.lifeCycle;
+
+  editIndex = index;
+
+  document.getElementById("formTitle").innerText = "Replace Computer";
+  document.getElementById("saveBtn").innerText = "Update Computer";
+
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+async function deleteComputer(index){
+  if(!confirm("Delete this computer ?")) return;
+
+  const pc = computers[index];
+
+  try{
+    await fetch(`${API_URL}?action=delete&id=${pc.id}`);
+    await loadData();
+    updatePcNumberOptions();
+    updatePcNameOptions();
+  }
+  catch(error){ console.error(error); }
+}
+
+function clearForm(){
+  document.getElementById("assetTag").value = "";
+  document.getElementById("pcName").selectedIndex = 0;
+  document.getElementById("pcNumber").selectedIndex = 0;
+  document.getElementById("brand").value = "";
+  document.getElementById("program").value = "";
+  document.getElementById("installDate").value = "";
+  document.getElementById("line").selectedIndex = 0;
+  document.getElementById("os").selectedIndex = 0;
+  document.getElementById("lifeCycle").value = "5";
+
+  editIndex = -1;
+  editId = "";
+  document.getElementById("formTitle").innerText = "Add Computer";
+  document.getElementById("saveBtn").innerText = "Save Computer";
+}
+
+function getStatus(remainingYears){
+  if(remainingYears <= 0){ return {text:"Expired", className:"status-expired"}; }
+  if(remainingYears <= 1){ return {text:"Replace Soon", className:"status-replace"}; }
+  if(remainingYears <= 2){ return {text:"Warning", className:"status-warning"}; }
+  return {text:"Healthy", className:"status-good"};
+}
+
+function render(){
+  let html = "";
+  let healthy = 0, warning = 0, replaceSoon = 0, expired = 0;
+
+  const keyword = "";
+  const filterLine = "";
+  const filterStatus = "";
+  const today = new Date();
+
+  computers.forEach(pc=>{
+    if(!pc.installDate){ return; }
+
+    const install = new Date(pc.installDate);
+    const expire = new Date(install);
+    expire.setFullYear(expire.getFullYear() + parseInt(pc.lifeCycle));
+
+    const remainingYears = (expire - today) / (1000*60*60*24*365);
+    const status = getStatus(remainingYears);
+
+    if(status.text === "Healthy"){ healthy++; }
+    if(status.text === "Warning"){ warning++; }
+    if(status.text === "Replace Soon"){ replaceSoon++; }
+    if(status.text === "Expired"){ expired++; }
+  });
+
+  const filteredData = computers.filter(pc=>{
+    const install = new Date(pc.installDate);
+    const expire = new Date(install);
+    expire.setFullYear(expire.getFullYear() + parseInt(pc.lifeCycle));
+
+    const remainingYears = (expire - today) / (1000*60*60*24*365);
+    const status = getStatus(remainingYears);
+
+    const matchKeyword = pc.assetTag.toLowerCase().includes(keyword)
+      || pc.pcName.toLowerCase().includes(keyword)
+      || pc.brand.toLowerCase().includes(keyword)
+      || pc.program.toLowerCase().includes(keyword);
+
+    const matchLine = filterLine === "" || pc.line === filterLine;
+    const matchStatus = filterStatus === "" || status.text === filterStatus;
+
+    return matchKeyword && matchLine && matchStatus;
+  });
+
+  filteredData.forEach((pc)=>{
+    const install = new Date(pc.installDate);
+    const expire = new Date(install);
+    expire.setFullYear(expire.getFullYear() + parseInt(pc.lifeCycle));
+
+    const remainingYears = (expire - today) / (1000*60*60*24*365);
+    const status = getStatus(remainingYears);
+    const realIndex = computers.indexOf(pc);
+
+    const rowClass = selectedPC === `${pc.line}-${pc.pcNumber}` ? "selected-row" : "";
+
+    html += `
+      <tr class="${rowClass}" data-pc="${pc.line}-${pc.pcNumber}">
+        <td>${pc.assetTag}</td>
+        <td>${pc.line}</td>
+        <td>${pc.pcNumber || ""}</td>
+        <td>${pc.pcName}</td>
+        <td>${pc.brand}</td>
+        <td>${pc.program}</td>
+        <td>${pc.os}</td>
+        <td>${new Date(pc.installDate).toLocaleDateString("en-GB")}</td>
+        <td>${pc.lifeCycle} Years</td>
+        <td>${expire.toISOString().split("T")[0]}</td>
+        <td>${remainingYears.toFixed(1)} Years</td>
+        <td class="${status.className}">${status.text}</td>
+        <td>
+          ${role === "Admin" ? `
+            <div class="action-buttons">
+              <button class="btn btn-edit" onclick="editComputer(${realIndex})">Edit</button>
+              <button class="btn btn-replace" onclick="editComputer(${realIndex})">Replace</button>
+              <button class="btn btn-delete" onclick="deleteComputer(${realIndex})">Delete</button>
+            </div>
+          ` : `<button class="btn btn-edit" onclick="editComputer(${realIndex})">Edit</button>`}
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("computerTable").innerHTML = html;
+  document.getElementById("totalPcCount").innerText = computers.length;
+  document.getElementById("healthyCount").innerText = healthy;
+  document.getElementById("warningCount").innerText = warning;
+  document.getElementById("replaceCount").innerText = replaceSoon;
+  document.getElementById("expiredCount").innerText = expired;
+}
+
+function renderLinePC(){
+  const line = document.getElementById("lineSelector").value;
+  const totalPC = {HMR:9,GMR:9,TMR1:9,TMR2:9,MIR:9,ISR:9,SP:9,HS:3}[line];
+
+  let html = "";
+
+  for(let i = 1; i <= totalPC; i++){
+    const pc = computers.find(c =>
+      String(c.line).trim() === String(line).trim()
+      && (
+        String(c.pcNumber || "").trim() === `PC${i}`
+        || String(c.pcName || "").trim() === `${line}-PC${i}`
+        || String(c.pcName || "").trim() === `PC${i}`
+      )
+    );
+
+    let daysLeft = "-";
+    let percent = 100;
+    let detail = "";
+    let cardClass = "";
+
+    if(pc){
+      const install = new Date(pc.installDate);
+      const expire = new Date(install);
+      expire.setFullYear(expire.getFullYear() + parseInt(pc.lifeCycle || 5));
+
+      daysLeft = Math.ceil((expire - new Date()) / 86400000);
+
+      if(daysLeft <= 0){ cardClass = "expired-card-bg"; }
+      else if(daysLeft <= 365){ cardClass = "replace-card-bg"; }
+      else if(daysLeft <= 730){ cardClass = "warning-card-bg"; }
+      else{ cardClass = "healthy-card-bg"; }
+
+      const totalDays = parseInt(pc.lifeCycle || 5) * 365;
+      const usedDays = (new Date() - install) / 86400000;
+
+      percent = Math.max(0, Math.min(100, ((totalDays - usedDays) / totalDays) * 100));
+
+      detail = `
+        <div class="pc-detail">
+          <b>Asset :</b> ${pc.assetTag}<br>
+          <b>Computer :</b> ${pc.pcName}<br>
+          <b>Brand :</b> ${pc.brand}<br>
+          <b>program :</b> ${pc.program}<br>
+          <b>OS :</b> ${pc.os}<br>
+          <b>Install :</b> ${new Date(pc.installDate).toLocaleDateString("en-GB")}
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="line-card ${cardClass}" onclick="selectPC('${line}','PC${i}')">
+        <div class="line-name">
+          ${line}-PC${i}
+          ${pc ? `<span class="pc-program">${pc.pcName}</span>` : ""}
+        </div>
+        <div class="line-count">${daysLeft} Days Remaining</div>
+        ${detail}
+        <div class="progress-bar"><div class="progress-fill" style="width:${percent}%;"></div></div>
+      </div>
+    `;
+  }
+
+  document.getElementById("lineGrid").innerHTML = html;
+}
+
+function exportExcel(){
+  const data = computers.map(pc => ({
+    "Asset Tag": pc.assetTag,
+    "Line": pc.line,
+    "PC No.": pc.pcNumber,
+    "Computer": pc.pcName,
+    "Brand": pc.brand,
+    "Program": pc.program,
+    "OS": pc.os,
+    "Install Date": pc.installDate,
+    "Life Cycle": pc.lifeCycle
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Computer Life");
+  XLSX.writeFile(workbook, "ComputerLife.xlsx");
+}
+
+function renderLineSummary(){
+  const lines = {HMR:9,GMR:9,TMR1:9,TMR2:9,MIR:9,ISR:9,SP:9,HS:3};
+
+  let html = '<div class="line-summary-grid">';
+
+  Object.keys(lines).forEach(line => {
+    const total = lines[line];
+    let healthy = 0, warning = 0, replaceSoon = 0, expired = 0;
+
+    computers.forEach(pc => {
+      if(pc.line !== line) return;
+
+      const install = new Date(pc.installDate);
+      const expire = new Date(install);
+      expire.setFullYear(expire.getFullYear() + parseInt(pc.lifeCycle));
+
+      const remainingYears = (expire - new Date()) / (1000*60*60*24*365);
+      const status = getStatus(remainingYears).text;
+
+      if(status==="Healthy") healthy++;
+      else if(status==="Warning") warning++;
+      else if(status==="Replace Soon") replaceSoon++;
+      else expired++;
     });
 
+    const percent = Math.round((healthy/total) * 100);
+
+    let barColor = "#15a364";
+    if(percent <= 20){ barColor = "#e0392c"; }
+    else if(percent <= 50){ barColor = "#d97706"; }
+
+    html += `
+      <div class="line-status-card">
+        <div class="line-status-title">💻 ${line}</div>
+        <div class="line-status-row"><span>🟢 Healthy</span><b>${healthy}</b></div>
+        <div class="line-status-row"><span>🟡 Warning</span><b>${warning}</b></div>
+        <div class="line-status-row"><span>🟣 Replace</span><b>${replaceSoon}</b></div>
+        <div class="line-status-row"><span>🔴 Expired</span><b>${expired}</b></div>
+        <div class="line-status-row"><span>Health</span><b>${percent}%</b></div>
+        <div class="health-bar"><div class="health-fill" style="width:${percent}%;background:${barColor};"></div></div>
+      </div>
+    `;
+  });
+
+  html += "</div>";
+  document.getElementById("lineSummaryChart").innerHTML = html;
+}
+
+function selectPC(line, pcNumber){
+  selectedPC = `${line}-${pcNumber}`;
+  render();
+  document.getElementById("computerSection").scrollIntoView({behavior:"smooth"});
 }
 
 function updatePcNumberOptions(){
+  const line = document.getElementById("line").value;
+  const select = document.getElementById("pcNumber");
 
-    const line =
-    document.getElementById(
-        "line"
-    ).value;
+  const maxPc = {HMR:9,GMR:9,TMR1:9,TMR2:9,MIR:9,ISR:9,SP:9,HS:3};
+  const currentValue = select.value;
 
-    const select =
-    document.getElementById(
-        "pcNumber"
+  select.innerHTML = "";
+
+  for(let i=1; i<=maxPc[line]; i++){
+    const pc = `PC${i}`;
+    const exists = computers.some(item =>
+      item.line === line && item.pcNumber === pc && item.id != editId
     );
 
-    const maxPc = {
-
-        HMR:9,
-        GMR:9,
-        TMR1:9,
-        TMR2:9,
-        MIR:9,
-        ISR:9,
-        SP:9,
-        HS:3
-
-    };
-
-    const currentValue =
-    select.value;
-
-    select.innerHTML = "";
-
-    for(
-        let i=1;
-        i<=maxPc[line];
-        i++
-    ){
-
-        const pc =
-        `PC${i}`;
-
-        const exists =
-        computers.some(item =>
-
-            item.line === line
-
-            &&
-
-            item.pcNumber === pc
-
-            &&
-
-            item.id != editId
-
-        );
-
-        if(!exists){
-
-            select.innerHTML +=
-            `<option value="${pc}">
-                ${pc}
-            </option>`;
-
-        }
-
+    if(!exists){
+      select.innerHTML += `<option value="${pc}">${pc}</option>`;
     }
+  }
 
-    if(currentValue){
-
-        select.value =
-        currentValue;
-
-    }
-
+  if(currentValue){ select.value = currentValue; }
 }
 
-    function updatePcNameOptions(){
+function updatePcNameOptions(){
+  const line = document.getElementById("line").value;
+  const select = document.getElementById("pcName");
 
-    const line =
-    document.getElementById(
-        "line"
-    ).value;
+  const names = [
+    "Pigtail Welding","FFC1 Welding (L)","FFC1 Welding (R)","FFC2 Welding (L)","FFC2 Welding (R)",
+    "Function Tester","Electric Tester","Final Tester","Image Filing"
+  ];
 
-    const select =
-    document.getElementById(
-        "pcName"
-    );
+  const currentValue = select.value;
+  select.innerHTML = '<option value="">Select Computer Name</option>';
 
-    const names = [
+  names.forEach(name => {
+    const exists = computers.some(pc => pc.line === line && pc.pcName === name && pc.id != editId);
+    if(!exists){
+      select.innerHTML += `<option value="${name}">${name}</option>`;
+    }
+  });
 
-        "Pigtail Welding",
-        "FFC1 Welding (L)",
-        "FFC1 Welding (R)",
-        "FFC2 Welding (L)",
-        "FFC2 Welding (R)",
-        "Function Tester",
-        "Electric Tester",
-        "Final Tester",
-        "Image Filing"
-
-    ];
-
-    const currentValue =
-    select.value;
-
-    select.innerHTML =
-    '<option value="">Select Computer Name</option>';
-
-    names.forEach(name => {
-
-        const exists =
-        computers.some(pc =>
-
-            pc.line === line
-
-            &&
-
-            pc.pcName === name
-
-            &&
-
-            pc.id != editId
-
-        );
-
-        if(!exists){
-
-            select.innerHTML +=
-
-            `<option value="${name}">
-                ${name}
-            </option>`;
-
-        }
-
-    });
-
-    select.value =
-    currentValue;
-
+  select.value = currentValue;
 }
 
-    updateDate();
-
+updateDate();
 loadData();
-    if(role !== "Admin"){
 
-    document
-    .getElementById(
-        "exportBtn"
-    )
-    .style.display =
-    "none";
-
+if(role !== "Admin"){
+  document.getElementById("exportBtn").style.display = "none";
 }
-
-แต่ถ้ามึงต้องการ
-
 </script>
-    
+
 <div id="loadingOverlay">
-
-    <div class="loading-box">
-
-        <div class="spinner"></div>
-
-        <div class="loading-text">
-
-            Loading Data...
-
-        </div>
-
-    </div>
-
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading Data...</div>
+  </div>
 </div>
 
-
-    
 </body>
 </html>
