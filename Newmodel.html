@@ -3,100 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Factory Dashboard - New Model V2</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Factory Dashboard - New Model</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --bg:#eef2f7;
-  --ink:#0f172a;
-  --muted:#64748b;
-  --line:#dbe2ea;
+  --ink:#0c1117;
+  --sidebar:#0b1220;
+  --sidebar-line:#1b2536;
+  --sidebar-text:#aab4c8;
+  --bg:#f1f3f8;
+  --muted:#6b7385;
+  --line:#e3e7ef;
   --card:#ffffff;
-  --accent:#2563eb;
-  --accent-dark:#1d4ed8;
-  --New:#16a34a;
-  --New-bg:#dcfce7;
+  --accent:#3461fd;
+  --accent-dark:#2347d6;
+  --accent-soft:#e8edff;
+
+  --New:#15a364;
+  --New-bg:#dcf6e8;
   --modify:#d97706;
   --modify-bg:#fef3c7;
-  --problem:#dc2626;
-  --problem-bg:#fee2e2;
+  --problem:#e0392c;
+  --problem-bg:#fde6e3;
+  --current:#2f6fed;
+  --current-bg:#dbe6fe;
+
   --radius:14px;
-  --current:#2563eb;
-  --current-bg:#dbeafe;
+  --radius-sm:10px;
+  --shadow-sm:0 1px 2px rgba(13,18,30,.04), 0 6px 16px rgba(13,18,30,.05);
+  --shadow-md:0 10px 30px rgba(13,18,30,.10);
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-body{background:var(--bg);color:var(--ink)}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 
-.header{
-  background:var(--ink);
-  color:#fff;
-  padding:18px 28px;
-  font-size:21px;
-  font-weight:700;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.header .sub{font-size:12.5px;font-weight:500;color:#94a3b8;margin-top:2px}
+/* ===== SIDEBAR (shared) ===== */
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:var(--sidebar);color:#fff;padding:24px 18px;z-index:1000;display:flex;flex-direction:column;border-right:1px solid var(--sidebar-line)}
+.sidebar-logo{font-size:19px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;margin-bottom:22px;padding:0 6px}
+.sidebar-logo .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(155deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+.status-strip{display:flex;align-items:center;gap:8px;padding:9px 12px;margin-bottom:18px;background:#10182b;border:1px solid var(--sidebar-line);border-radius:999px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--New);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(21,163,100,.55)}70%{box-shadow:0 0 0 6px rgba(21,163,100,0)}100%{box-shadow:0 0 0 0 rgba(21,163,100,0)}}
+.status-strip span{font-size:11px;font-weight:700;letter-spacing:.06em;color:#8fe3b8;text-transform:uppercase}
+.sidebar-section-label{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#566077;margin:6px 8px 10px}
+.sidebar-menu{display:flex;flex-direction:column;gap:4px}
+.menu-btn{border:none;background:transparent;color:var(--sidebar-text);text-align:left;padding:11px 14px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;transition:background .15s,color .15s;width:100%}
+.menu-btn:hover{background:#131c30;color:#fff}
+.menu-btn.active{background:var(--accent);color:#fff}
+.menu-btn .ic{font-size:16px;width:18px;text-align:center;flex:none}
+.sidebar-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--sidebar-line)}
+.sidebar-foot small{color:#566077;font-size:11px}
+.menu-toggle{display:none}
 
-.container{padding:22px;max-width:1400px;margin:0 auto}
+/* ===== MAIN ===== */
+.main-content{margin-left:260px}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;padding:24px 28px 0;flex-wrap:wrap;gap:10px}
+.topbar h1{font-size:23px;font-weight:800;letter-spacing:-.01em}
+.topbar p{color:var(--muted);margin-top:4px;font-size:13.5px}
+
+.container{padding:18px 28px 50px;max-width:1500px;margin:0 auto}
 .grid{display:grid;grid-template-columns:380px 1fr;gap:20px;align-items:start}
-@media (max-width:900px){.grid{grid-template-columns:1fr}}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
 
-.card{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:20px;
-  box-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
-  border:1px solid var(--line);
-}
-.card h2{
-  margin-bottom:16px;
-  font-size:15px;
-  font-weight:700;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+.card h2{margin-bottom:16px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
 
 .group{margin-bottom:13px}
-label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#334155}
-input,select,textarea{
-  width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;
-  font-size:13.5px;background:#fbfcfe;color:var(--ink);
-  transition:border-color .15s, box-shadow .15s;
-}
-input:focus,select:focus,textarea:focus{
-  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12);
-  background:#fff;
-}
+label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#39414f}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #d7dce6;border-radius:var(--radius-sm);font-size:13.5px;background:#fbfcfe;color:var(--ink);transition:border-color .15s, box-shadow .15s;font-family:'Inter',sans-serif}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#fff}
 textarea{height:70px;resize:vertical}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 .required-mark{color:var(--problem);margin-left:2px}
 .field-error{font-size:11.5px;color:var(--problem);margin-top:4px;display:none}
 
-.actions{display:flex;gap:8px;margin-top:6px}
-button{
-  padding:10px 16px;border:none;border-radius:9px;font-weight:700;font-size:13.5px;
-  cursor:pointer;transition:transform .08s, opacity .15s;
-}
+.actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+button{padding:10px 16px;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:13.5px;cursor:pointer;transition:transform .08s, opacity .15s, box-shadow .15s}
+button:hover{box-shadow:0 6px 14px rgba(13,18,30,.12)}
 button:active{transform:scale(.97)}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{background:var(--accent-dark)}
-.btn-secondary{background:#f1f5f9;color:#334155}
-.btn-secondary:hover{background:#e2e8f0}
+.btn-secondary{background:#eef0f5;color:#39414f}
+.btn-secondary:hover{background:#e2e6ee}
 .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
 button:disabled{opacity:.55;cursor:not-allowed}
 
-.edit-banner{
-  background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:12.5px;font-weight:600;
-  padding:8px 10px;border-radius:9px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:8px;
-}
+.edit-banner{background:var(--accent-soft);border:1px solid #c7d4ff;color:var(--accent-dark);font-size:12.5px;font-weight:600;padding:8px 10px;border-radius:var(--radius-sm);margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:8px}
 .edit-banner.show{display:flex}
-.edit-banner button{padding:4px 8px;font-size:11.5px;background:#fff;color:#1d4ed8;border:1px solid #bfdbfe}
+.edit-banner button{padding:4px 8px;font-size:11.5px;background:#fff;color:var(--accent-dark);border:1px solid #c7d4ff}
 
-/* layout card */
 .layout-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .layout-head h2{margin-bottom:0}
 .filter-row{display:flex;gap:8px;align-items:center}
@@ -104,46 +102,25 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 .summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 
-/* machine overview cards */
-.machine-overview{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
-  gap:14px;margin-bottom:20px;
-}
-.overview-card{
-  background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-.overview-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 14px 28px rgba(15,23,42,.12);
-  border-color:#c7d2e0;
-}
+.machine-overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-bottom:20px}
+.overview-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease}
+.overview-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:#c7d2e0}
 .ov-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .ov-name{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:6px}
-.ov-count{font-size:11px;color:var(--muted);background:#f1f5f9;padding:2px 8px;border-radius:999px}
-.progress-track{height:10px;background:#eef2f7;border-radius:999px;overflow:hidden;margin-bottom:6px}
+.ov-count{font-size:11px;color:var(--muted);background:#f1f3f8;padding:2px 8px;border-radius:999px;font-family:'IBM Plex Mono',monospace}
+.progress-track{height:9px;background:#eef1f7;border-radius:999px;overflow:hidden;margin-bottom:6px}
 .progress-fill{height:100%;border-radius:999px;transition:width .5s ease, background-color .3s ease}
 .bar-green{background:var(--New)}
 .bar-yellow{background:var(--modify)}
 .bar-red{background:var(--problem)}
-.ov-pct{font-size:12px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
-.ov-pct .muted-label{font-weight:500;color:var(--muted);font-size:11px}
+.ov-pct{font-size:12px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+.ov-pct .muted-label{font-weight:500;color:var(--muted);font-size:11px;font-family:'Inter',sans-serif}
 
-.entry-list{
-  margin-top:12px;border-top:1px solid var(--line);padding-top:10px;
-  max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;
-}
-.entry-row{
-  border:1px solid var(--line);border-left:3px solid transparent;border-radius:9px;
-  padding:10px 11px;background:#fbfcfe;
-  transition:transform .15s ease, box-shadow .15s ease, background-color .15s ease;
-}
-.entry-row:hover{
-  transform:translateX(2px);
-  background:#fff;
-  box-shadow:0 4px 12px rgba(15,23,42,.08);
-}
+.entry-list{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.entry-row{border:1px solid var(--line);border-left:3px solid transparent;border-radius:var(--radius-sm);padding:10px 11px;background:#fbfcfe;transition:transform .15s ease, box-shadow .15s ease, background-color .15s ease}
+.entry-row:hover{transform:translateX(2px);background:#fff;box-shadow:0 4px 12px rgba(13,18,30,.08)}
 .entry-row.New{border-left-color:var(--New)}
+.entry-row.current{border-left-color:var(--current)}
 .entry-row.modify{border-left-color:var(--modify)}
 .entry-row.problem{border-left-color:var(--problem)}
 .entry-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
@@ -152,261 +129,85 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .entry-actions{display:flex;gap:6px;margin-top:8px}
 .entry-actions button{padding:5px 9px;font-size:11px;border-radius:7px}
 
-.pill{
-  font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;display:flex;gap:6px;align-items:center;
-}
+.pill{font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;display:flex;gap:6px;align-items:center}
 .pill.New{background:var(--New-bg);color:var(--New)}
+.pill.current{background:var(--current-bg);color:var(--current)}
 .pill.modify{background:var(--modify-bg);color:var(--modify)}
 .pill.problem{background:var(--problem-bg);color:var(--problem)}
-.pill.total{background:#f1f5f9;color:#334155}
+.pill.total{background:#f1f3f8;color:#39414f}
 
 .line-tag{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.status-badge{
-  display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
-  padding:3px 9px;border-radius:999px;margin-bottom:8px;
-}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;margin-bottom:8px}
 .status-badge.New{background:var(--New-bg);color:var(--New)}
+.status-badge.current{background:var(--current-bg);color:var(--current)}
 .status-badge.modify{background:var(--modify-bg);color:var(--modify)}
 .status-badge.problem{background:var(--problem-bg);color:var(--problem)}
 .meta-line{font-size:11.5px;color:var(--muted);margin-bottom:2px}
 .card-actions{display:flex;gap:6px;margin-top:10px}
 .card-actions button{padding:6px 10px;font-size:11.5px;border-radius:7px}
 
-.empty-state{
-  grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted);
-}
+.empty-state{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted)}
 .empty-state .big{font-size:34px;margin-bottom:8px}
-
 .loading-row{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13.5px}
-.toast{
-  position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:11px 18px;
-  border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.2);
-  opacity:0;transform:translateY(10px);transition:opacity .2s, transform .2s;pointer-events:none;z-index:999;
-}
+
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:var(--shadow-md);opacity:0;transform:translateY(10px);transition:opacity .2s, transform .2s;pointer-events:none;z-index:9999}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.error{background:var(--problem)}
 .toast.success{background:var(--New)}
 
-
-  .entry-row.current{
-    border-left-color:var(--current);
-}
-
-.pill.current{
-    background:var(--current-bg);
-    color:var(--current);
-}
-
-.status-badge.current{
-    background:var(--current-bg);
-    color:var(--current);
-}
-
-  /* ===========================
-DETAIL POPUP
-=========================== */
-
-.detail-modal{
-
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,.45);
-
-    z-index:9999;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-.detail-box{
-
-    width:950px;
-
-    max-width:95%;
-
-    max-height:90vh;
-
-    overflow:auto;
-
-    background:white;
-
-    border-radius:16px;
-
-    padding:24px;
-
-    animation:popup .2s;
-
-}
-
-@keyframes popup{
-
-from{
-
-transform:scale(.95);
-
-opacity:0;
-
-}
-
-to{
-
-transform:scale(1);
-
-opacity:1;
-
-}
-
-}
-
-.detail-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:20px;
-
-}
-
-.close-btn{
-
-background:none;
-
-border:none;
-
-font-size:22px;
-
-cursor:pointer;
-
-color:#64748b;
-
-}
-
-.detail-grid{
-
-display:grid;
-
-grid-template-columns:1fr 1fr;
-
-gap:25px;
-
-margin-bottom:20px;
-
-}
-
-.detail-card{
-
-background:#f8fafc;
-
-border:1px solid #e2e8f0;
-
-border-radius:12px;
-
-padding:15px;
-
-}
-
-.detail-card h3{
-
-margin-bottom:12px;
-
-font-size:15px;
-
-}
-
-.detail-item{
-
-display:flex;
-
-justify-content:space-between;
-
-padding:6px 0;
-
-border-bottom:1px dashed #e2e8f0;
-
-font-size:13px;
-
-}
-
-.detail-item:last-child{
-
-border-bottom:none;
-
-}
-
-.detail-footer{
-
-margin-top:25px;
-
-text-align:center;
-
-}
-
-.purchase-status{
-
-    display:flex;
-
-    gap:18px;
-
-    margin:8px 0;
-
-    font-size:12px;
-
-    font-weight:700;
-
-}
-
-.purchase-status span{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:6px;
-
-    color:#334155;
-
-}
-
-.dot-green{
-
-    width:10px;
-
-    height:10px;
-
-    border-radius:50%;
-
-    background:#22c55e;
-
-}
-
-.dot-red{
-
-    width:10px;
-
-    height:10px;
-
-    border-radius:50%;
-
-    background:#ef4444;
-
+/* ===== DETAIL MODAL ===== */
+.detail-modal{display:none;position:fixed;inset:0;background:rgba(11,18,32,.5);z-index:99999;justify-content:center;align-items:center}
+.detail-box{width:950px;max-width:95%;max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:24px;animation:popup .2s}
+@keyframes popup{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.detail-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.close-btn{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+@media (max-width:700px){.detail-grid{grid-template-columns:1fr}}
+.detail-card{background:#fbfcfe;border:1px solid var(--line);border-radius:12px;padding:15px}
+.detail-card h3{margin-bottom:12px;font-size:14px}
+.detail-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.detail-item:last-child{border-bottom:none}
+.detail-footer{margin-top:20px;text-align:center}
+
+.purchase-status{display:flex;gap:18px;margin:8px 0;font-size:12px;font-weight:700}
+.purchase-status span{display:flex;align-items:center;gap:6px;color:#39414f}
+.dot-green{width:9px;height:9px;border-radius:50%;background:var(--New)}
+.dot-red{width:9px;height:9px;border-radius:50%;background:var(--problem)}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:980px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s ease;box-shadow:var(--shadow-md)}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .menu-toggle{display:flex;align-items:center;justify-content:center;position:fixed;top:16px;left:16px;z-index:1100;width:42px;height:42px;border-radius:11px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;box-shadow:var(--shadow-md)}
+  .topbar{padding-top:74px}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="sidebar">
+  <div class="sidebar-logo"><span class="mark">🆕</span> New Model</div>
+  <div class="status-strip"><span class="status-dot"></span><span>System Online</span></div>
+
+  <div class="sidebar-section-label">Navigate</div>
+  <div class="sidebar-menu">
+    <button class="menu-btn" onclick="window.location.href='index.html'"><span class="ic">🏭</span> Factory Dashboard</button>
+    <button class="menu-btn" onclick="window.location.href='ComputerLife.html'"><span class="ic">💻</span> Computer Life</button>
+    <button class="menu-btn active"><span class="ic">🆕</span> New Model</button>
+  </div>
+
+  <div class="sidebar-foot"><small>Furukawa · Internal Tool</small></div>
+</div>
+
+<div class="main-content">
+
+<div class="topbar">
   <div>
-    <div>🏭 Factory Dashboard — New Model V2</div>
-    <div class="sub">Production line model status tracker</div>
+    <h1>🏭 New Model V2</h1>
+    <p>Production line model status tracker</p>
   </div>
 </div>
 
@@ -439,13 +240,13 @@ text-align:center;
         <label>Machine</label>
         <select id="machine">
           <option>Stator clip assembly jig</option>
-           <option>Clamp assembly jig</option>
-           <option>Rotator handling jig</option>
-           <option>Barcode pasting jig</option>
-            <option>Barcode feeder</option>
-            <option>Harness length measurement jig</option>
-            <option>Window feeder</option>
-            <option>Neutral window pasting jig</option>
+          <option>Clamp assembly jig</option>
+          <option>Rotator handling jig</option>
+          <option>Barcode pasting jig</option>
+          <option>Barcode feeder</option>
+          <option>Harness length measurement jig</option>
+          <option>Window feeder</option>
+          <option>Neutral window pasting jig</option>
           <option>Lcc inspection</option>
           <option>Function tester</option>
           <option>Electric tester</option>
@@ -458,7 +259,7 @@ text-align:center;
       <label>Status</label>
       <select id="status">
         <option value="New">🟢 New</option>
-         <option value="Current">🔵 Current</option>
+        <option value="Current">🔵 Current</option>
         <option value="Modify">🟡 Modified</option>
         <option value="Problem">🔴 Problem</option>
       </select>
@@ -475,29 +276,27 @@ text-align:center;
       </div>
     </div>
 
-<div class="group">
-  <label>Maker</label>
-  <input id="pic" placeholder="Person in charge">
-</div>
+    <div class="group">
+      <label>Maker</label>
+      <input id="pic" placeholder="Person in charge">
+    </div>
 
-<div class="row2">
+    <div class="row2">
+      <div class="group">
+        <label>PR No.</label>
+        <input id="pr" placeholder="e.g. PR25070001">
+      </div>
+      <div class="group">
+        <label>PO No.</label>
+        <input id="po" placeholder="e.g. PO25070001">
+      </div>
+    </div>
 
-  <div class="group">
-    <label>PR No.</label>
-    <input id="pr" placeholder="e.g. PR25070001">
-  </div>
+    <div class="group">
+      <label>Remark</label>
+      <textarea id="remark" placeholder="Notes..."></textarea>
+    </div>
 
-  <div class="group">
-    <label>PO No.</label>
-    <input id="po" placeholder="e.g. PO25070001">
-  </div>
-
-</div>
-
-<div class="group">
-  <label>Remark</label>
-  <textarea id="remark" placeholder="Notes..."></textarea>
-</div>
     <div class="group">
       <label>Drawing</label>
       <input type="file" id="drawing" multiple>
@@ -529,6 +328,7 @@ text-align:center;
 
 </div>
 </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -538,8 +338,6 @@ const MACHINES = [ "Stator clip assembly jig", "Clamp assembly jig", "Rotator ha
 let models = [];
 let editId = "";
 
-
-
 function progressColorClass(pct){
   if (pct < 20) return "bar-red";
   if (pct < 50) return "bar-yellow";
@@ -547,33 +345,23 @@ function progressColorClass(pct){
 }
 
 function entryRowHtml(m){
- let cls = "New";
-let statusIcon = "🟢";
+  let cls = "New";
+  let statusIcon = "🟢";
 
-if(m.status === "Current"){
-    cls = "current";
-    statusIcon = "🔵";
-}
-else if(m.status === "Modify"){
-    cls = "modify";
-    statusIcon = "🟡";
-}
-else if(m.status === "Problem"){
-    cls = "problem";
-    statusIcon = "🔴";
-}
+  if(m.status === "Current"){ cls = "current"; statusIcon = "🔵"; }
+  else if(m.status === "Modify"){ cls = "modify"; statusIcon = "🟡"; }
+  else if(m.status === "Problem"){ cls = "problem"; statusIcon = "🔴"; }
 
   return `
-    <div class="entry-row ${cls}"
-ondblclick="showDetail('${m.id}')">
+    <div class="entry-row ${cls}" ondblclick="showDetail('${m.id}')">
       <div class="entry-top">
         <span class="line-tag">${escapeHtml(m.line || "—")}</span>
         <span class="status-badge ${cls}">${statusIcon} ${escapeHtml(m.status || "")}</span>
       </div>
       <div class="entry-model">${escapeHtml(m.model || "Untitled model")}</div>
       ${m.pic ? `<div class="meta-line">👤 ${escapeHtml(m.pic)}</div>` : ""}
-     ${(m.startDate || m.finishDate)? `<div class="meta-line">📅 ${formatDate(m.startDate)} → ${formatDate(m.finishDate)}</div>`: ""}
-     ${renderPurchaseStatus(m)}
+      ${(m.startDate || m.finishDate)? `<div class="meta-line">📅 ${formatDate(m.startDate)} → ${formatDate(m.finishDate)}</div>`: ""}
+      ${renderPurchaseStatus(m)}
       ${m.drawingUrl ? `<div class="meta-line">📎 <a href="${escapeHtml(m.drawingUrl)}" target="_blank" rel="noopener">${escapeHtml(m.drawingName || "Drawing")}</a></div>` : ""}
       <div class="entry-actions">
         <button class="btn-secondary" onclick="editModel('${m.id}')">✏️ Edit</button>
@@ -583,7 +371,6 @@ ondblclick="showDetail('${m.id}')">
   `;
 }
 
-/* ---------- machine overview (card per machine, with its records nested inside) ---------- */
 function renderMachineOverview(filtered){
   const container = document.getElementById("machineOverview");
   container.innerHTML = "";
@@ -592,11 +379,7 @@ function renderMachineOverview(filtered){
     const records = filtered.filter(m => m.machine === machine);
     const pcts = records.map(r => calcProgress(r.startDate, r.finishDate)).filter(p => p !== null);
     const hasProgress = pcts.length > 0;
-    const avgPct = hasProgress
-    ? Math.round(
-        pcts.reduce((a,b)=>a+b,0)/pcts.length
-      )
-    : 0;
+    const avgPct = hasProgress ? Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length) : 0;
     const colorClass = progressColorClass(avgPct);
 
     const entriesHtml = records.length
@@ -623,7 +406,6 @@ function renderMachineOverview(filtered){
   });
 }
 
-/* ---------- toast ---------- */
 function showToast(msg, type=""){
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -632,16 +414,15 @@ function showToast(msg, type=""){
   t._timer = setTimeout(()=> t.classList.remove("show"), 2800);
 }
 
-/* ---------- rendering ---------- */
 function render(){
   const filterLine = document.getElementById("filterLine").value;
   const filtered = filterLine ? models.filter(m => m.line === filterLine) : models;
 
   renderMachineOverview(filtered);
 
-  // summary pills
-  const counts = { New:0,  Current:0, Modify:0, Problem:0 };
+  const counts = { New:0, Current:0, Modify:0, Problem:0 };
   filtered.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
+
   document.getElementById("summary").innerHTML = `
     <span class="pill total">Total: ${filtered.length}</span>
     <span class="pill New">🟢 New: ${counts.New}</span>
@@ -655,7 +436,6 @@ function escapeHtml(str){
   return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-/* ---------- save / update ---------- */
 function validateForm(){
   const modelName = document.getElementById("modelName").value.trim();
   const errEl = document.getElementById("err-modelName");
@@ -671,7 +451,7 @@ function validateForm(){
 function fileToBase64(file){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(",")[1]); // strip data: prefix
+    reader.onload = () => resolve(reader.result.split(",")[1]);
     reader.onerror = () => reject(new Error("Could not read file"));
     reader.readAsDataURL(file);
   });
@@ -681,12 +461,7 @@ async function uploadDrawingFile(file){
   const base64 = await fileToBase64(file);
   const res = await fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify({
-      action: "uploadDrawing",
-      base64: base64,
-      fileName: file.name,
-      mimeType: file.type
-    })
+    body: JSON.stringify({ action: "uploadDrawing", base64: base64, fileName: file.name, mimeType: file.type })
   });
   if (!res.ok) throw new Error("Upload request failed: " + res.status);
   const data = await res.json();
@@ -705,79 +480,51 @@ async function saveModel(){
     start: document.getElementById("startDate").value,
     finish: document.getElementById("finishDate").value,
     pic: document.getElementById("pic").value.trim(),
-    pr:document.getElementById("pr").value.trim(),
-po:document.getElementById("po").value.trim(),
+    pr: document.getElementById("pr").value.trim(),
+    po: document.getElementById("po").value.trim(),
     remark: document.getElementById("remark").value.trim()
   };
 
   let action = "saveNewModel";
   let id = Date.now();
-  if (editId !== ""){
-    action = "updateNewModel";
-    id = editId;
-  }
+  if (editId !== ""){ action = "updateNewModel"; id = editId; }
 
   const saveBtn = document.getElementById("saveBtn");
   saveBtn.disabled = true;
 
-  // upload drawing first, if a new file was chosen
- 
   const fileInput = document.getElementById("drawing");
   const files = [...fileInput.files];
 
-let drawings = [];
+  let drawings = [];
 
-if(files.length){
-
-    saveBtn.textContent="Uploading...";
-
+  if(files.length){
+    saveBtn.textContent = "Uploading...";
     for(const file of files){
-
-        const uploaded =
-        await uploadDrawingFile(file);
-
-        drawings.push(uploaded);
-
+      const uploaded = await uploadDrawingFile(file);
+      drawings.push(uploaded);
     }
-
-}
+  }
 
   try{
-
-
     saveBtn.textContent = "Saving...";
-let drawingName = "";
-let drawingUrl = "";
+    let drawingName = "";
+    let drawingUrl = "";
 
-if(drawings.length){
-
-    drawingName =
-    drawings.map(x=>x.drawingName).join("|");
-
-    drawingUrl =
-    drawings.map(x=>x.drawingUrl).join("|");
-
-}
-else if(editId){
-
-    const old =
-    models.find(x=>String(x.id)===String(editId));
-
-    drawingName =
-    old?.drawingName || "";
-
-    drawingUrl =
-    old?.drawingUrl || "";
-
-}
+    if(drawings.length){
+      drawingName = drawings.map(x=>x.drawingName).join("|");
+      drawingUrl = drawings.map(x=>x.drawingUrl).join("|");
+    }
+    else if(editId){
+      const old = models.find(x=>String(x.id)===String(editId));
+      drawingName = old?.drawingName || "";
+      drawingUrl = old?.drawingUrl || "";
+    }
 
     const params = new URLSearchParams({
       action, id,
       model: m.model, line: m.line, machine: m.machine, status: m.status,
-      startDate: m.start, finishDate: m.finish, pic: m.pic,pr:m.pr,
-po:m.po, remark: m.remark,
-drawingName,
-drawingUrl,
+      startDate: m.start, finishDate: m.finish, pic: m.pic, pr: m.pr,
+      po: m.po, remark: m.remark, drawingName, drawingUrl
     });
 
     const res = await fetch(API_URL + "?" + params);
@@ -797,7 +544,6 @@ drawingUrl,
   }
 }
 
-/* ---------- edit ---------- */
 function editModel(id){
   const model = models.find(x => String(x.id) === String(id));
   if (!model) return;
@@ -805,13 +551,13 @@ function editModel(id){
   editId = id;
   document.getElementById("modelName").value = model.model || "";
   document.getElementById("line").value = model.line || "HMR";
-  document.getElementById("machine").value = model.machine || "Pigtail welding";
+  document.getElementById("machine").value = model.machine || MACHINES[0];
   document.getElementById("status").value = model.status || "New";
   document.getElementById("startDate").value = model.startDate || "";
   document.getElementById("finishDate").value = model.finishDate || "";
   document.getElementById("pic").value = model.pic || "";
-document.getElementById("pr").value = model.pr || "";
-document.getElementById("po").value = model.po || "";
+  document.getElementById("pr").value = model.pr || "";
+  document.getElementById("po").value = model.po || "";
   document.getElementById("remark").value = model.remark || "";
   document.getElementById("editBanner").classList.add("show");
   document.getElementById("saveBtn").textContent = "💾 Update";
@@ -825,7 +571,6 @@ function cancelEdit(){
   clearFormFields();
 }
 
-/* ---------- clear ---------- */
 function clearFormFields(){
   ["modelName","pic","pr","po","remark","startDate","finishDate"].forEach(id => document.getElementById(id).value = "");
   document.getElementById("status").selectedIndex = 0;
@@ -841,7 +586,6 @@ function clearForm(){
   document.getElementById("saveBtn").textContent = "💾 Save";
 }
 
-/* ---------- load ---------- */
 async function loadModels(){
   const container = document.getElementById("machineOverview");
   container.innerHTML = `<div class="loading-row">Loading records...</div>`;
@@ -850,13 +594,9 @@ async function loadModels(){
     const response = await fetch(API_URL + "?action=loadNewModel");
     if (!response.ok) throw new Error("Server returned " + response.status);
     const data = await response.json();
-    if (Array.isArray(data)){
-      models = data;
-    } else if (data && data.success === false){
-      throw new Error(data.message || "Failed to load data");
-    } else {
-      models = data.data || [];
-    }
+    if (Array.isArray(data)){ models = data; }
+    else if (data && data.success === false){ throw new Error(data.message || "Failed to load data"); }
+    else { models = data.data || []; }
     render();
   } catch(err){
     console.error(err);
@@ -865,7 +605,6 @@ async function loadModels(){
   }
 }
 
-/* ---------- delete ---------- */
 async function deleteModel(id){
   if (!confirm("Delete this record?")) return;
 
@@ -883,424 +622,165 @@ async function deleteModel(id){
   }
 }
 
-  function calcProgress(startDate, finishDate){
+function calcProgress(startDate, finishDate){
+  if(!startDate || !finishDate) return null;
 
-    if(!startDate || !finishDate)
-        return null;
+  const start = new Date(startDate);
+  const finish = new Date(finishDate);
+  const today = new Date();
 
-    const start = new Date(startDate);
-    const finish = new Date(finishDate);
-    const today = new Date();
+  start.setHours(0,0,0,0);
+  finish.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
 
-    // ลบเวลาออก
-    start.setHours(0,0,0,0);
-    finish.setHours(0,0,0,0);
-    today.setHours(0,0,0,0);
+  const totalDays = Math.ceil((finish - start) / 86400000);
+  if(totalDays <= 0) return 100;
 
-    const totalDays =
-        Math.ceil((finish - start) / 86400000);
+  const usedDays = Math.ceil((today - start) / 86400000);
+  let percent = (usedDays / totalDays) * 100;
+  percent = Math.max(0, Math.min(100, percent));
 
-    if(totalDays <= 0)
-        return 100;
-
-    const usedDays =
-        Math.ceil((today - start) / 86400000);
-
-    let percent =
-        (usedDays / totalDays) * 100;
-
-    percent = Math.max(0, Math.min(100, percent));
-
-    return Math.round(percent);
-
+  return Math.round(percent);
 }
+
 function showDetail(id){
-
-    const m =
-    models.find(x=>String(x.id)===String(id));
-
-    if(!m) return;
-
-    const progress =
-    calcProgress(
-        m.startDate,
-        m.finishDate
-    );
-
-    document.getElementById("detailBody").innerHTML=
-
-`
-<div class="detail-grid">
-
-<div class="detail-card">
-
-<h3>📦 General Information</h3>
-
-<div class="detail-item">
-
-<b>Model</b>
-
-<span>${m.model||"-"}</span>
-
-</div>
-
-<div class="detail-item">
-
-<b>Line</b>
-
-<span>${m.line||"-"}</span>
-
-</div>
-
-<div class="detail-item">
-
-<b>Machine</b>
-
-<span>${m.machine||"-"}</span>
-
-</div>
-
-<div class="detail-item">
-
-<b>Status</b>
-
-<span class="${getStatusClass(m.status)}">
-
-${getStatusIcon(m.status)}
-
-${m.status||"-"}
-
-</span>
-</div>
-
-</div>
-
-<div class="detail-card">
-
-<h3>📅 Schedule</h3>
-
-<div class="detail-item">
-
-<b>Start</b>
-
-<span>${m.startDate||"-"}</span>
-
-</div>
-
-<div class="detail-item">
-
-<b>Finish</b>
-
-<span>${m.finishDate||"-"}</span>
-
-</div>
-
-<div class="detail-item">
-
-<b>Progress</b>
-
-<span>
-
-${progress===null ? "-" : progress+"%"}
-
-</span>
-
-</div>
-
-<div
-style="height:10px;
-background:#e5e7eb;
-border-radius:20px;
-overflow:hidden;
-margin-top:10px;">
-
-<div
-style="
-height:100%;
-width:${progress===null?0:progress}%;
-background:${progressColor(progress===null?0:progress)};
-transition:.4s;">
-
-</div>
-
-</div>
-
-</div>
-
-<div class="detail-card">
-
-<h3>👤 Person</h3>
-
-<div class="detail-item">
-
-<b>Maker</b>
-
-<span>${m.pic||"-"}</span>
-
-</div>
-
-</div>
-
-<div class="detail-card">
-
-<h3>📄 Purchasing</h3>
-
-<div class="detail-item">
-
-<b>PR</b>
-
-<span>${m.pr||"-"}</span>
-
-</div>
-
-<div class="detail-item">
-
-<b>PO</b>
-
-<span>${m.po||"-"}</span>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="detail-card">
-
-<h3>📝 Remark</h3>
-
-<p>
-
-${m.remark||"-"}
-
-</p>
-
-</div>
-
-<br>
-
-<div class="detail-card">
-
-<h3>📎 Drawing</h3>
-
-${renderDrawingLinks(m)}
-
-</div>
-
-`;
-
-document.getElementById("detailModal").style.display="flex";
-
-}
-  function closeDetail(){
-
-document.getElementById(
-"detailModal"
-).style.display="none";
-
-} 
-  function renderDrawingLinks(m){
-
-if(!m.drawingUrl)
-return "-";
-
-const names =
-String(m.drawingName)
-.split("|");
-
-const urls =
-String(m.drawingUrl)
-.split("|");
-
-let html="";
-
-for(let i=0;i<urls.length;i++){
-
-html+=`
-
-<div style="margin:6px 0;">
-
-<a href="${urls[i]}"
-
-target="_blank">
-
-📎 ${names[i]}
-
-</a>
-
-</div>
-
-`;
-
+  const m = models.find(x=>String(x.id)===String(id));
+  if(!m) return;
+
+  const progress = calcProgress(m.startDate, m.finishDate);
+
+  document.getElementById("detailBody").innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-card">
+        <h3>📦 General Information</h3>
+        <div class="detail-item"><b>Model</b><span>${m.model||"-"}</span></div>
+        <div class="detail-item"><b>Line</b><span>${m.line||"-"}</span></div>
+        <div class="detail-item"><b>Machine</b><span>${m.machine||"-"}</span></div>
+        <div class="detail-item"><b>Status</b><span class="${getStatusClass(m.status)}">${getStatusIcon(m.status)} ${m.status||"-"}</span></div>
+      </div>
+
+      <div class="detail-card">
+        <h3>📅 Schedule</h3>
+        <div class="detail-item"><b>Start</b><span>${m.startDate||"-"}</span></div>
+        <div class="detail-item"><b>Finish</b><span>${m.finishDate||"-"}</span></div>
+        <div class="detail-item"><b>Progress</b><span>${progress===null ? "-" : progress+"%"}</span></div>
+        <div style="height:10px;background:#e5e7eb;border-radius:20px;overflow:hidden;margin-top:10px;">
+          <div style="height:100%;width:${progress===null?0:progress}%;background:${progressColor(progress===null?0:progress)};transition:.4s;"></div>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <h3>👤 Person</h3>
+        <div class="detail-item"><b>Maker</b><span>${m.pic||"-"}</span></div>
+      </div>
+
+      <div class="detail-card">
+        <h3>📄 Purchasing</h3>
+        <div class="detail-item"><b>PR</b><span>${m.pr||"-"}</span></div>
+        <div class="detail-item"><b>PO</b><span>${m.po||"-"}</span></div>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <h3>📝 Remark</h3>
+      <p>${m.remark||"-"}</p>
+    </div>
+
+    <br>
+
+    <div class="detail-card">
+      <h3>📎 Drawing</h3>
+      ${renderDrawingLinks(m)}
+    </div>
+  `;
+
+  document.getElementById("detailModal").style.display="flex";
 }
 
-return html;
-
+function closeDetail(){
+  document.getElementById("detailModal").style.display="none";
 }
 
-  function getStatusClass(status){
+function renderDrawingLinks(m){
+  if(!m.drawingUrl) return "-";
 
-    switch(status){
+  const names = String(m.drawingName).split("|");
+  const urls = String(m.drawingUrl).split("|");
 
-        case "New":
+  let html="";
+  for(let i=0;i<urls.length;i++){
+    html += `<div style="margin:6px 0;"><a href="${urls[i]}" target="_blank">📎 ${names[i]}</a></div>`;
+  }
+  return html;
+}
 
-            return "pill New";
-
-        case "Current":
-
-            return "pill current";
-
-        case "Modify":
-
-            return "pill modify";
-
-        case "Problem":
-
-            return "pill problem";
-
-        default:
-
-            return "pill";
-
-    }
-
+function getStatusClass(status){
+  switch(status){
+    case "New": return "pill New";
+    case "Current": return "pill current";
+    case "Modify": return "pill modify";
+    case "Problem": return "pill problem";
+    default: return "pill";
+  }
 }
 
 function getStatusIcon(status){
-
-    switch(status){
-
-        case "New":
-
-            return "🟢";
-
-        case "Current":
-
-            return "🔵";
-
-        case "Modify":
-
-            return "🟡";
-
-        case "Problem":
-
-            return "🔴";
-
-        default:
-
-            return "⚪";
-
-    }
-
+  switch(status){
+    case "New": return "🟢";
+    case "Current": return "🔵";
+    case "Modify": return "🟡";
+    case "Problem": return "🔴";
+    default: return "⚪";
+  }
 }
-  function progressColor(percent){
 
-    if(percent < 20)
-        return "#dc2626";
-
-    if(percent < 50)
-        return "#d97706";
-
-    return "#16a34a";
-
+function progressColor(percent){
+  if(percent < 20) return "#e0392c";
+  if(percent < 50) return "#d97706";
+  return "#15a364";
 }
+
 function formatDate(date){
+  if(!date) return "-";
 
-    if(!date)
-        return "-";
+  const d = new Date(date);
+  if(isNaN(d)) return date;
 
-    const d = new Date(date);
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const day = String(d.getDate()).padStart(2,"0");
+  const month = months[d.getMonth()];
+  const year = d.getFullYear();
 
-    if(isNaN(d))
-        return date;
-
-    const months = [
-        "Jan","Feb","Mar","Apr","May","Jun",
-        "Jul","Aug","Sep","Oct","Nov","Dec"
-    ];
-
-    const day =
-    String(d.getDate()).padStart(2,"0");
-
-    const month =
-    months[d.getMonth()];
-
-    const year =
-    d.getFullYear();
-
-    return `${day} ${month} ${year}`;
-
+  return `${day} ${month} ${year}`;
 }
 
 function renderPurchaseStatus(m){
+  const pr = m.pr && String(m.pr).trim() !== "";
+  const po = m.po && String(m.po).trim() !== "";
 
-    const pr =
-    m.pr && String(m.pr).trim() !== "";
-
-    const po =
-    m.po && String(m.po).trim() !== "";
-
-    return `
-
+  return `
     <div class="purchase-status">
-
-        <span>
-
-            <span class="${pr?"dot-green":"dot-red"}"></span>
-
-            PR
-
-        </span>
-
-        <span>
-
-            <span class="${po?"dot-green":"dot-red"}"></span>
-
-            PO
-
-        </span>
-
+      <span><span class="${pr?"dot-green":"dot-red"}"></span>PR</span>
+      <span><span class="${po?"dot-green":"dot-red"}"></span>PO</span>
     </div>
-
-    `;
-
+  `;
 }
 
 loadModels();
 </script>
 
 <div id="detailModal" class="detail-modal">
-
-    <div class="detail-box">
-
-        <div class="detail-header">
-
-            <h2>📋 New Model Detail</h2>
-
-            <button class="close-btn"
-                onclick="closeDetail()">
-                ✕
-            </button>
-
-        </div>
-
-        <div id="detailBody"></div>
-
-        <div class="detail-footer">
-
-            <button
-                class="btn-primary"
-                onclick="closeDetail()">
-
-                Close
-
-            </button>
-
-        </div>
-
+  <div class="detail-box">
+    <div class="detail-header">
+      <h2>📋 New Model Detail</h2>
+      <button class="close-btn" onclick="closeDetail()">✕</button>
     </div>
-
+    <div id="detailBody"></div>
+    <div class="detail-footer">
+      <button class="btn-primary" onclick="closeDetail()">Close</button>
+    </div>
+  </div>
 </div>
-  
+
 </body>
 </html>
