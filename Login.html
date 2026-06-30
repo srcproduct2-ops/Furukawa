@@ -1,813 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>Systems Login</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Inter',sans-serif;
+:root{
+  --ink:#0c1117;
+  --muted:#6b7385;
+  --line:#e3e7ef;
+  --accent:#3461fd;
+  --accent-dark:#2347d6;
+  --accent-soft:#e8edff;
+  --danger:#e0392c;
+  --success:#15a364;
 }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 
 body{
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0f172a,
-        #1e3a8a
-    );
-
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle at 20% 20%, #16234a 0%, #0b1220 55%, #060911 100%);
+  position:relative;
+  overflow:hidden;
+  padding:20px;
+}
+body::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:26px 26px;
+  pointer-events:none;
 }
 
 .login-box{
-
-    width:420px;
-
-    background:white;
-
-    padding:35px;
-
-    border-radius:20px;
-
-    box-shadow:
-    0 20px 40px rgba(0,0,0,.25);
-
-    position:relative;
-
+  width:420px;
+  background:#ffffff;
+  padding:36px 34px;
+  border-radius:20px;
+  box-shadow:0 30px 60px rgba(0,0,0,.35);
+  position:relative;
+  z-index:1;
 }
+
+.language-box{position:absolute;top:18px;right:18px;z-index:10}
+#language{
+  width:104px;height:34px;background:#10182b;color:#fff;border:1px solid #283449;
+  border-radius:8px;padding:0 10px;font-size:13px;font-weight:600;cursor:pointer;outline:none;
+}
+#language option{background:#10182b;color:#fff}
 
 .logo{
-
-    text-align:center;
-
-    font-size:42px;
-
-    margin-bottom:10px;
-
+  width:54px;height:54px;border-radius:14px;
+  background:linear-gradient(155deg,var(--accent),var(--accent-dark));
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin:0 auto 16px;
 }
 
-.title{
+.title{text-align:center;font-size:23px;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:26px;margin-top:4px;font-size:13.5px}
 
-    text-align:center;
-
-    font-size:26px;
-
-    font-weight:800;
-
-    margin-bottom:5px;
-
-}
-
-.subtitle{
-
-    text-align:center;
-
-    color:#6b7280;
-
-    margin-bottom:25px;
-
-}
-label{
-
-    display:block;
-
-    margin-bottom:6px;
-
-    font-weight:600;
-
-    color:#ffffff;
-
-
-
-}label1{
-
-  
-
-    margin-bottom:6px;
-
-    font-weight:600;
-
-    color::#000;
-
-
-
-}
+label{display:block;margin-bottom:6px;font-weight:600;color:#39414f;font-size:12.5px}
 
 input{
-
-    width:100%;
-
-    padding:12px;
-
-    border:1px solid #d1d5db;
-
-    border-radius:10px;
-
-    margin-bottom:15px;
-
+  width:100%;padding:12px 13px;border:1px solid #d7dce6;border-radius:10px;
+  margin-bottom:15px;font-size:14px;background:#fbfcfe;color:var(--ink);
+  transition:border-color .15s, box-shadow .15s;
 }
-
-input:focus{
-
-    outline:none;
-
-    border-color:#2563eb;
-
-}
+input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#fff}
 
 button{
-
-    width:100%;
-
-    border:none;
-
-    background:#2563eb;
-
-    color:white;
-
-    padding:14px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    font-size:15px;
-
-    font-weight:700;
-
+  width:100%;border:none;background:var(--accent);color:#fff;padding:13px;
+  border-radius:10px;cursor:pointer;font-size:14.5px;font-weight:700;
+  transition:background .15s, transform .08s;
 }
+button:hover{background:var(--accent-dark)}
+button:active{transform:scale(.99)}
 
-button:hover{
-
-    background:#1d4ed8;
-
-}
+.btn-secondary{background:#eef0f5;color:#39414f;margin-top:10px}
+.btn-secondary:hover{background:#e2e6ee}
 
 #msg{
-
-    text-align:center;
-
-    color:red;
-
-    margin-top:12px;
-
-}
-#msg{
-
-```
-color:#ef4444;
-
-font-size:14px;
-
-font-weight:600;
-
-text-align:center;
-
-min-height:20px;
-```
-
+  color:var(--danger);font-size:13.5px;font-weight:600;text-align:center;
+  min-height:18px;margin-top:14px;
 }
 
 #loginLoading{
-
-    position:fixed;
-    top:0;
-    left:0;
-
-    width:100%;
-    height:100%;
-
-    background:
-    rgba(0,0,0,.55);
-
-    display:none;
-
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-
-    z-index:99999;
-
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(6,9,17,.65);display:none;justify-content:center;align-items:center;
+  flex-direction:column;z-index:99999;backdrop-filter:blur(2px);
 }
-
 .loader{
-
-    width:60px;
-    height:60px;
-
-    border:5px solid #ddd;
-    border-top:5px solid #38bdf8;
-
-    border-radius:50%;
-
-    animation:
-    spin 1s linear infinite;
-
+  width:54px;height:54px;border:5px solid rgba(255,255,255,.2);
+  border-top:5px solid #5b8cff;border-radius:50%;animation:spin 1s linear infinite;
 }
-
-.loading-text{
-
-    color:white;
-
-    margin-top:15px;
-
-    font-size:18px;
-
-    font-weight:700;
-
-}
-
-@keyframes spin{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}.language-box{
-
-    position:absolute;
-
-    top:20px;
-
-    right:20px;
-
-    z-index:1000;
-
-}
-
-#language{
-
-    width:120px;
-
-    height:36px;
-
-    background:#111827;
-
-    color:#ffffff;
-
-    border:1px solid #374151;
-
-    border-radius:8px;
-
-    padding:0 10px;
-
-    font-size:14px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-    outline:none;
-
-}
-
-#language option{
-
-    background:#111827;
-
-    color:#ffffff;
-
-}
-
-
-
+.loading-text{color:#fff;margin-top:15px;font-size:15px;font-weight:700}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 </style>
-
 </head>
 
 <body>
 
-
-
-
 <div id="loginBox" class="login-box">
 
-    <div class="language-box">
+  <div class="language-box">
+    <select id="language" onchange="changeLanguage()">
+      <option value="en">En</option>
+      <option value="th">Th</option>
+    </select>
+  </div>
 
-        <select
-        id="language"
-        onchange="changeLanguage()">
+  <div class="logo">🏭</div>
 
-            <option value="en">
-                En
-            </option>
+  <div class="title">Factory Dashboard</div>
+  <div class="subtitle">Sign in to continue</div>
 
-            <option value="th">
-                Th
-            </option>
+  <label>Username</label>
+  <input type="text" id="loginUsername">
 
-        </select>
+  <label>Password</label>
+  <input type="password" id="loginPassword">
 
-    </div>
+  <button onclick="login()">Login</button>
+  <button type="button" class="btn-secondary" onclick="showRegister()">Register</button>
 
-    <div class="logo">
-        🏭
-    </div>
-
-    <div class="title">
-        Factory Dashboard
-    </div>
-
-    <div class="subtitle">
-        Sign in to continue
-    </div>
-
-    <label1>Username</label1>
- 
-
-    <input
-    type="text"
-    id="loginUsername">
-
-    <label1>Password</label1>
-
-    <input
-    type="password"
-    id="loginPassword">
-
-    <button onclick="login()">
-
-        Login
-
-    </button>
-
-    <br><br>
-
-    <button
-    type="button"
-    onclick="showRegister()">
-
-        Register
-
-    </button>
-
-
-
-<div
-id="msg"
-style="
-margin-top:15px;
-text-align:center;
-font-weight:600;
-">
-</div>
+  <div id="msg"></div>
 
 </div>
 
+<div id="registerBox" class="login-box" style="display:none;">
 
+  <div class="logo">🏭</div>
+  <div class="title">Create Account</div>
+  <div class="subtitle">Register a new login</div>
 
+  <label>Username</label>
+  <input type="text" id="registerUsername">
 
-<div
-id="registerBox"
-style="display:none;">
+  <label>Password</label>
+  <input type="password" id="registerPassword">
 
-    <label>Username</label>
+  <label>Confirm Password</label>
+  <input type="password" id="confirmPassword">
 
-    <input
-    type="text"
-    id="registerUsername">
-
-    <label>Password</label>
-
-    <input
-    type="password"
-    id="registerPassword">
-
-    <label>Confirm Password</label>
-
-    <input
-    type="password"
-    id="confirmPassword">
-
-    <button onclick="registerUser()">
-
-        Create Account
-
-    </button>
-
-    <br><br>
-
-    <button
-    type="button"
-    onclick="showLogin()">
-
-        Back To Login
-
-    </button>
+  <button onclick="registerUser()">Create Account</button>
+  <button type="button" class="btn-secondary" onclick="showLogin()">Back To Login</button>
 
 </div>
-
 
 <script>
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbxcz3HZH5lsv0ZcTxIFyX_E6SuFSvWXyZ5g8lem2bS6KUD6S3NCoNDqf6joWdLRqa_a/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxcz3HZH5lsv0ZcTxIFyX_E6SuFSvWXyZ5g8lem2bS6KUD6S3NCoNDqf6joWdLRqa_a/exec";
 
 /* =====================
 LOGIN
 ===================== */
-
 async function login(){
+  const username = document.getElementById("loginUsername").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
 
-    const username =
-    document
-    .getElementById("loginUsername")
-    .value
-    .trim();
+  if(username === "" || password === ""){
+    showMessage("Please enter Username and Password", "red");
+    return;
+  }
 
-    const password =
-    document
-    .getElementById("loginPassword")
-    .value
-    .trim();
+  try{
+    showLoginLoading();
 
-    if(
-        username === ""
-        ||
-        password === ""
-    ){
-
-        showMessage(
-            "Please enter Username and Password",
-            "red"
-        );
-
-        return;
-    }
-
-    try{
-showLoginLoading();
-
-        const response =
-        await fetch(
-
-            API_URL +
-
-            "?action=login" +
-
-            "&username=" +
-            encodeURIComponent(username)
-
-            +
-
-            "&password=" +
-            encodeURIComponent(password)
-
-        );
-
-        const result =
-        await response.json();
-
-        if(result.success){
-
-            localStorage.setItem(
-                "username",
-                result.username
-            );
-
-            localStorage.setItem(
-                "role",
-                result.role
-            );
-
-            localStorage.setItem(
-                "workSheet",
-                result.workSheet
-            );
-
-            localStorage.setItem(
-                "computerSheet",
-                result.computerSheet
-            );
-
-            window.location.href =
-            "index.html";
-
-        }else{
-hideLoginLoading();
-
-    document
-    .getElementById(
-        "loginUsername"
-    )
-    .value = "";
-
-    document
-    .getElementById(
-        "loginPassword"
-    )
-    .value = "";
-
-    showMessage(
-        result.message,
-        "red"
+    const response = await fetch(
+      API_URL +
+      "?action=login" +
+      "&username=" + encodeURIComponent(username) +
+      "&password=" + encodeURIComponent(password)
     );
 
-    document
-    .getElementById(
-        "loginUsername"
-    )
-    .focus();
+    const result = await response.json();
 
-}
+    if(result.success){
+      localStorage.setItem("username", result.username);
+      localStorage.setItem("role", result.role);
+      localStorage.setItem("workSheet", result.workSheet);
+      localStorage.setItem("computerSheet", result.computerSheet);
 
+      window.location.href = "index.html";
+    } else {
+      hideLoginLoading();
+      document.getElementById("loginUsername").value = "";
+      document.getElementById("loginPassword").value = "";
+      showMessage(result.message, "red");
+      document.getElementById("loginUsername").focus();
     }
-    catch(error){
-hideLoginLoading();
-
-        console.error(error);
-
-        showMessage(
-            "Connection Error",
-            "red"
-        );
-
-    }
-
+  }
+  catch(error){
+    hideLoginLoading();
+    console.error(error);
+    showMessage("Connection Error", "red");
+  }
 }
 
 /* =====================
 REGISTER
 ===================== */
-
 async function registerUser(){
+  const username = document.getElementById("registerUsername").value.trim();
+  const password = document.getElementById("registerPassword").value.trim();
+  const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-    const username =
-    document
-    .getElementById("registerUsername")
-    .value
-    .trim();
+  if(username===""){ showMessage("Please enter Username", "red"); return; }
+  if(password===""){ showMessage("Please enter Password", "red"); return; }
+  if(password!==confirmPassword){ showMessage("Password not match", "red"); return; }
 
-    const password =
-    document
-    .getElementById("registerPassword")
-    .value
-    .trim();
+  try{
+    showLoginLoading();
 
-    const confirmPassword =
-    document
-    .getElementById("confirmPassword")
-    .value
-    .trim();
+    const response = await fetch(
+      API_URL +
+      "?action=register" +
+      "&username=" + encodeURIComponent(username) +
+      "&password=" + encodeURIComponent(password)
+    );
 
-    if(username===""){
+    const result = await response.json();
+    hideLoginLoading();
 
-        showMessage(
-            "Please enter Username",
-            "red"
-        );
+    if(result.success){
+      document.getElementById("registerUsername").value = "";
+      document.getElementById("registerPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
 
-        return;
+      showLogin();
+      showMessage("Register Success, Please Login", "green");
+    } else {
+      showMessage(result.message, "red");
     }
-
-    if(password===""){
-
-        showMessage(
-            "Please enter Password",
-            "red"
-        );
-
-        return;
-    }
-
-    if(password!==confirmPassword){
-
-        showMessage(
-            "Password not match",
-            "red"
-        );
-
-        return;
-    }
-
-    try{
-
-        showLoginLoading();
-
-        const response =
-        await fetch(
-
-            API_URL +
-
-            "?action=register" +
-
-            "&username=" +
-            encodeURIComponent(username)
-
-            +
-
-            "&password=" +
-            encodeURIComponent(password)
-
-        );
-
-        const result =
-        await response.json();
-
-        hideLoginLoading();
-
-        if(result.success){
-
-            document
-            .getElementById("registerUsername")
-            .value = "";
-
-            document
-            .getElementById("registerPassword")
-            .value = "";
-
-            document
-            .getElementById("confirmPassword")
-            .value = "";
-
-            showLogin();
-
-            showMessage(
-                "Register Success, Please Login",
-                "green"
-            );
-
-        }else{
-
-            showMessage(
-                result.message,
-                "red"
-            );
-
-        }
-
-    }
-    catch(error){
-
-        hideLoginLoading();
-
-        console.error(error);
-
-        showMessage(
-            "Connection Error",
-            "red"
-        );
-
-    }
-
+  }
+  catch(error){
+    hideLoginLoading();
+    console.error(error);
+    showMessage("Connection Error", "red");
+  }
 }
+
 /* =====================
 SCREEN SWITCH
 ===================== */
-
 function showLogin(){
-
-    document
-    .getElementById("loginBox")
-    .style.display =
-    "block";
-
-    document
-    .getElementById("registerBox")
-    .style.display =
-    "none";
-
+  document.getElementById("loginBox").style.display = "block";
+  document.getElementById("registerBox").style.display = "none";
 }
 
 function showRegister(){
-
-    document
-    .getElementById("loginBox")
-    .style.display =
-    "none";
-
-    document
-    .getElementById("registerBox")
-    .style.display =
-    "block";
-
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("registerBox").style.display = "block";
 }
 
 /* =====================
 MESSAGE
 ===================== */
-
-function showMessage(
-msg,
-color
-){
-
-    const box =
-    document
-    .getElementById("msg");
-
-    box.innerText =
-    msg;
-
-    box.style.color =
-    color;
-
+function showMessage(msg, color){
+  const box = document.getElementById("msg");
+  box.innerText = msg;
+  box.style.color = color === "green" ? "#15a364" : "#e0392c";
 }
 
-
 function showLoginLoading(){
-
-    document
-    .getElementById(
-        "loginLoading"
-    )
-    .style.display =
-    "flex";
-
+  document.getElementById("loginLoading").style.display = "flex";
 }
 
 function hideLoginLoading(){
-
-    document
-    .getElementById(
-        "loginLoading"
-    )
-    .style.display =
-    "none";
-
+  document.getElementById("loginLoading").style.display = "none";
 }
 
-    function changeLanguage(){
-
-    const lang =
-    document
-    .getElementById("language")
-    .value;
-
-    localStorage.setItem(
-        "language",
-        lang
-    );
-
-    location.reload();
-
+function changeLanguage(){
+  const lang = document.getElementById("language").value;
+  localStorage.setItem("language", lang);
+  location.reload();
 }
-    document.addEventListener(
-    "DOMContentLoaded",
-    function(){
 
-        const lang =
-        localStorage.getItem("language")
-        || "en";
-
-        document
-        .getElementById("language")
-        .value = lang;
-
-    }
-);
-
-    document.addEventListener("DOMContentLoaded", () => {
-
-    document
-    .getElementById("loginPassword")
-    .addEventListener("keypress", function(e){
-
-        if(e.key === "Enter"){
-
-            login();
-
-        }
-
-    });
-
+document.addEventListener("DOMContentLoaded", function(){
+  const lang = localStorage.getItem("language") || "en";
+  document.getElementById("language").value = lang;
 });
 
-
-
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("loginPassword").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){ login(); }
+  });
+});
 </script>
+
 <div id="loginLoading">
-
-    <div class="loader"></div>
-
-    <div class="loading-text">
-
-        Logging In...
-
-    </div>
-
+  <div class="loader"></div>
+  <div class="loading-text">Logging In...</div>
 </div>
+
 </body>
 </html>
