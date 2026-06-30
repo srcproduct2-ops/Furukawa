@@ -302,6 +302,11 @@ button:disabled{opacity:.55;cursor:not-allowed}
       <input type="file" id="drawing" multiple>
     </div>
 
+    <div class="group">
+      <label>แนบรูป</label>
+      <input type="file" id="photo" accept="image/*" multiple>
+    </div>
+
     <div class="actions">
       <button class="btn-primary" id="saveBtn" onclick="saveModel()">💾 Save</button>
       <button class="btn-secondary" onclick="clearForm()">🧹 Clear</button>
@@ -362,7 +367,8 @@ function entryRowHtml(m){
       ${m.pic ? `<div class="meta-line">👤 ${escapeHtml(m.pic)}</div>` : ""}
       ${(m.startDate || m.finishDate)? `<div class="meta-line">📅 ${formatDate(m.startDate)} → ${formatDate(m.finishDate)}</div>`: ""}
       ${renderPurchaseStatus(m)}
-      ${m.drawingUrl ? `<div class="meta-line">📎 <a href="${escapeHtml(m.drawingUrl)}" target="_blank" rel="noopener">${escapeHtml(m.drawingName || "Drawing")}</a></div>` : ""}
+      ${m.remark ? `<div class="meta-line">📝 ${escapeHtml(m.remark)}</div>` : ""}
+      ${m.drawingUrl ? `<div class="meta-line">📎 <b>Drawing</b>${String(m.drawingUrl).split("|").map((u,i)=>`<div style="margin-left:14px">${i+1}.<a href="${escapeHtml(u)}" target="_blank" rel="noopener">${escapeHtml(String(m.drawingName||"file").split("|")[i]||"file")}</a></div>`).join("")}</div>` : ""}
       <div class="entry-actions">
         <button class="btn-secondary" onclick="editModel('${m.id}')">✏️ Edit</button>
         <button class="btn-ghost" onclick="deleteModel('${m.id}')">🗑️ Delete</button>
@@ -493,7 +499,8 @@ async function saveModel(){
   saveBtn.disabled = true;
 
   const fileInput = document.getElementById("drawing");
-  const files = [...fileInput.files];
+  const photoInput = document.getElementById("photo");
+  const files = [...fileInput.files, ...photoInput.files];
 
   let drawings = [];
 
@@ -576,6 +583,7 @@ function clearFormFields(){
   document.getElementById("status").selectedIndex = 0;
   document.getElementById("machine").selectedIndex = 0;
   document.getElementById("drawing").value = "";
+  document.getElementById("photo").value = "";
   document.getElementById("err-modelName").style.display = "none";
 }
 
@@ -681,16 +689,23 @@ function showDetail(id){
       </div>
     </div>
 
-    <div class="detail-card">
-      <h3>📝 Remark</h3>
-      <p>${m.remark||"-"}</p>
-    </div>
+    <div class="detail-grid" style="margin-top:0;">
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <div class="detail-card">
+          <h3>📝 Remark</h3>
+          <p>${m.remark||"-"}</p>
+        </div>
 
-    <br>
+        <div class="detail-card">
+          <h3>📎 Drawing</h3>
+          ${renderDrawingFileLinks(m)}
+        </div>
+      </div>
 
-    <div class="detail-card">
-      <h3>📎 Drawing</h3>
-      ${renderDrawingLinks(m)}
+      <div class="detail-card">
+        <h3>🖼️ Preview</h3>
+        ${renderDrawingPreviews(m)}
+      </div>
     </div>
   `;
 
@@ -701,17 +716,62 @@ function closeDetail(){
   document.getElementById("detailModal").style.display="none";
 }
 
-function renderDrawingLinks(m){
+/* shared: pull Drive file id + detect image extension */
+function _driveId(url){
+  const m1 = String(url).match(/\/d\/([-\w]{20,})/);
+  if(m1) return m1[1];
+  const m2 = String(url).match(/[?&]id=([-\w]{20,})/);
+  if(m2) return m2[1];
+  return "";
+}
+function _isImage(name){
+  return /\.(jpe?g|png|gif|webp|bmp|svg)$/i.test(name || "");
+}
+
+/* left column: every file as a numbered link */
+function renderDrawingFileLinks(m){
   if(!m.drawingUrl) return "-";
 
-  const names = String(m.drawingName).split("|");
+  const names = String(m.drawingName || "").split("|");
   const urls = String(m.drawingUrl).split("|");
 
-  let html="";
+  let html = "";
   for(let i=0;i<urls.length;i++){
-    html += `<div style="margin:6px 0;"><a href="${urls[i]}" target="_blank">📎 ${names[i]}</a></div>`;
+    const name = names[i] || "file";
+    html += `<div style="margin:4px 0 4px 14px;">${i+1}.<a href="${urls[i]}" target="_blank">${name}</a></div>`;
   }
   return html;
+}
+
+/* right column (circled area): image files shown as previews */
+function renderDrawingPreviews(m){
+  if(!m.drawingUrl) return `<p style="color:#6b7385;font-size:13px;">No image attached.</p>`;
+
+  const names = String(m.drawingName || "").split("|");
+  const urls = String(m.drawingUrl).split("|");
+
+  let html = "";
+  for(let i=0;i<urls.length;i++){
+    const name = names[i] || "file";
+    if(!_isImage(name)) continue;
+
+    const url = urls[i];
+    const id = _driveId(url);
+    const thumb = id ? `https://drive.google.com/thumbnail?id=${id}&sz=w600` : url;
+
+    html += `
+      <div style="margin-bottom:12px;">
+        <a href="${url}" target="_blank">
+          <img src="${thumb}" alt="${name}"
+            style="max-width:100%;border:1px solid #e3e7ef;border-radius:8px;display:block;"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+          <span style="display:none;">📎 Open image</span>
+        </a>
+        <div style="font-size:11.5px;color:#6b7385;margin-top:4px;">${name}</div>
+      </div>`;
+  }
+
+  return html || `<p style="color:#6b7385;font-size:13px;">No image attached.</p>`;
 }
 
 function getStatusClass(status){
