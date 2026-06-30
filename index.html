@@ -1,2109 +1,815 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Work</title>
 
-<title>Dashboard Work </title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-
 :root{
-    --primary:#2563eb;
-    --success:#16a34a;
-    --warning:#f59e0b;
-    --danger:#dc2626;
-    --sidebar:#0f172a;
-    --gray:#6b7280;
-    --border:#e5e7eb;
+  --ink:#0c1117;
+  --sidebar:#0b1220;
+  --sidebar-line:#1b2536;
+  --sidebar-text:#aab4c8;
+  --bg:#f1f3f8;
+  --card:#ffffff;
+  --line:#e3e7ef;
+  --muted:#6b7385;
+
+  --accent:#3461fd;
+  --accent-dark:#2347d6;
+  --accent-soft:#e8edff;
+
+  --success:#15a364;
+  --success-soft:#dcf6e8;
+  --warning:#d97706;
+  --warning-soft:#fef3c7;
+  --danger:#e0392c;
+  --danger-soft:#fde6e3;
+
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow-sm:0 1px 2px rgba(13,18,30,.04), 0 6px 16px rgba(13,18,30,.05);
+  --shadow-md:0 10px 30px rgba(13,18,30,.10);
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Inter',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 
-body{
-    background:#f3f4f6;
-    color:#111827;
-}
-
+/* ============ SIDEBAR ============ */
 .sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:260px;
-    height:100vh;
-    background:var(--sidebar);
-    color:#fff;
-    padding:25px;
-    z-index:1000;
+  position:fixed;left:0;top:0;width:260px;height:100vh;
+  background:var(--sidebar);color:#fff;padding:24px 18px;
+  z-index:1000;display:flex;flex-direction:column;
+  border-right:1px solid var(--sidebar-line);
 }
-
 .sidebar-logo{
-    font-size:24px;
-    font-weight:800;
-    margin-bottom:25px;
+  font-size:19px;font-weight:800;letter-spacing:-.01em;
+  display:flex;align-items:center;gap:10px;margin-bottom:22px;padding:0 6px;
 }
+.sidebar-logo .mark{
+  width:34px;height:34px;border-radius:9px;background:linear-gradient(155deg,var(--accent),var(--accent-dark));
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex:none;
+}
+.status-strip{
+  display:flex;align-items:center;gap:8px;padding:9px 12px;margin-bottom:18px;
+  background:#10182b;border:1px solid var(--sidebar-line);border-radius:999px;
+}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 0 0 rgba(21,163,100,.6);animation:pulse 2s infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(21,163,100,.55)}
+  70%{box-shadow:0 0 0 6px rgba(21,163,100,0)}
+  100%{box-shadow:0 0 0 0 rgba(21,163,100,0)}
+}
+.status-strip span{font-size:11px;font-weight:700;letter-spacing:.06em;color:#8fe3b8;text-transform:uppercase}
 
 .sidebar-user{
-    background:#1e293b;
-    padding:15px;
-    border-radius:12px;
-    margin-bottom:25px;
+  background:#10182b;padding:13px 14px;border-radius:12px;margin-bottom:20px;
+  border:1px solid var(--sidebar-line);
 }
+.sidebar-user .name{font-size:13px;font-weight:700}
+.sidebar-user .role{font-size:11.5px;color:var(--sidebar-text);margin-top:2px}
 
-.sidebar-menu{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
+.sidebar-section-label{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#566077;margin:6px 8px 10px}
+.sidebar-menu{display:flex;flex-direction:column;gap:4px}
 .menu-btn{
-    border:none;
-    background:transparent;
-    color:#fff;
-    text-align:left;
-    padding:14px;
-    border-radius:12px;
-    cursor:pointer;
+  border:none;background:transparent;color:var(--sidebar-text);text-align:left;
+  padding:11px 14px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;
+  display:flex;align-items:center;gap:10px;transition:background .15s,color .15s;
+  width:100%;
+}
+.menu-btn:hover{background:#131c30;color:#fff}
+.menu-btn.active{background:var(--accent);color:#fff}
+.menu-btn .ic{font-size:16px;width:18px;text-align:center;flex:none}
+
+.sidebar-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--sidebar-line)}
+.sidebar-foot small{color:#566077;font-size:11px}
+
+/* mobile sidebar toggle */
+.menu-toggle{display:none}
+
+/* ============ MAIN ============ */
+.main-content{margin-left:260px}
+.container{max-width:1700px;margin:auto;padding:26px 28px 60px}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  margin-bottom:26px;flex-wrap:wrap;
+}
+.topbar h1{font-size:23px;font-weight:800;letter-spacing:-.01em}
+.topbar p{color:var(--muted);margin-top:4px;font-size:13.5px}
+.topbar-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.date-chip{
+  font-size:12.5px;font-weight:600;color:var(--muted);background:var(--card);
+  border:1px solid var(--line);padding:8px 14px;border-radius:999px;
+}
+.user-chip{
+  font-size:12.5px;font-weight:700;color:var(--ink);background:var(--accent-soft);
+  border:1px solid #d4ddff;padding:8px 14px;border-radius:999px;
 }
 
-.menu-btn.active{
-    background:#2563eb;
-}
-
-.main-content{
-    margin-left:260px;
-}
-
-.container{
-    max-width:1700px;
-    margin:auto;
-    padding:25px;
-}
-
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-}
-
-.dashboard{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:15px;
-    margin-bottom:25px;
-}
-
+/* ============ KPI CARDS ============ */
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
 .card{
-    background:#fff;
-    border-radius:16px;
-    padding:24px;
-    border:1px solid var(--border);
+  background:var(--card);border-radius:var(--radius);padding:20px 20px;
+  border:1px solid var(--line);box-shadow:var(--shadow-sm);
+  transition:transform .18s ease, box-shadow .18s ease;
 }
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.card > div:first-child{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.card-value{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:700;letter-spacing:-.02em}
 
-.card-value{
-    font-size:34px;
-    font-weight:800;
+/* ============ PANEL ============ */
+.panel{background:var(--card);border-radius:var(--radius);padding:22px;margin-bottom:20px;border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.panel-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+label{display:block;font-size:12.5px;font-weight:600;color:#39414f;margin-bottom:6px}
+input,textarea,select{
+  width:100%;padding:11px 12px;border:1px solid #d7dce6;border-radius:var(--radius-sm);
+  font-size:13.5px;background:#fbfcfe;color:var(--ink);transition:border-color .15s,box-shadow .15s;
+  font-family:'Inter',sans-serif;
 }
-
-.panel{
-    background:#fff;
-    border-radius:16px;
-    padding:20px;
-    margin-bottom:20px;
-    border:1px solid var(--border);
+input:focus,textarea:focus,select:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#fff;
 }
+input[type="range"]{padding:0}
 
-.panel-title{
-    font-size:18px;
-    font-weight:700;
-    margin-bottom:15px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:12px;
-}
-
-input,
-textarea,
-select{
-    width:100%;
-    padding:12px;
-    border:1px solid #d1d5db;
-    border-radius:10px;
-}
-
+/* ============ BUTTONS ============ */
 .btn{
-    border:none;
-    border-radius:10px;
-    padding:12px 18px;
-    color:#fff;
-    cursor:pointer;
+  border:none;border-radius:var(--radius-sm);padding:11px 18px;color:#fff;cursor:pointer;
+  font-weight:700;font-size:13.5px;transition:transform .08s ease, opacity .15s ease, box-shadow .15s ease;
 }
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(13,18,30,.12)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn-save{background:var(--accent)}
+.btn-save:hover{background:var(--accent-dark)}
+.btn-edit{background:var(--warning)}
+.btn-delete{background:var(--danger)}
+.btn-complete{background:var(--success)}
+.btn-export{background:var(--success)}
+.btn-cancel{background:#eef0f5;color:#3a4150}
 
-.btn-save{background:#2563eb;}
-.btn-edit{background:#f59e0b;}
-.btn-delete{background:#dc2626;}
-.btn-complete{background:#16a34a;}
-.btn-export{background:#16a34a;}
-.btn-cancel{background:#6b7280;}
+/* ============ TABLE ============ */
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{background:#f6f7fb;color:#3a4150;padding:12px 14px;text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px}
+tbody tr:hover{background:#f8f9fc}
+.action-buttons{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.action-buttons .btn{padding:7px 11px;font-size:11.5px}
 
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th{
-    background:#111827;
-    color:#fff;
-    padding:14px;
-    text-align:left;
-}
-
-td{
-    padding:12px;
-    border-bottom:1px solid #e5e7eb;
-}
-
-.action-buttons{
-    display:flex;
-    gap:8px;
-}
-
+/* ============ LOADING ============ */
 .loading-overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.5);
-    z-index:9999;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    color:#fff;
+  display:none;position:fixed;inset:0;background:rgba(11,18,32,.55);z-index:9999;
+  align-items:center;justify-content:center;flex-direction:column;color:#fff;backdrop-filter:blur(2px);
 }
+.loader{width:46px;height:46px;border:4px solid rgba(255,255,255,.25);border-top:4px solid #5b8cff;border-radius:50%;animation:spin .9s linear infinite;margin-bottom:14px}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+#loadingText{font-size:14px;font-weight:600;letter-spacing:.02em}
 
-.loader{
-    width:50px;
-    height:50px;
-    border:5px solid #ddd;
-    border-top:5px solid #00d4ff;
-    border-radius:50%;
-    animation:spin 1s linear infinite;
+/* ============ MODAL ============ */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(11,18,32,.5);z-index:9999;align-items:center;justify-content:center}
+.modal-box{background:#fff;width:700px;max-width:92%;margin:0 auto;padding:24px;border-radius:16px;box-shadow:var(--shadow-md);animation:pop .18s ease}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal-box h3{font-size:17px;font-weight:700;margin-bottom:10px}
+.modal-box p{color:#3a4150;font-size:13.5px;line-height:1.6;margin-bottom:14px;white-space:pre-wrap}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:980px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s ease;box-shadow:var(--shadow-md)}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .menu-toggle{
+    display:flex;align-items:center;justify-content:center;
+    position:fixed;top:16px;left:16px;z-index:1100;width:42px;height:42px;
+    border-radius:11px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;
+    box-shadow:var(--shadow-md);
+  }
+  .container{padding-top:74px}
 }
-
-@keyframes spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
+@media (max-width:600px){
+  .topbar{flex-direction:column;align-items:flex-start}
 }
-
-
-
-@keyframes spin{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}
-    
 </style>
-
 </head>
-
 <body>
 
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
 <div class="sidebar">
+  <div class="sidebar-logo"><span class="mark">🏭</span> Factory Dashboard</div>
 
-    <div class="sidebar-logo">
-        🏭 Factory Dashboard
-    </div>
+  <div class="status-strip"><span class="status-dot"></span><span>System Online</span></div>
 
-    <div class="sidebar-user">
+  <div class="sidebar-user">
+    <div class="name">Smart Factory System</div>
+    <div class="role">Production &amp; Engineering</div>
+  </div>
 
-        <div>
-            Smart Factory System
-        </div>
+  <div class="sidebar-section-label">Navigate</div>
+  <div class="sidebar-menu">
+    <button class="menu-btn active" onclick="scrollToSection('dashboardSection')"><span class="ic">📊</span> Dashboard</button>
+    <button class="menu-btn" onclick="window.location.href='ComputerLife.html'"><span class="ic">💻</span> Computer Life</button>
+    <button class="menu-btn" onclick="window.location.href='Newmodel.html'"><span class="ic">🆕</span> New Model</button>
+  </div>
 
-        <div style="font-size:12px;opacity:.7;">
-            Production & Engineering
-        </div>
-
-    </div>
-
-    <div class="sidebar-menu">
-
-        <button
-        class="menu-btn active"
-        onclick="scrollToSection('dashboardSection')">
-            📊 Dashboard
-        </button>
-
-    <button
-class="menu-btn"
-onclick="window.location.href='ComputerLife.html'">
-
-    💻 Computer Life
-
-</button>
-   
-<button
-class="menu-btn"
-onclick="window.location.href='Newmodel.html'">
-
-    🆕 New Model
-
-</button>
-
-        
-    </div>
-
+  <div class="sidebar-foot"><small>Furukawa · Internal Tool</small></div>
 </div>
 
 <div class="main-content">
-
 <div class="container">
 
-<div class="header">
-
+  <div class="topbar">
     <div>
-
-        <h1>
-            Factory Dashboard 
-        </h1>
-
-        <p>
-            Production, Maintenance & Engineering Task Tracking System
-        </p>
-
+      <h1>Factory Dashboard</h1>
+      <p>Production, Maintenance &amp; Engineering Task Tracking System</p>
     </div>
-
-    <div>
-
-        <span id="todayDate"></span>
-
-        <span
-        id="userInfo"
-        style="margin-left:15px;">
-        </span>
-
-        <button
-        class="btn btn-delete"
-        onclick="logout()">
-            Logout
-        </button>
-
+    <div class="topbar-right">
+      <span class="date-chip" id="todayDate"></span>
+      <span class="user-chip" id="userInfo"></span>
+      <button class="btn btn-delete" onclick="logout()">Logout</button>
     </div>
+  </div>
 
-</div>
+  <div class="dashboard" id="dashboardSection">
+    <div class="card"><div>Total Tasks</div><div id="total" class="card-value">0</div></div>
+    <div class="card"><div>In Progress</div><div id="working" class="card-value">0</div></div>
+    <div class="card"><div>Completed</div><div id="completed" class="card-value">0</div></div>
+    <div class="card"><div>Critical</div><div id="criticalCount" class="card-value">0</div></div>
+    <div class="card"><div>Archived</div><div id="archiveCount" class="card-value">0</div></div>
+  </div>
 
-<div
-class="dashboard"
-id="dashboardSection">
-
-    <div class="card">
-        <div>Total Tasks</div>
-        <div id="total" class="card-value">0</div>
-    </div>
-
-    <div class="card">
-        <div>In Progress</div>
-        <div id="working" class="card-value">0</div>
-    </div>
-
-    <div class="card">
-        <div>Completed</div>
-        <div id="completed" class="card-value">0</div>
-    </div>
-
-    <div class="card">
-        <div>Critical</div>
-        <div id="criticalCount" class="card-value">0</div>
-    </div>
-
-    <div class="card">
-        <div>Archived</div>
-        <div id="archiveCount" class="card-value">0</div>
-    </div>
-
-</div>
-
-<div class="panel">
-
-    <div
-    class="panel-title"
-    id="formTitle">
-
-        Add New Task
-
-    </div>
+  <div class="panel">
+    <div class="panel-title" id="formTitle">Add New Task</div>
 
     <div class="form-grid">
+      <div id="ownerBox" style="display:none;">
+        <label>Owner</label>
+        <select id="owner"><option value="">Loading...</option></select>
+      </div>
 
-        <div
-        id="ownerBox"
-        style="display:none;">
+      <div>
+        <label>Task Title</label>
+        <input type="text" id="title">
+      </div>
 
-            <label>Owner</label>
+      <div>
+        <label>Category</label>
+        <select id="category">
+          <option value="">Select Category</option>
+          <option>New Model</option>
+          <option>Production Line</option>
+          <option>Computer</option>
+          <option>UPS</option>
+          <option>Defect</option>
+          <option>Downtime</option>
+          <option>Order Parts</option>
+          <option>Other</option>
+        </select>
+      </div>
 
-            <select id="owner">
+      <div>
+        <label>Priority</label>
+        <select id="priority">
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
 
-                <option value="">
-                    Loading...
-                </option>
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option>Not Started</option>
+          <option>In Progress</option>
+          <option>Pending</option>
+        </select>
+      </div>
 
-            </select>
+      <div>
+        <label>Progress</label>
+        <input type="range" id="percent" min="0" max="100" value="0"
+          oninput="document.getElementById('percentLabel').innerText=this.value+'%'">
+        <div id="percentLabel" style="margin-top:6px;font-size:12.5px;font-weight:700;color:var(--accent)">0%</div>
+      </div>
 
-        </div>
-
-        <div>
-
-            <label>Task Title</label>
-
-            <input
-            type="text"
-            id="title">
-
-        </div>
-
-        <div>
-
-            <label>Category</label>
-
-            <select id="category">
-
-                <option value="">
-                    Select Category
-                </option>
-
-                <option>
-                    New Model
-                </option>
-
-                <option>
-                    Production Line
-                </option>
-
-                <option>
-                    Computer
-                </option>
-
-                <option>
-                    UPS
-                </option>
-
-                <option>
-                    Defect
-                </option>
-
-                <option>
-                    Downtime
-                </option>
-
-                <option>
-                    Order Parts
-                </option>
-
-                <option>
-                    Other
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div>
-
-            <label>Priority</label>
-
-            <select id="priority">
-
-                <option value="Low">
-                    Low
-                </option>
-
-                <option value="Medium">
-                    Medium
-                </option>
-
-                <option value="High">
-                    High
-                </option>
-
-                <option value="Critical">
-                    Critical
-                </option>
-
-            </select>
-
-        </div>
-
-        <div>
-
-            <label>Status</label>
-
-            <select id="status">
-
-                <option>
-                    Not Started
-                </option>
-
-                <option>
-                    In Progress
-                </option>
-
-                <option>
-                    Pending
-                </option>
-
-            </select>
-
-        </div>
-
-        <div>
-
-            <label>Progress</label>
-
-            <input
-            type="range"
-            id="percent"
-            min="0"
-            max="100"
-            value="0"
-            oninput="
-            document.getElementById('percentLabel').innerText=this.value+'%'">
-
-            <div id="percentLabel">
-                0%
-            </div>
-
-        </div>
-
-        <div>
-
-            <label>Due Date</label>
-
-            <input
-            type="date"
-            id="duedate">
-
-        </div>
-
+      <div>
+        <label>Due Date</label>
+        <input type="date" id="duedate">
+      </div>
     </div>
 
-    <div style="margin-top:15px;">
-
-
-      <div
-style="
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:12px;
-align-items:start;
-">
-
-    <div>
-
-        <label>รายละเอียดงาน</label>
-
-        <textarea
-        id="detail"
-        rows="3"
-        style="
-        resize:none;
-        height:90px;
-        ">
-        </textarea>
-
+    <div style="margin-top:16px;">
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;align-items:start;">
+        <div>
+          <label>รายละเอียดงาน</label>
+          <textarea id="detail" rows="3" style="resize:none;height:90px;"></textarea>
+        </div>
+        <div>
+          <label>แนบไฟล์</label>
+          <input type="file" id="taskFile" style="height:90px;padding:10px;">
+        </div>
+      </div>
     </div>
 
-    <div>
-
-        <label>แนบไฟล์</label>
-
-        <input
-        type="file"
-        id="taskFile"
-        style="
-        height:90px;
-        padding:10px;
-        ">
-
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button id="saveBtn" class="btn btn-save" onclick="saveTask()">Save Task</button>
+      <button class="btn btn-cancel" onclick="clearForm()">Cancel</button>
+      <button class="btn btn-export" onclick="exportExcel()">Export Excel</button>
     </div>
+  </div>
 
-</div>
-
-    </div>
-
-    <br>
-
-    <button
-    id="saveBtn"
-    class="btn btn-save"
-    onclick="saveTask()">
-
-        Save Task
-
-    </button>
-
-    <button
-    class="btn btn-cancel"
-    onclick="clearForm()">
-
-        Cancel
-
-    </button>
-
-    <button
-    class="btn btn-export"
-    onclick="exportExcel()">
-
-        Export Excel
-
-    </button>
-
-</div>
-
-<div class="panel">
-
-    <div class="panel-title">
-
-        Search & Filter
-
-    </div>
-
+  <div class="panel">
+    <div class="panel-title">Search &amp; Filter</div>
     <div class="form-grid">
-
-        <input
-        type="text"
-        id="search"
-        placeholder="Search..."
-        onkeyup="render()">
-
-        <select
-        id="filterStatus"
-        onchange="render()">
-
-            <option value="">
-                All Status
-            </option>
-
-            <option value="Not Started">
-                Not Started
-            </option>
-
-            <option value="In Progress">
-                In Progress
-            </option>
-
-            <option value="Pending">
-                Pending
-            </option>
-
-            <option value="Complete">
-                Complete
-            </option>
-
-        </select>
-
-        <select
-        id="ownerFilter"
-        onchange="render()"
-        style="display:none;">
-
-            <option value="">
-                All Owner
-            </option>
-
-        </select>
-
+      <input type="text" id="search" placeholder="Search..." onkeyup="render()">
+      <select id="filterStatus" onchange="render()">
+        <option value="">All Status</option>
+        <option value="Not Started">Not Started</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Pending">Pending</option>
+        <option value="Complete">Complete</option>
+      </select>
+      <select id="ownerFilter" onchange="render()" style="display:none;">
+        <option value="">All Owner</option>
+      </select>
     </div>
+  </div>
 
-</div>
-
-<div
-class="panel"
-id="criticalSection">
-
-    <div class="panel-title">
-
-        📋 Active Tasks
-
-    </div>
-
-    <table>
-
+  <div class="panel" id="criticalSection">
+    <div class="panel-title">📋 Active Tasks</div>
+    <div class="table-scroll">
+      <table>
         <thead>
-
-            <tr>
-
-                <th>Owner</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Progress</th>
-                <th>Due</th>
-                <th>Created</th>
-                <th>Actions</th>
-
-            </tr>
-
+          <tr>
+            <th>Owner</th><th>Title</th><th>Category</th><th>Priority</th>
+            <th>Status</th><th>Progress</th><th>Due</th><th>Created</th><th>Actions</th>
+          </tr>
         </thead>
-
-        <tbody id="taskTable">
-
-        </tbody>
-
-    </table>
-
-</div>
-
-<div
-class="panel"
-id="archiveSection">
-
-    <div class="panel-title">
-
-        📦 Archived Tasks
-
+        <tbody id="taskTable"></tbody>
+      </table>
     </div>
+  </div>
 
-    <table>
-
+  <div class="panel" id="archiveSection">
+    <div class="panel-title">📦 Archived Tasks</div>
+    <div class="table-scroll">
+      <table>
         <thead>
-
-            <tr>
-
-                <th>Owner</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Created</th>
-
-            </tr>
-
+          <tr><th>Owner</th><th>Title</th><th>Category</th><th>Priority</th><th>Status</th><th>Created</th></tr>
         </thead>
-
-        <tbody id="archiveTable">
-
-        </tbody>
-
-    </table>
-
-</div>
+        <tbody id="archiveTable"></tbody>
+      </table>
+    </div>
+  </div>
 
 </div>
 </div>
 
 <script>
-    const LANG =
-localStorage.getItem(
-    "language"
-) || "en";
-    const TEXT = {
-
-    en:{
-
-        dashboard:"Dashboard",
-        computer:"Computer Life",
-        addTask:"Add New Task",
-        search:"Search & Filter",
-        active:"Active Tasks",
-        owner:"Owner",
-        save:"Save Task",
-        cancel:"Cancel"
-
-    },
-
-    th:{
-
-        dashboard:"แดชบอร์ด",
-        computer:"อายุการใช้งานคอมพิวเตอร์",
-        addTask:"เพิ่มงานใหม่",
-        search:"ค้นหาและกรอง",
-        active:"งานที่กำลังดำเนินการ",
-        owner:"ผู้รับผิดชอบ",
-        save:"บันทึกงาน",
-        cancel:"ยกเลิก"
-
-    }
-
+const LANG = localStorage.getItem("language") || "en";
+const TEXT = {
+  en:{dashboard:"Dashboard",computer:"Computer Life",addTask:"Add New Task",search:"Search & Filter",active:"Active Tasks",owner:"Owner",save:"Save Task",cancel:"Cancel"},
+  th:{dashboard:"แดชบอร์ด",computer:"อายุการใช้งานคอมพิวเตอร์",addTask:"เพิ่มงานใหม่",search:"ค้นหาและกรอง",active:"งานที่กำลังดำเนินการ",owner:"ผู้รับผิดชอบ",save:"บันทึกงาน",cancel:"ยกเลิก"}
 };
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbxcz3HZH5lsv0ZcTxIFyX_E6SuFSvWXyZ5g8lem2bS6KUD6S3NCoNDqf6joWdLRqa_a/exec";
-
-const ROLE =
-localStorage.getItem("role");
-
-const USERNAME =
-localStorage.getItem("username");
-
-const SHEET_NAME =
-localStorage.getItem("workSheet");
+const API_URL = "https://script.google.com/macros/s/AKfycbxcz3HZH5lsv0ZcTxIFyX_E6SuFSvWXyZ5g8lem2bS6KUD6S3NCoNDqf6joWdLRqa_a/exec";
+const ROLE = localStorage.getItem("role");
+const USERNAME = localStorage.getItem("username");
+const SHEET_NAME = localStorage.getItem("workSheet");
 
 let tasks = [];
-
 let editingId = null;
-
 let selectedCategory = "";
 
-if(
-    !USERNAME ||
-    !ROLE
-){
-    location.href =
-    "Login.html";
+if(!USERNAME || !ROLE){
+  location.href = "Login.html";
 }
 
-function showLoading(
-msg="Loading..."
-){
-
-    const textEl =
-    document.getElementById(
-        "loadingText"
-    );
-
-    if(textEl){
-        textEl.innerText = msg;
-    }
-
-    const overlay =
-    document.getElementById(
-        "loadingOverlay"
-    );
-
-    if(overlay){
-        overlay.style.display =
-        "flex";
-    }
-
+function showLoading(msg="Loading..."){
+  const textEl = document.getElementById("loadingText");
+  if(textEl){ textEl.innerText = msg; }
+  const overlay = document.getElementById("loadingOverlay");
+  if(overlay){ overlay.style.display = "flex"; }
 }
 
 function hideLoading(){
-
-    document
-    .getElementById(
-        "loadingOverlay"
-    )
-    .style.display =
-    "none";
-
+  document.getElementById("loadingOverlay").style.display = "none";
 }
 
 function scrollToSection(id){
-
-    document
-    .getElementById(id)
-    ?.scrollIntoView({
-        behavior:"smooth"
-    });
-
+  document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
 }
 
 function logout(){
-
-    localStorage.clear();
-
-    location.href =
-    "Login.html";
-
+  localStorage.clear();
+  location.href = "Login.html";
 }
 
 function updateDate(){
-
-    const lang =
-    localStorage.getItem("language")
-    || "en";
-
-    document.getElementById("todayDate").innerText =
-    new Date().toLocaleDateString(
-
-        lang === "th"
-        ? "th-TH"
-        : "en-US",
-
-        {
-            weekday:"long",
-            year:"numeric",
-            month:"long",
-            day:"numeric"
-        }
-
-    );
-
+  const lang = localStorage.getItem("language") || "en";
+  document.getElementById("todayDate").innerText =
+    new Date().toLocaleDateString(lang === "th" ? "th-TH" : "en-US",
+      {weekday:"long",year:"numeric",month:"long",day:"numeric"});
 }
 
 async function loadUsers(){
-
-    if(
-        ROLE !== "Admin"
-    ){
-        return;
-    }
-
-    document
-    .getElementById(
-        "ownerBox"
-    )
-    .style.display =
-    "block";
-
-    document
-    .getElementById(
-        "ownerFilter"
-    )
-    .style.display =
-    "block";
-
-    try{
-
-        const response =
-        await fetch(
-
-            API_URL +
-
-            "?action=getUsers"
-
-        );
-
-        const users =
-        await response.json();
-
-        let ownerHtml = "";
-        let filterHtml =
-        `
-        <option value="">
-            All Owner
-        </option>
-        `;
-
-        users.forEach(user=>{
-
-            ownerHtml +=
-            `
-            <option value="${user.username}">
-                ${user.username}
-            </option>
-            `;
-
-            filterHtml +=
-            `
-            <option value="${user.username}">
-                ${user.username}
-            </option>
-            `;
-
-        });
-
-        document
-        .getElementById("owner")
-        .innerHTML =
-        ownerHtml;
-
-        document
-        .getElementById("ownerFilter")
-        .innerHTML =
-        filterHtml;
-
-    }
-    catch(error){
-
-        console.error(error);
-
-    }
-
+  if(ROLE !== "Admin"){ return; }
+  document.getElementById("ownerBox").style.display = "block";
+  document.getElementById("ownerFilter").style.display = "block";
+  try{
+    const response = await fetch(API_URL + "?action=getUsers");
+    const users = await response.json();
+    let ownerHtml = "";
+    let filterHtml = `<option value="">All Owner</option>`;
+    users.forEach(user=>{
+      ownerHtml += `<option value="${user.username}">${user.username}</option>`;
+      filterHtml += `<option value="${user.username}">${user.username}</option>`;
+    });
+    document.getElementById("owner").innerHTML = ownerHtml;
+    document.getElementById("ownerFilter").innerHTML = filterHtml;
+  }
+  catch(error){ console.error(error); }
 }
 
 async function loadData(){
-
-    showLoading(
-        "Loading Tasks..."
-    );
-
-    try{
-
-        let url = "";
-
-        if(
-            ROLE === "Admin"
-        ){
-
-            url =
-            API_URL +
-            "?action=loadAll";
-
-        }
-        else{
-
-            url =
-            API_URL +
-            "?action=load" +
-            "&sheetName=" +
-            encodeURIComponent(
-                SHEET_NAME
-            );
-
-        }
-
-        const response =
-await fetch(url);
-
-tasks =
-await response.json();
-
-console.log(
-    "TASKS",
-    tasks
-);
-
-render();
-
+  showLoading("Loading Tasks...");
+  try{
+    let url = "";
+    if(ROLE === "Admin"){
+      url = API_URL + "?action=loadAll";
+    } else {
+      url = API_URL + "?action=load" + "&sheetName=" + encodeURIComponent(SHEET_NAME);
     }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "Load Data Error"
-        );
-
-    }
-    finally{
-
-        hideLoading();
-
-    }
-
+    const response = await fetch(url);
+    tasks = await response.json();
+    console.log("TASKS", tasks);
+    render();
+  }
+  catch(error){
+    console.error(error);
+    alert("Load Data Error");
+  }
+  finally{ hideLoading(); }
 }
 
 async function saveTask(){
+  const owner = ROLE === "Admin" ? document.getElementById("owner").value : USERNAME;
+  const file = document.getElementById("taskFile").files[0];
 
-    const owner =
+  const task = {
+    owner:owner,
+    title: document.getElementById("title").value,
+    category: document.getElementById("category").value,
+    priority: document.getElementById("priority").value,
+    detail: document.getElementById("detail").value,
+    status: document.getElementById("status").value,
+    percent: document.getElementById("percent").value,
+    due: document.getElementById("duedate").value,
+    createdAt: new Date().toLocaleString()
+  };
 
-    ROLE === "Admin"
+  if(!task.title.trim()){
+    alert("Please enter task title");
+    return;
+  }
 
-    ?
+  showLoading("Saving...");
 
-    document
-    .getElementById("owner")
-    .value
+  try{
+    let url = API_URL + (editingId ? "?action=update" : "?action=save");
 
-    :
-
-    USERNAME;
-
-    const file =
-document.getElementById(
-    "taskFile"
-).files[0];
-
-    const task = {
-
-        owner:owner,
-
-        title:
-        document
-        .getElementById("title")
-        .value,
-
-        category:
-        document
-        .getElementById("category")
-        .value,
-
-        priority:
-        document
-        .getElementById("priority")
-        .value,
-
-        detail:
-        document
-        .getElementById("detail")
-        .value,
-
-        status:
-        document
-        .getElementById("status")
-        .value,
-
-        percent:
-        document
-        .getElementById("percent")
-        .value,
-
-        due:
-        document
-        .getElementById("duedate")
-        .value,
-
-        createdAt:
-        new Date()
-        .toLocaleString()
-
-    };
-
-    if(
-        !task.title.trim()
-    ){
-        alert(
-            "Please enter task title"
-        );
-        return;
+    if(editingId){
+      url += "&id=" + encodeURIComponent(editingId)
+           + "&sheetName=" + encodeURIComponent(window.currentSheetName || SHEET_NAME);
+    } else {
+      url += "&sheetName=" + encodeURIComponent(SHEET_NAME);
     }
 
-    showLoading(
-        "Saving..."
-    );
+    url += "&role=" + encodeURIComponent(ROLE)
+         + "&owner=" + encodeURIComponent(task.owner)
+         + "&title=" + encodeURIComponent(task.title)
+         + "&category=" + encodeURIComponent(task.category)
+         + "&priority=" + encodeURIComponent(task.priority)
+         + "&detail=" + encodeURIComponent(task.detail)
+         + "&status=" + encodeURIComponent(task.status)
+         + "&percent=" + encodeURIComponent(task.percent)
+         + "&due=" + encodeURIComponent(task.due)
+         + "&createdAt=" + encodeURIComponent(task.createdAt);
 
-    try{
+    const response = await fetch(url);
+    const result = await response.json();
 
-        let url =
-
-        API_URL +
-
-        (
-            editingId
-            ?
-            "?action=update"
-            :
-            "?action=save"
-        );
-
-        if(editingId){
-
-            url +=
-
-            "&id=" +
-            encodeURIComponent(
-                editingId
-            )
-
-            +
-
-"&sheetName=" +
-encodeURIComponent(
-    window.currentSheetName ||
-    SHEET_NAME
-);
-        }
-        else{
-
-            url +=
-
-            "&sheetName=" +
-            encodeURIComponent(
-                SHEET_NAME
-            );
-
-        }
-
-        url +=
-
-        "&role=" +
-        encodeURIComponent(
-            ROLE
-        )
-
-        +
-
-        "&owner=" +
-        encodeURIComponent(
-            task.owner
-        )
-
-        +
-
-        "&title=" +
-        encodeURIComponent(
-            task.title
-        )
-
-        +
-
-        "&category=" +
-        encodeURIComponent(
-            task.category
-        )
-
-        +
-
-        "&priority=" +
-        encodeURIComponent(
-            task.priority
-        )
-
-        +
-
-        "&detail=" +
-        encodeURIComponent(
-            task.detail
-        )
-
-        +
-
-        "&status=" +
-        encodeURIComponent(
-            task.status
-        )
-
-        +
-
-        "&percent=" +
-        encodeURIComponent(
-            task.percent
-        )
-
-        +
-
-        "&due=" +
-        encodeURIComponent(
-            task.due
-        )
-
-        +
-
-        "&createdAt=" +
-        encodeURIComponent(
-            task.createdAt
-        );
-
-        const response =
-        await fetch(url);
-
-        const result =
-        await response.json();
-
-        if(
-            result.success
-        ){
-
-            clearForm();
-
-            await loadData();
-
-        }
-
+    if(result.success){
+      clearForm();
+      await loadData();
     }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "Save Failed"
-        );
-
-    }
-    finally{
-
-        hideLoading();
-
-    }
-
+  }
+  catch(error){
+    console.error(error);
+    alert("Save Failed");
+  }
+  finally{ hideLoading(); }
 }
 
 function editTask(index){
+  const task = tasks[index];
+  editingId = task.id;
+  window.currentSheetName = task.sheetName;
 
-    const task =
-    tasks[index];
+  document.getElementById("title").value = task.title || "";
+  document.getElementById("category").value = task.category || "";
+  document.getElementById("priority").value = task.priority || "";
+  document.getElementById("detail").value = task.detail || "";
+  document.getElementById("status").value = task.status || "";
+  document.getElementById("percent").value = task.percent || 0;
+  document.getElementById("percentLabel").innerText = (task.percent || 0) + "%";
+  document.getElementById("duedate").value = task.due || "";
 
-    editingId =
-    task.id;
+  if(ROLE === "Admin"){
+    document.getElementById("owner").value = task.owner || "";
+  }
 
-    window.currentSheetName =
-    task.sheetName;
-
-    document
-    .getElementById("title")
-    .value =
-    task.title || "";
-
-    document
-    .getElementById("category")
-    .value =
-    task.category || "";
-
-    document
-    .getElementById("priority")
-    .value =
-    task.priority || "";
-
-    document
-    .getElementById("detail")
-    .value =
-    task.detail || "";
-
-    document
-    .getElementById("status")
-    .value =
-    task.status || "";
-
-    document
-    .getElementById("percent")
-    .value =
-    task.percent || 0;
-
-    document
-    .getElementById("duedate")
-    .value =
-    task.due || "";
-
-
-if(
-ROLE === "Admin"
-){
-
-    document
-    .getElementById("owner")
-    .value =
-    task.owner || "";
-
+  document.querySelector(".panel").scrollIntoView({behavior:"smooth"});
 }
-
-}
-
 
 async function deleteTask(id,sheetName){
-
-    if(
-        !confirm(
-            "Delete this task ?"
-        )
-    ){
-        return;
-    }
-
-    showLoading(
-        "Deleting..."
-    );
-
-    try{
-
-        const response =
-        await fetch(
-
-            API_URL +
-
-            "?action=delete"
-
-            + "&id=" +
-            encodeURIComponent(id)
-
-            + "&sheetName=" +
-            encodeURIComponent(sheetName)
-
-        );
-
-        const result =
-        await response.json();
-
-        if(
-            result.success
-        ){
-
-            await loadData();
-
-        }
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "Delete Failed"
-        );
-
-    }
-    finally{
-
-        hideLoading();
-
-    }
-
+  if(!confirm("Delete this task ?")){ return; }
+  showLoading("Deleting...");
+  try{
+    const response = await fetch(API_URL + "?action=delete"
+      + "&id=" + encodeURIComponent(id)
+      + "&sheetName=" + encodeURIComponent(sheetName));
+    const result = await response.json();
+    if(result.success){ await loadData(); }
+  }
+  catch(error){
+    console.error(error);
+    alert("Delete Failed");
+  }
+  finally{ hideLoading(); }
 }
 
-async function completeTask(
-id,
-sheetName
-){
+async function completeTask(id,sheetName){
+  if(!confirm("Complete this task ?")){ return; }
+  const task = tasks.find(t => String(t.id) === String(id));
+  if(!task){ return; }
 
-    if(
-        !confirm(
-            "Complete this task ?"
-        )
-    ){
-        return;
-    }
+  showLoading("Completing...");
 
-    const task =
-    tasks.find(
-        t =>
-        String(t.id)
-        ===
-        String(id)
-    );
+  try{
+    const url = API_URL + "?action=update"
+      + "&id=" + encodeURIComponent(id)
+      + "&sheetName=" + encodeURIComponent(sheetName)
+      + "&owner=" + encodeURIComponent(task.owner)
+      + "&title=" + encodeURIComponent(task.title)
+      + "&category=" + encodeURIComponent(task.category)
+      + "&priority=" + encodeURIComponent(task.priority)
+      + "&detail=" + encodeURIComponent(task.detail)
+      + "&status=Complete"
+      + "&percent=100"
+      + "&due=" + encodeURIComponent(task.due || "")
+      + "&createdAt=" + encodeURIComponent(task.createdAt)
+      + "&fileName=" + encodeURIComponent(task.fileName || "")
+      + "&fileUrl=" + encodeURIComponent(task.fileUrl || "");
 
-    if(!task){
-        return;
-    }
-
-    showLoading(
-        "Completing..."
-    );
-
-    try{
-
-        const url =
-
-        API_URL +
-
-        "?action=update"
-
-        + "&id=" +
-        encodeURIComponent(id)
-
-        + "&sheetName=" +
-        encodeURIComponent(sheetName)
-
-        + "&owner=" +
-        encodeURIComponent(task.owner)
-
-        + "&title=" +
-        encodeURIComponent(task.title)
-
-        + "&category=" +
-        encodeURIComponent(task.category)
-
-        + "&priority=" +
-        encodeURIComponent(task.priority)
-
-        + "&detail=" +
-        encodeURIComponent(task.detail)
-
-        + "&status=Complete"
-
-        + "&percent=100"
-
-        + "&due=" +
-        encodeURIComponent(task.due || "")
-
-        + "&createdAt=" +
-        encodeURIComponent(task.createdAt)
-
-        + "&fileName=" +
-        encodeURIComponent(task.fileName || "")
-
-        + "&fileUrl=" +
-        encodeURIComponent(task.fileUrl || "");
-
-        const response =
-        await fetch(url);
-
-        const result =
-        await response.json();
-
-        if(
-            result.success
-        ){
-
-            await loadData();
-
-        }
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        alert(
-            "Complete Failed"
-        );
-
-    }
-    finally{
-
-        hideLoading();
-
-    }
-
+    const response = await fetch(url);
+    const result = await response.json();
+    if(result.success){ await loadData(); }
+  }
+  catch(error){
+    console.error(error);
+    alert("Complete Failed");
+  }
+  finally{ hideLoading(); }
 }
 
 function clearForm(){
-
-    editingId = null;
-
-    document
-    .getElementById("title")
-    .value = "";
-
-    document
-    .getElementById("category")
-    .selectedIndex = 0;
-
-    document
-    .getElementById("priority")
-    .selectedIndex = 0;
-
-    document
-    .getElementById("detail")
-    .value = "";
-
-    document
-    .getElementById("percent")
-    .value = 0;
-
-    document
-    .getElementById("percentLabel")
-    .innerText = "0%";
-
-    document
-    .getElementById("duedate")
-    .value = "";
-
-    document
-    .getElementById("status")
-    .selectedIndex = 0;
-
+  editingId = null;
+  document.getElementById("title").value = "";
+  document.getElementById("category").selectedIndex = 0;
+  document.getElementById("priority").selectedIndex = 0;
+  document.getElementById("detail").value = "";
+  document.getElementById("percent").value = 0;
+  document.getElementById("percentLabel").innerText = "0%";
+  document.getElementById("duedate").value = "";
+  document.getElementById("status").selectedIndex = 0;
 }
 
 function render(){
-
-    let html = "";
-    let archiveHtml = "";
-
-    const keyword =
-    document
-    .getElementById("search")
-    .value
-    .toLowerCase();
-
-    const statusFilter =
-    document
-    .getElementById("filterStatus")
-    .value;
-
-    const ownerFilterEl =
-    document
-    .getElementById("ownerFilter");
-
-    const ownerFilter =
-    ownerFilterEl
-    ?
-    ownerFilterEl.value
-    :
-    "";
-
-    const activeTasks =
-
-    tasks.filter(task=>{
-
-        if(
-            task.status ===
-            "Complete"
-        ){
-            return false;
-        }
-
-   const matchKeyword =
-
-String(
-    task.title || ""
-)
-.toLowerCase()
-.includes(keyword)
-
-||
-
-String(
-    task.detail || ""
-)
-.toLowerCase()
-.includes(keyword);
-
-        const matchStatus =
-
-        !statusFilter
-
-        ||
-
-        task.status ===
-        statusFilter;
-
-        const matchOwner =
-
-        !ownerFilter
-
-        ||
-
-        task.owner ===
-        ownerFilter;
-
-        return (
-            matchKeyword &&
-            matchStatus &&
-            matchOwner
-        );
-
-    });
-
-    const archivedTasks =
-
-    tasks.filter(
-
-        task =>
-
-        task.status ===
-        "Complete"
-
-    );
-
-    activeTasks.forEach(
-    (task,index)=>{
-
-        html += `
-
-<tr>
-
-<td>${task.owner || "-"}</td>
-
-<td>
-<a
-href="#"
-onclick="viewTask(${tasks.indexOf(task)})">
-
-${task.title || ""}
-
-</a>
-</td>
-
-<td>${task.category || ""}</td>
-
-<td>${task.priority || ""}</td>
-
-<td>${task.status || ""}</td>
-
-<td>${task.percent || 0}%</td>
-
-<td>
-${
-task.due
-?
-String(task.due).split("T")[0]
-:
-"-"
-}
-</td>
-
-<td>
-${
-task.createdAt
-?
-String(task.createdAt).split("T")[0]
-:
-""
-}
-
-
-<div class="action-buttons">
-
-${
-ROLE === "Admin"
-||
-task.owner === USERNAME
-
-?
-
-`
-<button
-class="btn btn-edit"
-onclick="editTask(${tasks.indexOf(task)})">
-
-Edit
-
-</button>
-`
-
-:
-
-""
-}
-${
-ROLE === "Admin"
-?
-
-`
-<button
-class="btn btn-complete"
-onclick="completeTask(
-'${task.id}',
-'${task.sheetName || SHEET_NAME}'
-)">
-Complete
-</button>
-
-<button
-class="btn btn-delete"
-onclick="deleteTask(
-'${task.id}',
-'${task.sheetName || SHEET_NAME}'
-)">
-Delete
-</button>
-`
-
-:
-
-""
-}
-
-</div>
-
-</td>
-
-</tr>
-
-`;
-
-    });
-
-    archivedTasks.forEach(task=>{
-
-        archiveHtml += `
-
-<tr>
-
-<td>${task.owner || "-"}</td>
-
-<td>
-<a
-href="#"
-onclick="viewTask(${tasks.indexOf(task)})">
-
-${task.title || ""}
-
-</a>
-</td>
-
-<td>${task.category || ""}</td>
-
-<td>${task.priority || ""}</td>
-
-<td>${task.status || ""}</td>
-
-<td>
-${
-task.createdAt
-?
-String(task.createdAt).split("T")[0]
-:
-""
-}
-</td>
-
-</tr>
-
-`;
-
-    });
-
-    document
-    .getElementById("taskTable")
-    .innerHTML =
-    html;
-
-    document
-    .getElementById("archiveTable")
-    .innerHTML =
-    archiveHtml;
-
-    document
-    .getElementById("total")
-    .innerText =
-    tasks.length;
-
-    document
-    .getElementById("working")
-    .innerText =
-    tasks.filter(
-        t =>
-        t.status ===
-        "In Progress"
-    ).length;
-
-    document
-    .getElementById("completed")
-    .innerText =
-    archivedTasks.length;
-
-    document
-    .getElementById("criticalCount")
-    .innerText =
-    tasks.filter(
-        t =>
-        t.priority ===
-        "Critical"
-    ).length;
-
-    document
-    .getElementById("archiveCount")
-    .innerText =
-    archivedTasks.length;
-
+  let html = "";
+  let archiveHtml = "";
+
+  const keyword = document.getElementById("search").value.toLowerCase();
+  const statusFilter = document.getElementById("filterStatus").value;
+  const ownerFilterEl = document.getElementById("ownerFilter");
+  const ownerFilter = ownerFilterEl ? ownerFilterEl.value : "";
+
+  const activeTasks = tasks.filter(task=>{
+    if(task.status === "Complete"){ return false; }
+
+    const matchKeyword = String(task.title || "").toLowerCase().includes(keyword)
+      || String(task.detail || "").toLowerCase().includes(keyword);
+    const matchStatus = !statusFilter || task.status === statusFilter;
+    const matchOwner = !ownerFilter || task.owner === ownerFilter;
+
+    return matchKeyword && matchStatus && matchOwner;
+  });
+
+  const archivedTasks = tasks.filter(task => task.status === "Complete");
+
+  activeTasks.forEach((task)=>{
+    html += `
+      <tr>
+        <td>${task.owner || "-"}</td>
+        <td><a href="#" onclick="viewTask(${tasks.indexOf(task)})">${task.title || ""}</a></td>
+        <td>${task.category || ""}</td>
+        <td>${task.priority || ""}</td>
+        <td>${task.status || ""}</td>
+        <td>${task.percent || 0}%</td>
+        <td>${task.due ? String(task.due).split("T")[0] : "-"}</td>
+        <td>
+          ${task.createdAt ? String(task.createdAt).split("T")[0] : ""}
+          <div class="action-buttons">
+            ${ROLE === "Admin" || task.owner === USERNAME
+              ? `<button class="btn btn-edit" onclick="editTask(${tasks.indexOf(task)})">Edit</button>` : ""}
+            ${ROLE === "Admin"
+              ? `<button class="btn btn-complete" onclick="completeTask('${task.id}','${task.sheetName || SHEET_NAME}')">Complete</button>
+                 <button class="btn btn-delete" onclick="deleteTask('${task.id}','${task.sheetName || SHEET_NAME}')">Delete</button>` : ""}
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  archivedTasks.forEach(task=>{
+    archiveHtml += `
+      <tr>
+        <td>${task.owner || "-"}</td>
+        <td><a href="#" onclick="viewTask(${tasks.indexOf(task)})">${task.title || ""}</a></td>
+        <td>${task.category || ""}</td>
+        <td>${task.priority || ""}</td>
+        <td>${task.status || ""}</td>
+        <td>${task.createdAt ? String(task.createdAt).split("T")[0] : ""}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("taskTable").innerHTML = html;
+  document.getElementById("archiveTable").innerHTML = archiveHtml;
+
+  document.getElementById("total").innerText = tasks.length;
+  document.getElementById("working").innerText = tasks.filter(t => t.status === "In Progress").length;
+  document.getElementById("completed").innerText = archivedTasks.length;
+  document.getElementById("criticalCount").innerText = tasks.filter(t => t.priority === "Critical").length;
+  document.getElementById("archiveCount").innerText = archivedTasks.length;
 }
 
 function exportExcel(){
-
-    const ws =
-    XLSX.utils.json_to_sheet(
-        tasks
-    );
-
-    const wb =
-    XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(
-        wb,
-        ws,
-        "Tasks"
-    );
-
-    XLSX.writeFile(
-        wb,
-        "Factory_Dashboard_Report.xlsx"
-    );
-
+  const ws = XLSX.utils.json_to_sheet(tasks);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Tasks");
+  XLSX.writeFile(wb, "Factory_Dashboard_Report.xlsx");
 }
 
-document
-.getElementById("userInfo")
-.innerHTML =
+document.getElementById("userInfo").innerHTML = "👤 " + USERNAME + " (" + ROLE + ")";
 
-"👤 " +
-
-USERNAME +
-
-" (" +
-
-ROLE +
-
-")";
-
-if(
-    ROLE !== "Admin"
-){
-
-    document
-    .querySelector(".btn-export")
-    .style.display =
-    "none";
-
+if(ROLE !== "Admin"){
+  document.querySelector(".btn-export").style.display = "none";
 }
 
+function applyLanguage(){
+  const lang = localStorage.getItem("language") || "en";
+  if(lang !== "th"){ return; }
 
-    
-    function applyLanguage(){
+  document.title = "แดชบอร์ดโรงงาน";
+  document.querySelector(".sidebar-logo").innerHTML = '<span class="mark">🏭</span> แดชบอร์ดโรงงาน';
+  const menuBtns = document.querySelectorAll(".menu-btn");
+  menuBtns[0].innerHTML = '<span class="ic">📊</span> แดชบอร์ด';
+  menuBtns[1].innerHTML = '<span class="ic">💻</span> อายุการใช้งานคอมพิวเตอร์';
+  menuBtns[2].innerHTML = '<span class="ic">🆕</span> รุ่นใหม่';
 
-    const lang =
-    localStorage.getItem("language")
-    || "en";
+  document.querySelector(".topbar h1").innerText = "แดชบอร์ดโรงงาน";
+  document.querySelector(".topbar p").innerText = "ระบบติดตามงานฝ่ายผลิต ซ่อมบำรุง และวิศวกรรม";
+  document.querySelector(".btn-delete").innerText = "ออกจากระบบ";
 
-    if(lang !== "th"){
-        return;
-    }
+  const cardLabels = document.querySelectorAll(".card > div:first-child");
+  cardLabels[0].innerText = "งานทั้งหมด";
+  cardLabels[1].innerText = "กำลังดำเนินการ";
+  cardLabels[2].innerText = "เสร็จสิ้น";
+  cardLabels[3].innerText = "งานเร่งด่วน";
+  cardLabels[4].innerText = "เก็บถาวร";
 
-    document.title =
-    "แดชบอร์ดโรงงาน";
+  document.getElementById("formTitle").innerText = "เพิ่มงานใหม่";
 
-    /* Sidebar */
+  const labels = document.querySelectorAll("label");
+  if(labels.length >= 8){
+    labels[0].innerText = "ผู้รับผิดชอบ";
+    labels[1].innerText = "ชื่องาน";
+    labels[2].innerText = "หมวดหมู่";
+    labels[3].innerText = "ความสำคัญ";
+    labels[4].innerText = "สถานะ";
+    labels[5].innerText = "ความคืบหน้า";
+    labels[6].innerText = "กำหนดส่ง";
+    labels[7].innerText = "รายละเอียดงาน";
+  }
 
-    document.querySelector(".sidebar-logo").innerHTML =
-    "🏭 แดชบอร์ดโรงงาน";
+  const category = document.getElementById("category");
+  category.options[0].text = "เลือกหมวดหมู่";
+  category.options[1].text = "รุ่นใหม่";
+  category.options[2].text = "ไลน์ผลิต";
+  category.options[3].text = "คอมพิวเตอร์";
+  category.options[4].text = "UPS";
+  category.options[5].text = "ของเสีย";
+  category.options[6].text = "เครื่องหยุด";
+  category.options[7].text = "สั่งอะไหล่";
+  category.options[8].text = "อื่นๆ";
 
-    document.querySelectorAll(".menu-btn")[0].innerHTML =
-    "📊 แดชบอร์ด";
+  const priority = document.getElementById("priority");
+  priority.options[0].text = "ต่ำ";
+  priority.options[1].text = "ปานกลาง";
+  priority.options[2].text = "สูง";
+  priority.options[3].text = "วิกฤต";
 
-    document.querySelectorAll(".menu-btn")[1].innerHTML =
-    "💻 อายุการใช้งานคอมพิวเตอร์";
+  const status = document.getElementById("status");
+  status.options[0].text = "ยังไม่เริ่ม";
+  status.options[1].text = "กำลังดำเนินการ";
+  status.options[2].text = "รอดำเนินการ";
 
+  document.getElementById("saveBtn").innerText = "บันทึกงาน";
+  document.querySelector(".btn-cancel").innerText = "ยกเลิก";
+  document.querySelector(".btn-export").innerText = "ส่งออก Excel";
 
-    /* Header */
+  document.querySelectorAll(".panel-title")[1].innerText = "ค้นหาและกรอง";
+  document.getElementById("search").placeholder = "ค้นหา...";
+  document.getElementById("filterStatus").options[0].text = "ทุกสถานะ";
+  document.getElementById("filterStatus").options[1].text = "ยังไม่เริ่ม";
+  document.getElementById("filterStatus").options[2].text = "กำลังดำเนินการ";
+  document.getElementById("filterStatus").options[3].text = "รอดำเนินการ";
+  document.getElementById("filterStatus").options[4].text = "เสร็จสิ้น";
 
-    document.querySelector("h1").innerText =
-    "แดชบอร์ดโรงงาน V3";
+  document.querySelectorAll(".panel-title")[2].innerText = "📋 งานที่กำลังดำเนินการ";
 
-    document.querySelector(".header p").innerText =
-    "ระบบติดตามงานฝ่ายผลิต ซ่อมบำรุง และวิศวกรรม";
+  const th = document.querySelectorAll("th");
+  th[0].innerText = "ผู้รับผิดชอบ";
+  th[1].innerText = "หัวข้อ";
+  th[2].innerText = "หมวดหมู่";
+  th[3].innerText = "ความสำคัญ";
+  th[4].innerText = "สถานะ";
+  th[5].innerText = "ความคืบหน้า";
+  th[6].innerText = "กำหนดส่ง";
+  th[7].innerText = "วันที่สร้าง";
+  th[8].innerText = "จัดการ";
+  th[9].innerText = "ผู้รับผิดชอบ";
+  th[10].innerText = "หัวข้อ";
+  th[11].innerText = "หมวดหมู่";
+  th[12].innerText = "ความสำคัญ";
+  th[13].innerText = "สถานะ";
+  th[14].innerText = "วันที่สร้าง";
+}
 
-    document.querySelector(".btn-delete").innerText =
-    "ออกจากระบบ";
+function viewTask(index){
+  const task = tasks[index];
+  document.getElementById("modalTitle").innerText = task.title || "";
+  document.getElementById("modalDetail").innerText = task.detail || "";
 
-    /* Dashboard Cards */
-
-    document.querySelectorAll(".card div")[0].innerText =
-    "งานทั้งหมด";
-
-    document.querySelectorAll(".card div")[2].innerText =
-    "กำลังดำเนินการ";
-
-    document.querySelectorAll(".card div")[4].innerText =
-    "เสร็จสิ้น";
-
-    document.querySelectorAll(".card div")[6].innerText =
-    "งานเร่งด่วน";
-
-    document.querySelectorAll(".card div")[8].innerText =
-    "เก็บถาวร";
-
-    /* Form */
-
-    document.getElementById("formTitle").innerText =
-    "เพิ่มงานใหม่";
-
-    const labels =
-    document.querySelectorAll("label");
-
-    if(labels.length >= 8){
-
-        labels[0].innerText = "ผู้รับผิดชอบ";
-        labels[1].innerText = "ชื่องาน";
-        labels[2].innerText = "หมวดหมู่";
-        labels[3].innerText = "ความสำคัญ";
-        labels[4].innerText = "สถานะ";
-        labels[5].innerText = "ความคืบหน้า";
-        labels[6].innerText = "กำหนดส่ง";
-        labels[7].innerText = "รายละเอียดงาน";
-
-    }
-
-    /* Category */
-
-    const category =
-    document.getElementById("category");
-
-    category.options[0].text = "เลือกหมวดหมู่";
-    category.options[1].text = "รุ่นใหม่";
-    category.options[2].text = "ไลน์ผลิต";
-    category.options[3].text = "คอมพิวเตอร์";
-    category.options[4].text = "UPS";
-    category.options[5].text = "ของเสีย";
-    category.options[6].text = "เครื่องหยุด";
-    category.options[7].text = "สั่งอะไหล่";
-    category.options[8].text = "อื่นๆ";
-
-    /* Priority */
-
-    const priority =
-    document.getElementById("priority");
-
-    priority.options[0].text = "ต่ำ";
-    priority.options[1].text = "ปานกลาง";
-    priority.options[2].text = "สูง";
-    priority.options[3].text = "วิกฤต";
-
-    /* Status */
-
-    const status =
-    document.getElementById("status");
-
-    status.options[0].text = "ยังไม่เริ่ม";
-    status.options[1].text = "กำลังดำเนินการ";
-    status.options[2].text = "รอดำเนินการ";
-
-    /* Buttons */
-
-    document.getElementById("saveBtn").innerText =
-    "บันทึกงาน";
-
-    document.querySelector(".btn-cancel").innerText =
-    "ยกเลิก";
-
-    document.querySelector(".btn-export").innerText =
-    "ส่งออก Excel";
-
-    /* Search Panel */
-
-    document.querySelectorAll(".panel-title")[1].innerText =
-    "ค้นหาและกรอง";
-
-    document.getElementById("search").placeholder =
-    "ค้นหา...";
-
-    document.getElementById("filterStatus").options[0].text =
-    "ทุกสถานะ";
-
-    document.getElementById("filterStatus").options[1].text =
-    "ยังไม่เริ่ม";
-
-    document.getElementById("filterStatus").options[2].text =
-    "กำลังดำเนินการ";
-
-    document.getElementById("filterStatus").options[3].text =
-    "รอดำเนินการ";
-
-    document.getElementById("filterStatus").options[4].text =
-    "เสร็จสิ้น";
-
-    /* Tables */
-
-    document.querySelectorAll(".panel-title")[2].innerText =
-    "📋 งานที่กำลังดำเนินการ";
-    const th =
-    document.querySelectorAll("th");
-
-    th[0].innerText = "ผู้รับผิดชอบ";
-    th[1].innerText = "หัวข้อ";
-    th[2].innerText = "หมวดหมู่";
-    th[3].innerText = "ความสำคัญ";
-    th[4].innerText = "สถานะ";
-    th[5].innerText = "ความคืบหน้า";
-    th[6].innerText = "กำหนดส่ง";
-    th[7].innerText = "วันที่สร้าง";
-    th[8].innerText = "จัดการ";
-
-    th[9].innerText = "ผู้รับผิดชอบ";
-    th[10].innerText = "หัวข้อ";
-    th[11].innerText = "หมวดหมู่";
-    th[12].innerText = "ความสำคัญ";
-    th[13].innerText = "สถานะ";
-    th[14].innerText = "วันที่สร้าง";
-
-} 
-    function viewTask(index){
-
-    const task =
-    tasks[index];
-
-    document
-    .getElementById("modalTitle")
-    .innerText =
-    task.title || "";
-
-    document
-    .getElementById("modalDetail")
-    .innerText =
-    task.detail || "";
-
-    let fileHtml = "";
-
-    if(task.fileUrl){
-
-        fileHtml = `
-        <a
-        href="${task.fileUrl}"
-        target="_blank"
-        class="btn btn-save">
-
-        Download File
-
-        </a>
-        `;
-
-    }
-
-    document
-    .getElementById("modalFile")
-    .innerHTML =
-    fileHtml;
-
-    document
-    .getElementById("taskModal")
-    .style.display =
-    "block";
-
+  let fileHtml = "";
+  if(task.fileUrl){
+    fileHtml = `<a href="${task.fileUrl}" target="_blank" class="btn btn-save">Download File</a>`;
+  }
+  document.getElementById("modalFile").innerHTML = fileHtml;
+  document.getElementById("taskModal").style.display = "flex";
 }
 
 function closeTaskModal(){
-
-    document
-    .getElementById("taskModal")
-    .style.display =
-    "none";
-
+  document.getElementById("taskModal").style.display = "none";
 }
 
-  
 applyLanguage();
 updateDate();
-
 loadUsers();
-
 loadData();
-
 </script>
 
-<div
-id="loadingOverlay"
-class="loading-overlay">
-
-<div class="loader"></div>
-
-<div id="loadingText">
-Loading...
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader"></div>
+  <div id="loadingText">Loading...</div>
 </div>
 
-</div>
-<div
-id="taskModal"
-style="
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.5);
-z-index:9999;
-">
-
-<div
-style="
-background:#fff;
-width:700px;
-max-width:95%;
-margin:50px auto;
-padding:20px;
-border-radius:12px;
-">
-
-<h3 id="modalTitle"></h3>
-
-<p id="modalDetail"></p>
-
-<div id="modalFile"></div>
-
-<br>
-
-<button
-class="btn btn-cancel"
-onclick="closeTaskModal()">
-
-Close
-
-</button>
-
+<div id="taskModal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <p id="modalDetail"></p>
+    <div id="modalFile"></div>
+    <button class="btn btn-cancel" onclick="closeTaskModal()">Close</button>
+  </div>
 </div>
 
-</div>
-
-
-
-    
 </body>
 </html>
