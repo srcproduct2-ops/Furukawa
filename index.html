@@ -216,6 +216,8 @@ tbody tr:hover{background:#f8f9fc}
     <button class="menu-btn active" onclick="scrollToSection('dashboardSection')"><span class="ic">📊</span> Dashboard</button>
     <button class="menu-btn" onclick="window.location.href='ComputerLife.html'"><span class="ic">💻</span> Computer Life</button>
     <button class="menu-btn" onclick="window.location.href='Newmodel.html'"><span class="ic">🆕</span> New Model</button>
+    <button class="menu-btn" onclick="window.location.href='MachineLog.html'"><span class="ic">📝</span> Machine Log</button>
+    <button class="menu-btn" onclick="window.location.href='MachineMain.html'"><span class="ic">🛠</span> Maintenance</button>
   </div>
 
   <div class="sidebar-foot"><small>Furukawa · Internal Tool</small></div>
@@ -694,6 +696,8 @@ function applyLanguage(){
   menuBtns[0].innerHTML = '<span class="ic">📊</span> แดชบอร์ด';
   menuBtns[1].innerHTML = '<span class="ic">💻</span> อายุการใช้งานคอมพิวเตอร์';
   menuBtns[2].innerHTML = '<span class="ic">🆕</span> รุ่นใหม่';
+  menuBtns[3].innerHTML = '<span class="ic">📝</span> ประวัติปัญหาเครื่องจักร';
+  menuBtns[4].innerHTML = '<span class="ic">🛠</span> ซ่อมบำรุงเครื่องจักร';
 
   document.querySelector(".topbar h1").innerText = "แดชบอร์ดโรงงาน";
   document.querySelector(".topbar p").innerText = "ระบบติดตามงานฝ่ายผลิต ซ่อมบำรุง และวิศวกรรม";
