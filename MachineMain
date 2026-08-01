@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Maintenance</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+:root{
+  --ink:#0c1117;
+  --sidebar:#0b1220;
+  --sidebar-line:#1b2536;
+  --sidebar-text:#aab4c8;
+  --bg:#f1f3f8;
+  --card:#ffffff;
+  --line:#e3e7ef;
+  --muted:#6b7385;
+
+  --accent:#3461fd;
+  --accent-dark:#2347d6;
+  --accent-soft:#e8edff;
+
+  --success:#15a364;
+  --success-soft:#dcf6e8;
+  --warning:#d97706;
+  --warning-soft:#fef3c7;
+  --danger:#e0392c;
+  --danger-soft:#fde6e3;
+
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow-sm:0 1px 2px rgba(13,18,30,.04), 0 6px 16px rgba(13,18,30,.05);
+  --shadow-md:0 10px 30px rgba(13,18,30,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ===== SIDEBAR ===== */
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:var(--sidebar);color:#fff;padding:24px 18px;z-index:1000;display:flex;flex-direction:column;border-right:1px solid var(--sidebar-line)}
+.sidebar-logo{font-size:19px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;margin-bottom:22px;padding:0 6px}
+.sidebar-logo .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(155deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+.status-strip{display:flex;align-items:center;gap:8px;padding:9px 12px;margin-bottom:18px;background:#10182b;border:1px solid var(--sidebar-line);border-radius:999px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(21,163,100,.55)}70%{box-shadow:0 0 0 6px rgba(21,163,100,0)}100%{box-shadow:0 0 0 0 rgba(21,163,100,0)}}
+.status-strip span{font-size:11px;font-weight:700;letter-spacing:.06em;color:#8fe3b8;text-transform:uppercase}
+.sidebar-section-label{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#566077;margin:6px 8px 10px}
+.sidebar-menu{display:flex;flex-direction:column;gap:4px}
+.menu-btn{border:none;background:transparent;color:var(--sidebar-text);text-align:left;padding:11px 14px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;transition:background .15s,color .15s;width:100%}
+.menu-btn:hover{background:#131c30;color:#fff}
+.menu-btn.active{background:var(--accent);color:#fff}
+.menu-btn .ic{font-size:16px;width:18px;text-align:center;flex:none}
+.sidebar-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--sidebar-line)}
+.sidebar-foot small{color:#566077;font-size:11px}
+.menu-toggle{display:none}
+
+/* ===== MAIN ===== */
+.main-content{margin-left:260px}
+.container{max-width:1700px;margin:auto;padding:26px 28px 60px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.topbar h1{font-size:23px;font-weight:800;letter-spacing:-.01em}
+.topbar p{color:var(--muted);margin-top:4px;font-size:13.5px}
+.topbar-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.date-chip{font-size:12.5px;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:999px}
+.user-chip{font-size:12.5px;font-weight:700;color:var(--ink);background:var(--accent-soft);border:1px solid #d4ddff;padding:8px 14px;border-radius:999px}
+
+/* ===== KPI ===== */
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .18s ease,box-shadow .18s ease}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.card > div:first-child{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.card-value{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:700;letter-spacing:-.02em}
+.v-due{color:var(--warning)}
+.v-over{color:var(--danger)}
+.v-plc{color:var(--accent)}
+
+/* ===== PANEL ===== */
+.panel{background:var(--card);border-radius:var(--radius);padding:22px;margin-bottom:20px;border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.panel-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.text-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:16px}
+label{display:block;font-size:12.5px;font-weight:600;color:#39414f;margin-bottom:6px}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d7dce6;border-radius:var(--radius-sm);font-size:13.5px;background:#fbfcfe;color:var(--ink);transition:border-color .15s,box-shadow .15s;font-family:'Inter',sans-serif}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#fff}
+textarea{resize:vertical;min-height:88px}
+
+/* ===== BUTTONS ===== */
+.btn{border:none;border-radius:var(--radius-sm);padding:11px 18px;color:#fff;cursor:pointer;font-weight:700;font-size:13.5px;transition:transform .08s ease,opacity .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(13,18,30,.12)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-save{background:var(--accent)}
+.btn-save:hover{background:var(--accent-dark)}
+.btn-edit{background:var(--warning)}
+.btn-delete{background:var(--danger)}
+.btn-export{background:var(--success)}
+.btn-cancel{background:#eef0f5;color:#3a4150}
+.action-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.action-buttons .btn{padding:7px 11px;font-size:11.5px}
+
+.edit-banner{display:none;align-items:center;gap:10px;background:var(--warning-soft);border:1px solid #fbd88a;color:#8a5200;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;margin-bottom:14px}
+.edit-banner.show{display:flex}
+
+/* ===== TABLE ===== */
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:1150px}
+th{background:#f6f7fb;color:#3a4150;padding:12px 14px;text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+tbody tr:hover{background:#f8f9fc}
+.link-title{color:var(--accent);font-weight:700;cursor:pointer;text-decoration:none}
+.link-title:hover{text-decoration:underline}
+.empty-row{text-align:center;color:var(--muted);padding:26px 0;font-size:13.5px}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-done{background:var(--success-soft);color:#0e6b43}
+.b-progress{background:var(--warning-soft);color:#8a5200}
+.b-plan{background:var(--accent-soft);color:#22409e}
+.b-due{background:var(--warning-soft);color:#8a5200}
+.b-over{background:var(--danger-soft);color:#a5241a}
+.b-ok{background:#eef0f5;color:#4a5262}
+
+/* ===== PLC CARDS ===== */
+.plc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.plc-card{border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;background:#fbfcfe}
+.plc-card.ok{border-color:#a9e3c6;background:#f2fbf6}
+.plc-card.warn{border-color:#fbd88a;background:#fffaf0}
+.plc-card.over{border-color:#f3b7b1;background:#fff6f5}
+.plc-card.none{border-style:dashed;background:#fafbfd}
+.plc-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.plc-machine{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13.5px}
+.plc-main{font-size:13.5px;font-weight:700;margin-bottom:6px}
+.plc-meta{font-size:12px;color:var(--muted);line-height:1.65}
+.plc-meta b{color:#3a4150}
+.plc-bar{height:7px;border-radius:999px;background:#e8ebf2;margin-top:10px;overflow:hidden}
+.plc-fill{height:100%;border-radius:999px;background:var(--success);transition:width .3s}
+.plc-empty{color:var(--muted);font-size:13px;padding:6px 0}
+
+/* ===== DUE LIST ===== */
+.due-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.due-card{border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px;background:#fbfcfe}
+.due-card.warn{border-color:#fbd88a;background:#fffaf0}
+.due-card.over{border-color:#f3b7b1;background:#fff6f5}
+.due-machine{font-weight:700;font-size:13.5px;margin-bottom:4px}
+.due-meta{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ===== MODAL ===== */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(11,18,32,.5);z-index:9999;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:#fff;width:700px;max-width:100%;max-height:88vh;overflow:auto;padding:24px;border-radius:16px;box-shadow:var(--shadow-md);animation:pop .18s ease}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal-box h3{font-size:17px;font-weight:700;margin-bottom:4px}
+.modal-sub{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+.detail-row{border-top:1px solid var(--line);padding:12px 0}
+.detail-row .k{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.detail-row .v{font-size:13.5px;line-height:1.6;white-space:pre-wrap}
+
+/* ===== LOADING + TOAST ===== */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(11,18,32,.55);z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:#fff;backdrop-filter:blur(2px)}
+.loader{width:46px;height:46px;border:4px solid rgba(255,255,255,.25);border-top:4px solid #5b8cff;border-radius:50%;animation:spin .9s linear infinite;margin-bottom:14px}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+#loadingText{font-size:14px;font-weight:600}
+.toast{position:fixed;right:22px;bottom:22px;z-index:100000;background:#0f172a;color:#fff;padding:13px 18px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow-md);opacity:0;transform:translateY(12px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{background:#0e6b43}
+.toast.error{background:#a5241a}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:980px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s ease;box-shadow:var(--shadow-md)}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .menu-toggle{display:flex;align-items:center;justify-content:center;position:fixed;top:16px;left:16px;z-index:1100;width:42px;height:42px;border-radius:11px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-size:18px;box-shadow:var(--shadow-md)}
+  .container{padding-top:74px}
+}
+@media (max-width:600px){ .topbar{flex-direction:column;align-items:flex-start} }
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo"><span class="mark">🛠</span> Maintenance</div>
+  <div class="status-strip"><span class="status-dot"></span><span>System Online</span></div>
+
+  <div class="sidebar-section-label">Navigate</div>
+  <div class="sidebar-menu">
+    <button class="menu-btn" onclick="window.location.href='index.html'"><span class="ic">🏭</span> Factory Dashboard</button>
+    <button class="menu-btn" onclick="window.location.href='ComputerLife.html'"><span class="ic">💻</span> Computer Life</button>
+    <button class="menu-btn" onclick="window.location.href='Newmodel.html'"><span class="ic">🆕</span> New Model</button>
+    <button class="menu-btn" onclick="window.location.href='MachineLog.html'"><span class="ic">📝</span> Machine Log</button>
+    <button class="menu-btn active"><span class="ic">🛠</span> Maintenance</button>
+  </div>
+
+  <div class="sidebar-foot"><small>Furukawa · Internal Tool</small></div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+<div class="container">
+
+  <div class="topbar">
+    <div>
+      <h1>Machine Maintenance</h1>
+      <p>Part replacement and preventive maintenance records</p>
+    </div>
+    <div class="topbar-right">
+      <span class="date-chip" id="todayDate"></span>
+      <span class="user-chip" id="userInfo"></span>
+      <button class="btn btn-delete" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="dashboard">
+    <div class="card"><div>Total Records</div><div id="kpiTotal" class="card-value">0</div></div>
+    <div class="card"><div>This Month</div><div id="kpiMonth" class="card-value">0</div></div>
+    <div class="card"><div>PLC Replacements</div><div id="kpiPlc" class="card-value v-plc">0</div></div>
+    <div class="card"><div>Due In 30 Days</div><div id="kpiDue" class="card-value v-due">0</div></div>
+    <div class="card"><div>Overdue</div><div id="kpiOver" class="card-value v-over">0</div></div>
+  </div>
+
+  <!-- FORM -->
+  <div class="panel" id="formPanel">
+    <div class="panel-title" id="formTitle">🛠 Add Maintenance Record</div>
+
+    <div class="edit-banner" id="editBanner">
+      <span>✏️ Editing an existing record</span>
+      <button class="btn btn-cancel" style="padding:6px 12px;font-size:12px" onclick="cancelEdit()">Cancel edit</button>
+    </div>
+
+    <div class="form-grid">
+      <div>
+        <label>Maintenance Date</label>
+        <input type="date" id="maintDate">
+      </div>
+
+      <div>
+        <label>Line</label>
+        <select id="line"></select>
+      </div>
+
+      <div>
+        <label>Machine</label>
+        <select id="machine"></select>
+      </div>
+
+      <div>
+        <label>Maintenance Type</label>
+        <select id="maintType"></select>
+      </div>
+
+      <div>
+        <label>Part Name</label>
+        <input type="text" id="partName" placeholder="e.g. PLC CPU, Servo driver">
+      </div>
+
+      <div>
+        <label>Part Model / Spec</label>
+        <input type="text" id="partModel" placeholder="e.g. Mitsubishi FX5U-32MT">
+      </div>
+
+      <div>
+        <label>Old Serial No.</label>
+        <input type="text" id="oldSerial">
+      </div>
+
+      <div>
+        <label>New Serial No.</label>
+        <input type="text" id="newSerial">
+      </div>
+
+      <div>
+        <label>Quantity</label>
+        <input type="number" id="qty" min="1" step="1" value="1">
+      </div>
+
+      <div>
+        <label>Technician</label>
+        <input type="text" id="technician">
+      </div>
+
+      <div>
+        <label>Cost (THB)</label>
+        <input type="number" id="cost" min="0" step="0.01" placeholder="0">
+      </div>
+
+      <div>
+        <label>Next Due Date</label>
+        <input type="date" id="nextDueDate">
+      </div>
+
+      <div>
+        <label>Status</label>
+        <select id="status">
+          <option>Done</option>
+          <option>In Progress</option>
+          <option>Planned</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="text-grid">
+      <div>
+        <label>Reason</label>
+        <textarea id="reason" placeholder="Why the part was replaced or serviced"></textarea>
+      </div>
+      <div>
+        <label>Work Detail</label>
+        <textarea id="detail" placeholder="What was done, settings, program version, notes"></textarea>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;max-width:420px;">
+      <label>Attachment (photo, program backup, invoice)</label>
+      <input type="file" id="maintFile">
+      <div id="currentFile" style="margin-top:8px;font-size:12.5px"></div>
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button id="saveBtn" class="btn btn-save" onclick="saveRecord()">💾 Save Record</button>
+      <button class="btn btn-cancel" onclick="clearForm()">Clear</button>
+      <button id="exportBtn" class="btn btn-export" onclick="exportExcel()">Export Excel</button>
+    </div>
+  </div>
+
+  <!-- PLC OVERVIEW -->
+  <div class="panel" id="plcPanel">
+    <div class="panel-title">🔌 PLC Status By Machine</div>
+
+    <select id="plcLine" onchange="renderPlc()" style="width:230px;margin-bottom:16px;"></select>
+
+    <div class="plc-grid" id="plcGrid"></div>
+  </div>
+
+  <!-- UPCOMING -->
+  <div class="panel">
+    <div class="panel-title">⏰ Upcoming &amp; Overdue Maintenance</div>
+    <div class="due-grid" id="dueGrid"></div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="panel">
+    <div class="panel-title">🔎 Search &amp; Filter</div>
+    <div class="form-grid">
+      <div>
+        <label>Keyword</label>
+        <input type="text" id="search" placeholder="Part, serial, technician..." onkeyup="render()">
+      </div>
+      <div>
+        <label>Line</label>
+        <select id="filterLine" onchange="render()"></select>
+      </div>
+      <div>
+        <label>Machine</label>
+        <select id="filterMachine" onchange="render()"></select>
+      </div>
+      <div>
+        <label>Type</label>
+        <select id="filterType" onchange="render()"></select>
+      </div>
+      <div>
+        <label>From Date</label>
+        <input type="date" id="filterFrom" onchange="render()">
+      </div>
+      <div>
+        <label>To Date</label>
+        <input type="date" id="filterTo" onchange="render()">
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="panel">
+    <div class="panel-title">📋 Maintenance History <span id="rowCount" style="font-weight:600;color:var(--muted);font-size:13px"></span></div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Line</th><th>Machine</th><th>Type</th><th>Part</th>
+            <th>Old S/N</th><th>New S/N</th><th>Qty</th><th>Technician</th>
+            <th>Cost</th><th>Next Due</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="maintTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — วาง URL ของ Web App จาก MachineMainCode.gs
+   (คนละตัวกับของหน้า MachineLog.html)
+   ============================================================ */
+const API_URL = "https://script.google.com/macros/s/AKfycbxPO2iEcJBUhfel_S8jqJLODLIlCUJUc4BKvmoG3s48R1UbfGZA8j0KPjMEN_qdSMLz/exec";
+
+const LINES = ["HMR","GMR","TMR1","TMR2","MIR","ISR","SP","HS"];
+const MACHINES = [
+  "Pigtail welding","FFC1 Welding","FFC2 Welding","Cable grease",
+  "Function tester","Electric tester","Final tester"
+];
+const MAINT_TYPES = [
+  "PLC Replacement","PLC Battery","Touch Panel / HMI","Servo Motor / Driver",
+  "Sensor","Cylinder / Valve","Power Supply","Relay / Contactor","Cable / Wiring",
+  "Camera / Vision","Program Update","Calibration","Preventive Maintenance (PM)","Other"
+];
+
+const ROLE = localStorage.getItem("role") || "User";
+const USERNAME = localStorage.getItem("username") || "";
+
+let records = [];
+let editId = "";
+let currentFile = { fileName:"", fileUrl:"" };
+
+if (!USERNAME) { location.href = "Login.html"; }
+
+/* ===================== UI HELPERS ===================== */
+function showLoading(msg){
+  document.getElementById("loadingText").innerText = msg || "Loading...";
+  document.getElementById("loadingOverlay").style.display = "flex";
+}
+function hideLoading(){
+  document.getElementById("loadingOverlay").style.display = "none";
+}
+function showToast(msg, type){
+  const toast = document.getElementById("toast");
+  toast.className = "toast show " + (type || "");
+  toast.innerText = msg;
+  setTimeout(function(){ toast.className = "toast " + (type || ""); }, 2600);
+}
+function escapeHtml(text){
+  return String(text === null || text === undefined ? "" : text)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function logout(){
+  localStorage.clear();
+  location.href = "Login.html";
+}
+function updateDate(){
+  const lang = localStorage.getItem("language") || "en";
+  document.getElementById("todayDate").innerText =
+    new Date().toLocaleDateString(lang === "th" ? "th-TH" : "en-US",
+      {weekday:"long", year:"numeric", month:"long", day:"numeric"});
+}
+function today(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function shortDate(value){
+  if (!value) return "";
+  return String(value).split("T")[0];
+}
+function daysUntil(dateText){
+  if (!dateText) return null;
+  const target = new Date(shortDate(dateText) + "T00:00:00");
+  if (isNaN(target)) return null;
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  return Math.round((target - now) / 86400000);
+}
+
+/* ===================== OPTIONS ===================== */
+function optionList(list){
+  return list.map(function(v){ return '<option>' + v + '</option>'; }).join("");
+}
+function buildOptions(){
+  document.getElementById("line").innerHTML = optionList(LINES);
+  document.getElementById("machine").innerHTML = optionList(MACHINES);
+  document.getElementById("maintType").innerHTML = optionList(MAINT_TYPES);
+
+  document.getElementById("filterLine").innerHTML = '<option value="">All Line</option>' + optionList(LINES);
+  document.getElementById("filterMachine").innerHTML = '<option value="">All Machine</option>' + optionList(MACHINES);
+  document.getElementById("filterType").innerHTML = '<option value="">All Type</option>' + optionList(MAINT_TYPES);
+
+  document.getElementById("plcLine").innerHTML = optionList(LINES);
+}
+
+/* ===================== LOAD ===================== */
+async function loadRecords(){
+  showLoading("Loading maintenance records...");
+  try{
+    const response = await fetch(API_URL + "?action=loadMachineMain");
+    if (!response.ok) throw new Error("Server returned " + response.status);
+
+    const data = await response.json();
+    if (Array.isArray(data)) { records = data; }
+    else if (data && data.success === false) { throw new Error(data.message || "Load failed"); }
+    else { records = data.data || []; }
+
+    records.sort(function(a,b){ return String(b.maintDate || "").localeCompare(String(a.maintDate || "")); });
+    render();
+  }
+  catch(err){
+    console.error(err);
+    showToast("Couldn't load data: " + err.message, "error");
+    document.getElementById("maintTable").innerHTML =
+      '<tr><td colspan="13" class="empty-row">⚠️ ' + escapeHtml(err.message) + '</td></tr>';
+  }
+  finally{ hideLoading(); }
+}
+
+/* ===================== FILE ===================== */
+function fileToBase64(file){
+  return new Promise(function(resolve, reject){
+    const reader = new FileReader();
+    reader.onload = function(){ resolve(reader.result.split(",")[1]); };
+    reader.onerror = function(){ reject(new Error("Could not read file")); };
+    reader.readAsDataURL(file);
+  });
+}
+async function uploadFile(file){
+  const base64 = await fileToBase64(file);
+  const response = await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ action:"uploadFile", base64:base64, fileName:file.name, mimeType:file.type })
+  });
+  if (!response.ok) throw new Error("Upload failed: " + response.status);
+  const data = await response.json();
+  if (!data.success) throw new Error(data.message || "Upload failed");
+  return { fileName: data.fileName, fileUrl: data.fileUrl };
+}
+
+/* ===================== SAVE ===================== */
+async function saveRecord(){
+  const record = {
+    maintDate:   document.getElementById("maintDate").value,
+    line:        document.getElementById("line").value,
+    machine:     document.getElementById("machine").value,
+    maintType:   document.getElementById("maintType").value,
+    partName:    document.getElementById("partName").value.trim(),
+    partModel:   document.getElementById("partModel").value.trim(),
+    oldSerial:   document.getElementById("oldSerial").value.trim(),
+    newSerial:   document.getElementById("newSerial").value.trim(),
+    qty:         document.getElementById("qty").value || "1",
+    reason:      document.getElementById("reason").value.trim(),
+    detail:      document.getElementById("detail").value.trim(),
+    technician:  document.getElementById("technician").value.trim(),
+    cost:        document.getElementById("cost").value || "0",
+    nextDueDate: document.getElementById("nextDueDate").value,
+    status:      document.getElementById("status").value
+  };
+
+  if (!record.maintDate){ showToast("Please select a maintenance date", "error"); return; }
+  if (!record.partName){ showToast("Please enter the part name", "error"); return; }
+
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+  showLoading(editId ? "Updating..." : "Saving...");
+
+  try{
+    const file = document.getElementById("maintFile").files[0];
+    if (file){
+      currentFile = await uploadFile(file);
+    }
+
+    const params = new URLSearchParams(Object.assign({}, record, {
+      action: editId ? "updateMachineMain" : "saveMachineMain",
+      id: editId,
+      fileName: currentFile.fileName || "",
+      fileUrl:  currentFile.fileUrl  || ""
+    }));
+
+    const response = await fetch(API_URL + "?" + params.toString());
+    if (!response.ok) throw new Error("Request failed: " + response.status);
+
+    const result = await response.json();
+    if (!result.success) throw new Error(result.message || "Save failed");
+
+    showToast(editId ? "Updated" : "Saved", "success");
+    clearForm();
+    await loadRecords();
+  }
+  catch(err){
+    console.error(err);
+    showToast(err.message, "error");
+  }
+  finally{
+    saveBtn.disabled = false;
+    hideLoading();
+  }
+}
+
+/* ===================== EDIT / DELETE ===================== */
+function editRecord(id){
+  const record = records.find(function(x){ return String(x.id) === String(id); });
+  if (!record) return;
+
+  editId = record.id;
+  currentFile = { fileName: record.fileName || "", fileUrl: record.fileUrl || "" };
+
+  document.getElementById("maintDate").value   = shortDate(record.maintDate);
+  document.getElementById("line").value        = record.line || LINES[0];
+  document.getElementById("machine").value     = record.machine || MACHINES[0];
+  document.getElementById("maintType").value   = record.maintType || MAINT_TYPES[0];
+  document.getElementById("partName").value    = record.partName || "";
+  document.getElementById("partModel").value   = record.partModel || "";
+  document.getElementById("oldSerial").value   = record.oldSerial || "";
+  document.getElementById("newSerial").value   = record.newSerial || "";
+  document.getElementById("qty").value         = record.qty || "1";
+  document.getElementById("technician").value  = record.technician || "";
+  document.getElementById("cost").value        = record.cost || "";
+  document.getElementById("nextDueDate").value = shortDate(record.nextDueDate);
+  document.getElementById("status").value      = record.status || "Done";
+  document.getElementById("reason").value      = record.reason || "";
+  document.getElementById("detail").value      = record.detail || "";
+  document.getElementById("maintFile").value   = "";
+
+  renderCurrentFile();
+
+  document.getElementById("editBanner").classList.add("show");
+  document.getElementById("saveBtn").innerText = "💾 Update Record";
+  document.getElementById("formPanel").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+async function deleteRecord(id){
+  if (!confirm("Delete this record?")) return;
+
+  showLoading("Deleting...");
+  try{
+    const params = new URLSearchParams({ action:"deleteMachineMain", id:id });
+    const response = await fetch(API_URL + "?" + params.toString());
+    const result = await response.json();
+    if (!result.success) throw new Error(result.message || "Delete failed");
+
+    showToast("Deleted", "success");
+    await loadRecords();
+  }
+  catch(err){
+    console.error(err);
+    showToast(err.message, "error");
+  }
+  finally{ hideLoading(); }
+}
+
+function cancelEdit(){ clearForm(); }
+
+function clearForm(){
+  editId = "";
+  currentFile = { fileName:"", fileUrl:"" };
+
+  document.getElementById("maintDate").value = today();
+  document.getElementById("line").selectedIndex = 0;
+  document.getElementById("machine").selectedIndex = 0;
+  document.getElementById("maintType").selectedIndex = 0;
+  ["partName","partModel","oldSerial","newSerial","cost","nextDueDate","reason","detail","maintFile"]
+    .forEach(function(id){ document.getElementById(id).value = ""; });
+  document.getElementById("qty").value = "1";
+  document.getElementById("technician").value = USERNAME;
+  document.getElementById("status").value = "Done";
+
+  renderCurrentFile();
+  document.getElementById("editBanner").classList.remove("show");
+  document.getElementById("saveBtn").innerText = "💾 Save Record";
+}
+
+function renderCurrentFile(){
+  const box = document.getElementById("currentFile");
+  box.innerHTML = currentFile.fileUrl
+    ? 'Attached: <a href="' + currentFile.fileUrl + '" target="_blank" class="link-title">' + escapeHtml(currentFile.fileName || "file") + '</a>'
+    : "";
+}
+
+/* ===================== RENDER ===================== */
+function statusBadge(status){
+  const map = { "Done":"b-done", "In Progress":"b-progress", "Planned":"b-plan" };
+  return '<span class="badge ' + (map[status] || "b-ok") + '">' + escapeHtml(status || "-") + '</span>';
+}
+
+function dueBadge(nextDueDate){
+  const days = daysUntil(nextDueDate);
+  if (days === null) return '<span style="color:var(--muted)">-</span>';
+  if (days < 0)  return '<span class="badge b-over">' + shortDate(nextDueDate) + ' · ' + Math.abs(days) + 'd late</span>';
+  if (days <= 30) return '<span class="badge b-due">' + shortDate(nextDueDate) + ' · ' + days + 'd</span>';
+  return '<span class="badge b-ok">' + shortDate(nextDueDate) + '</span>';
+}
+
+function getFiltered(){
+  const keyword = document.getElementById("search").value.toLowerCase();
+  const line = document.getElementById("filterLine").value;
+  const machine = document.getElementById("filterMachine").value;
+  const type = document.getElementById("filterType").value;
+  const from = document.getElementById("filterFrom").value;
+  const to = document.getElementById("filterTo").value;
+
+  return records.filter(function(item){
+    const haystack = [item.partName, item.partModel, item.oldSerial, item.newSerial,
+                      item.technician, item.reason, item.detail, item.machine]
+      .map(function(v){ return String(v || "").toLowerCase(); }).join(" ");
+
+    if (keyword && haystack.indexOf(keyword) === -1) return false;
+    if (line && item.line !== line) return false;
+    if (machine && item.machine !== machine) return false;
+    if (type && item.maintType !== type) return false;
+
+    const date = shortDate(item.maintDate);
+    if (from && date < from) return false;
+    if (to && date > to) return false;
+
+    return true;
+  });
+}
+
+function render(){
+  const rows = getFiltered();
+  let html = "";
+
+  rows.forEach(function(item){
+    const canDelete = ROLE === "Admin";
+
+    html += '<tr>' +
+      '<td>' + escapeHtml(shortDate(item.maintDate) || "-") + '</td>' +
+      '<td>' + escapeHtml(item.line || "-") + '</td>' +
+      '<td>' + escapeHtml(item.machine || "-") + '</td>' +
+      '<td>' + escapeHtml(item.maintType || "-") + '</td>' +
+      '<td><a class="link-title" onclick="viewRecord(\'' + item.id + '\')">' +
+        escapeHtml(item.partName || "-") + '</a><br>' +
+        '<span style="color:var(--muted);font-size:12px">' + escapeHtml(item.partModel || "") + '</span></td>' +
+      '<td class="mono">' + escapeHtml(item.oldSerial || "-") + '</td>' +
+      '<td class="mono">' + escapeHtml(item.newSerial || "-") + '</td>' +
+      '<td>' + escapeHtml(item.qty || "1") + '</td>' +
+      '<td>' + escapeHtml(item.technician || "-") + '</td>' +
+      '<td class="mono">' + formatCost(item.cost) + '</td>' +
+      '<td>' + dueBadge(item.nextDueDate) + '</td>' +
+      '<td>' + statusBadge(item.status) + '</td>' +
+      '<td><div class="action-buttons">' +
+        '<button class="btn btn-edit" onclick="editRecord(\'' + item.id + '\')">Edit</button>' +
+        (canDelete ? '<button class="btn btn-delete" onclick="deleteRecord(\'' + item.id + '\')">Delete</button>' : '') +
+      '</div></td>' +
+    '</tr>';
+  });
+
+  if (!rows.length){
+    html = '<tr><td colspan="13" class="empty-row">No record found. Add the first maintenance record above.</td></tr>';
+  }
+
+  document.getElementById("maintTable").innerHTML = html;
+  document.getElementById("rowCount").innerText = "(" + rows.length + " records)";
+
+  renderKpi();
+  renderPlc();
+  renderDue();
+}
+
+/* ===== PLC status card ต่อเครื่องจักร (เฉพาะงานที่เป็น PLC) ===== */
+function renderPlc(){
+  const line = document.getElementById("plcLine").value;
+  let html = "";
+
+  MACHINES.forEach(function(machine){
+    const list = records
+      .filter(function(item){
+        return item.line === line
+          && item.machine === machine
+          && String(item.maintType || "").indexOf("PLC") === 0;
+      })
+      .sort(function(a,b){ return String(b.maintDate).localeCompare(String(a.maintDate)); });
+
+    const latest = list[0];
+
+    if (!latest){
+      html += '<div class="plc-card none">' +
+        '<div class="plc-head"><span class="plc-machine">' + escapeHtml(machine) + '</span>' +
+        '<span class="badge b-ok">No record</span></div>' +
+        '<div class="plc-empty">ยังไม่มีประวัติงาน PLC</div>' +
+      '</div>';
+      return;
+    }
+
+    const since = daysSince(latest.maintDate);
+    const due = daysUntil(latest.nextDueDate);
+
+    let cardClass = "ok";
+    let dueText = "No next due date";
+
+    if (due !== null){
+      if (due < 0){ cardClass = "over"; dueText = "Overdue " + Math.abs(due) + " days"; }
+      else if (due <= 30){ cardClass = "warn"; dueText = "Due in " + due + " days"; }
+      else { dueText = "Due in " + due + " days"; }
+    }
+
+    html += '<div class="plc-card ' + cardClass + '">' +
+      '<div class="plc-head">' +
+        '<span class="plc-machine">' + escapeHtml(machine) + '</span>' +
+        '<span class="badge b-plan">' + escapeHtml(latest.maintType) + '</span>' +
+      '</div>' +
+      '<div class="plc-main">' + (since === null ? "-" : since + " days since last change") + '</div>' +
+      '<div class="plc-meta">' +
+        '<b>Model :</b> ' + escapeHtml(latest.partModel || latest.partName || "-") + '<br>' +
+        '<b>Serial :</b> ' + escapeHtml(latest.newSerial || "-") + '<br>' +
+        '<b>Changed :</b> ' + escapeHtml(shortDate(latest.maintDate) || "-") +
+          ' · ' + escapeHtml(latest.technician || "-") + '<br>' +
+        '<b>Next due :</b> ' + escapeHtml(shortDate(latest.nextDueDate) || "-") + ' · ' + dueText + '<br>' +
+        '<b>History :</b> ' + list.length + ' record' + (list.length > 1 ? "s" : "") +
+      '</div>' +
+      plcBar(latest) +
+    '</div>';
+  });
+
+  document.getElementById("plcGrid").innerHTML = html;
+}
+
+function plcBar(item){
+  const start = shortDate(item.maintDate);
+  const end = shortDate(item.nextDueDate);
+  if (!start || !end) return "";
+
+  const total = daysUntil(end) === null ? 0 : (new Date(end) - new Date(start)) / 86400000;
+  if (total <= 0) return "";
+
+  const left = daysUntil(end);
+  const percent = Math.max(0, Math.min(100, (left / total) * 100));
+  const color = left < 0 ? "var(--danger)" : (left <= 30 ? "var(--warning)" : "var(--success)");
+
+  return '<div class="plc-bar"><div class="plc-fill" style="width:' + percent + '%;background:' + color + ';"></div></div>';
+}
+
+function daysSince(dateText){
+  if (!dateText) return null;
+  const start = new Date(shortDate(dateText) + "T00:00:00");
+  if (isNaN(start)) return null;
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  return Math.max(0, Math.round((now - start) / 86400000));
+}
+
+function formatCost(cost){
+  const value = parseFloat(cost || 0);
+  if (!value) return "-";
+  return value.toLocaleString("en-US", {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+
+function renderKpi(){
+  const now = new Date();
+  const monthKey = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0");
+
+  let month = 0, plc = 0, due = 0, over = 0;
+
+  records.forEach(function(item){
+    if (shortDate(item.maintDate).indexOf(monthKey) === 0) month++;
+    if (String(item.maintType || "").indexOf("PLC") === 0) plc++;
+
+    const days = daysUntil(item.nextDueDate);
+    if (days !== null && item.status !== "Planned"){
+      if (days < 0) over++;
+      else if (days <= 30) due++;
+    }
+  });
+
+  document.getElementById("kpiTotal").innerText = records.length;
+  document.getElementById("kpiMonth").innerText = month;
+  document.getElementById("kpiPlc").innerText = plc;
+  document.getElementById("kpiDue").innerText = due;
+  document.getElementById("kpiOver").innerText = over;
+}
+
+function renderDue(){
+  const upcoming = records
+    .filter(function(item){
+      const days = daysUntil(item.nextDueDate);
+      return days !== null && days <= 60;
+    })
+    .sort(function(a,b){ return String(a.nextDueDate).localeCompare(String(b.nextDueDate)); })
+    .slice(0, 12);
+
+  if (!upcoming.length){
+    document.getElementById("dueGrid").innerHTML =
+      '<div style="color:var(--muted);font-size:13.5px">Nothing due in the next 60 days.</div>';
+    return;
+  }
+
+  let html = "";
+  upcoming.forEach(function(item){
+    const days = daysUntil(item.nextDueDate);
+    const cardClass = days < 0 ? "over" : (days <= 30 ? "warn" : "");
+    const label = days < 0 ? (Math.abs(days) + " days overdue") : ("in " + days + " days");
+
+    html += '<div class="due-card ' + cardClass + '">' +
+      '<div class="due-machine">' + escapeHtml(item.line || "") + ' · ' + escapeHtml(item.machine || "") + '</div>' +
+      '<div class="due-meta">' +
+        escapeHtml(item.maintType || "-") + '<br>' +
+        escapeHtml(item.partName || "-") + '<br>' +
+        '<b>' + shortDate(item.nextDueDate) + '</b> · ' + label +
+      '</div></div>';
+  });
+
+  document.getElementById("dueGrid").innerHTML = html;
+}
+
+/* ===================== DETAIL MODAL ===================== */
+function viewRecord(id){
+  const item = records.find(function(x){ return String(x.id) === String(id); });
+  if (!item) return;
+
+  document.getElementById("modalTitle").innerText = (item.maintType || "Maintenance") + " · " + (item.partName || "");
+  document.getElementById("modalSub").innerText =
+    shortDate(item.maintDate) + " · " + (item.line || "-") + " · " + (item.machine || "-");
+
+  const fileHtml = item.fileUrl
+    ? '<a class="btn btn-save" style="display:inline-block;text-decoration:none" href="' + item.fileUrl + '" target="_blank">Open attachment</a>'
+    : '<span style="color:var(--muted);font-size:13px">No attachment</span>';
+
+  document.getElementById("modalBody").innerHTML =
+    detailRow("Part", (item.partName || "-") + (item.partModel ? " · " + item.partModel : "")) +
+    detailRow("Serial (old → new)", (item.oldSerial || "-") + "  →  " + (item.newSerial || "-")) +
+    detailRow("Quantity", item.qty) +
+    detailRow("Reason", item.reason) +
+    detailRow("Work detail", item.detail) +
+    detailRow("Technician", item.technician) +
+    detailRow("Cost", formatCost(item.cost) + " THB") +
+    detailRow("Next due", shortDate(item.nextDueDate) || "-") +
+    detailRow("Status", item.status) +
+    detailRow("Recorded at", item.createdAt) +
+    '<div class="detail-row">' + fileHtml + '</div>';
+
+  document.getElementById("maintModal").style.display = "flex";
+}
+
+function detailRow(key, value){
+  return '<div class="detail-row"><div class="k">' + escapeHtml(key) + '</div>' +
+         '<div class="v">' + escapeHtml(value || "-") + '</div></div>';
+}
+
+function closeModal(){
+  document.getElementById("maintModal").style.display = "none";
+}
+
+/* ===================== EXPORT ===================== */
+function exportExcel(){
+  const data = getFiltered().map(function(item){
+    return {
+      "Date": shortDate(item.maintDate),
+      "Line": item.line,
+      "Machine": item.machine,
+      "Type": item.maintType,
+      "Part Name": item.partName,
+      "Part Model": item.partModel,
+      "Old Serial": item.oldSerial,
+      "New Serial": item.newSerial,
+      "Qty": item.qty,
+      "Reason": item.reason,
+      "Detail": item.detail,
+      "Technician": item.technician,
+      "Cost": item.cost,
+      "Next Due": shortDate(item.nextDueDate),
+      "Status": item.status,
+      "Attachment": item.fileUrl
+    };
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "MachineMain");
+  XLSX.writeFile(workbook, "MachineMaintenance.xlsx");
+}
+
+/* ===================== START ===================== */
+document.getElementById("userInfo").innerHTML = "👤 " + USERNAME + " (" + ROLE + ")";
+if (ROLE !== "Admin"){ document.getElementById("exportBtn").style.display = "none"; }
+
+buildOptions();
+updateDate();
+clearForm();
+loadRecords();
+</script>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader"></div>
+  <div id="loadingText">Loading...</div>
+</div>
+
+<div id="maintModal" class="modal-backdrop" onclick="if(event.target===this) closeModal()">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <div class="modal-sub" id="modalSub"></div>
+    <div id="modalBody"></div>
+    <div style="margin-top:18px;">
+      <button class="btn btn-cancel" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+</body>
+</html>
