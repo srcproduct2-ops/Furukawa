@@ -242,7 +242,7 @@ tbody tr:hover{background:#f8f9fc}
 
       <div>
         <label>Line</label>
-        <select id="line"></select>
+        <select id="line" onchange="refreshMachineOptions()"></select>
       </div>
 
       <div>
@@ -395,12 +395,30 @@ tbody tr:hover{background:#f8f9fc}
 </div>
 </div>
 
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loader"></div>
+  <div id="loadingText">Loading...</div>
+</div>
+
+<div id="maintModal" class="modal-backdrop" onclick="if(event.target===this) closeModal()">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <div class="modal-sub" id="modalSub"></div>
+    <div id="modalBody"></div>
+    <div style="margin-top:18px;">
+      <button class="btn btn-cancel" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
 <script>
 /* ============================================================
    CONFIG — วาง URL ของ Web App จาก MachineMainCode.gs
    (คนละตัวกับของหน้า MachineLog.html)
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbxPO2iEcJBUhfel_S8jqJLODLIlCUJUc4BKvmoG3s48R1UbfGZA8j0KPjMEN_qdSMLz/exec";
+const API_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
 
 const LINES = ["HMR","GMR","TMR1","TMR2","MIR","ISR","SP","HS"];
 const MACHINES = [
@@ -482,6 +500,43 @@ function buildOptions(){
   document.getElementById("filterType").innerHTML = '<option value="">All Type</option>' + optionList(MAINT_TYPES);
 
   document.getElementById("plcLine").innerHTML = optionList(LINES);
+
+  refreshMachineOptions();
+}
+
+/**
+ * ซ่อนเครื่องจักรที่บันทึกไปแล้วออกจาก dropdown ของฟอร์ม
+ * - เช็คแยกตามไลน์ที่เลือกอยู่ (ไลน์อื่นยังเลือกเครื่องเดิมได้)
+ * - ตอนกดแก้ไข เครื่องของรายการนั้นจะยังอยู่ในลิสต์เสมอ
+ * - ช่องกรอง (filterMachine) ยังแสดงครบทุกเครื่องเหมือนเดิม
+ */
+function refreshMachineOptions(){
+  const select = document.getElementById("machine");
+  const line = document.getElementById("line").value;
+  const previous = select.value;
+
+  const editing = editId
+    ? records.find(function(x){ return String(x.id) === String(editId); })
+    : null;
+  const keep = editing ? editing.machine : "";
+
+  const used = records
+    .filter(function(item){ return item.line === line; })
+    .map(function(item){ return item.machine; });
+
+  const available = MACHINES.filter(function(machine){
+    return used.indexOf(machine) === -1 || machine === keep;
+  });
+
+  if (!available.length){
+    select.innerHTML = '<option value="">— ทุกเครื่องในไลน์นี้บันทึกครบแล้ว —</option>';
+    return;
+  }
+
+  select.innerHTML = optionList(available);
+
+  if (available.indexOf(previous) !== -1)  select.value = previous;
+  else if (available.indexOf(keep) !== -1) select.value = keep;
 }
 
 /* ===================== LOAD ===================== */
@@ -549,6 +604,7 @@ async function saveRecord(){
     status:      document.getElementById("status").value
   };
 
+  if (!record.machine){ showToast("ไลน์นี้บันทึกครบทุกเครื่องแล้ว", "error"); return; }
   if (!record.maintDate){ showToast("Please select a maintenance date", "error"); return; }
   if (!record.partName){ showToast("Please enter the part name", "error"); return; }
 
@@ -599,6 +655,7 @@ function editRecord(id){
 
   document.getElementById("maintDate").value   = shortDate(record.maintDate);
   document.getElementById("line").value        = record.line || LINES[0];
+  refreshMachineOptions();                       // ให้เครื่องของรายการนี้กลับมาอยู่ในลิสต์
   document.getElementById("machine").value     = record.machine || MACHINES[0];
   document.getElementById("maintType").value   = record.maintType || MAINT_TYPES[0];
   document.getElementById("partName").value    = record.partName || "";
@@ -649,8 +706,8 @@ function clearForm(){
 
   document.getElementById("maintDate").value = today();
   document.getElementById("line").selectedIndex = 0;
-  document.getElementById("machine").selectedIndex = 0;
   document.getElementById("maintType").selectedIndex = 0;
+  refreshMachineOptions();
   ["partName","partModel","oldSerial","newSerial","cost","nextDueDate","reason","detail","maintFile"]
     .forEach(function(id){ document.getElementById(id).value = ""; });
   document.getElementById("qty").value = "1";
@@ -748,6 +805,7 @@ function render(){
   renderKpi();
   renderPlc();
   renderDue();
+  refreshMachineOptions();
 }
 
 /* ===== PLC status card ต่อเครื่องจักร (เฉพาะงานที่เป็น PLC) ===== */
@@ -971,24 +1029,6 @@ updateDate();
 clearForm();
 loadRecords();
 </script>
-
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="loader"></div>
-  <div id="loadingText">Loading...</div>
-</div>
-
-<div id="maintModal" class="modal-backdrop" onclick="if(event.target===this) closeModal()">
-  <div class="modal-box">
-    <h3 id="modalTitle"></h3>
-    <div class="modal-sub" id="modalSub"></div>
-    <div id="modalBody"></div>
-    <div style="margin-top:18px;">
-      <button class="btn btn-cancel" onclick="closeModal()">Close</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
 
 </body>
 </html>
