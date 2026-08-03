@@ -116,6 +116,9 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 .btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(13,18,30,.12)}
 .btn-save{background:var(--accent)}
 .btn-export{background:var(--success)}
+.btn-backup{background:#6d28d9;color:#fff}
+.btn-backup:hover{background:#5b21b6}
+
 .btn-edit{background:var(--warning)}
 .btn-delete{background:var(--danger)}
 .btn-replace{background:var(--purple)}
@@ -277,6 +280,7 @@ tbody tr:hover{background:#f8f9fc}
     <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
       <button class="btn btn-save" id="saveBtn" onclick="saveComputer()">Save Computer</button>
       <button id="exportBtn" class="btn btn-export" onclick="exportExcel()">Export Excel</button>
+      <button id="backupBtn" class="btn btn-backup" onclick="backupJSON()" title="สำรองข้อมูลทั้งหมดเป็นไฟล์ .json">🗄️ สำรองไฟล์ (.json)</button>
     </div>
   </div>
 
@@ -645,6 +649,51 @@ function renderLinePC(){
   document.getElementById("lineGrid").innerHTML = html;
 }
 
+
+/* ===================== BACKUP JSON ===================== */
+function downloadJSON(payload, prefix){
+  try{
+    var d = new Date();
+    var pad = function(n){ return String(n).padStart(2,"0"); };
+    var stamp = d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate())
+              + "_" + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+
+    var text = JSON.stringify(payload, null, 2);
+    var blob = new Blob([text], { type: "application/json;charset=utf-8" });
+    var url  = URL.createObjectURL(blob);
+
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = prefix + "_backup_" + stamp + ".json";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    return true;
+  }catch(err){
+    console.error("Backup failed:", err);
+    alert("สำรองไฟล์ไม่สำเร็จ: " + err.message);
+    return false;
+  }
+}
+
+function backupJSON(){
+  var data = (typeof computers !== "undefined" && Array.isArray(computers)) ? computers : [];
+  if(data.length === 0){
+    alert("ยังไม่มีข้อมูลให้สำรอง กรุณารอให้โหลดข้อมูลเสร็จก่อน");
+    return;
+  }
+  downloadJSON({
+    app: "Computer Life",
+    exportedBy: (typeof USERNAME !== "undefined" ? USERNAME
+                : (typeof username !== "undefined" ? username : "")),
+    exportedAt: new Date().toISOString(),
+    count: data.length,
+    records: data
+  }, "ComputerLife");
+}
+
 function exportExcel(){
   const data = computers.map(pc => ({
     "Asset Tag": pc.assetTag,
@@ -768,6 +817,7 @@ loadData();
 
 if(role !== "Admin"){
   document.getElementById("exportBtn").style.display = "none";
+  document.getElementById("backupBtn").style.display = "none";
 }
 </script>
 
