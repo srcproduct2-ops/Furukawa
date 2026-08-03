@@ -97,6 +97,9 @@ textarea{resize:vertical;min-height:88px}
 .btn-edit{background:var(--warning)}
 .btn-delete{background:var(--danger)}
 .btn-export{background:var(--success)}
+.btn-backup{background:#6d28d9;color:#fff}
+.btn-backup:hover{background:#5b21b6}
+
 .btn-cancel{background:#eef0f5;color:#3a4150}
 .action-buttons{display:flex;gap:6px;flex-wrap:wrap}
 .action-buttons .btn{padding:7px 11px;font-size:11.5px}
@@ -326,6 +329,7 @@ tbody tr:hover{background:#f8f9fc}
       <button id="saveBtn" class="btn btn-save" onclick="saveRecord()">💾 Save Record</button>
       <button class="btn btn-cancel" onclick="clearForm()">Clear</button>
       <button id="exportBtn" class="btn btn-export" onclick="exportExcel()">Export Excel</button>
+      <button id="backupBtn" class="btn btn-backup" onclick="backupJSON()" title="สำรองข้อมูลทั้งหมดเป็นไฟล์ .json">🗄️ สำรองไฟล์ (.json)</button>
     </div>
   </div>
 
@@ -991,6 +995,51 @@ function closeModal(){
   document.getElementById("maintModal").style.display = "none";
 }
 
+
+/* ===================== BACKUP JSON ===================== */
+function downloadJSON(payload, prefix){
+  try{
+    var d = new Date();
+    var pad = function(n){ return String(n).padStart(2,"0"); };
+    var stamp = d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate())
+              + "_" + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+
+    var text = JSON.stringify(payload, null, 2);
+    var blob = new Blob([text], { type: "application/json;charset=utf-8" });
+    var url  = URL.createObjectURL(blob);
+
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = prefix + "_backup_" + stamp + ".json";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    return true;
+  }catch(err){
+    console.error("Backup failed:", err);
+    alert("สำรองไฟล์ไม่สำเร็จ: " + err.message);
+    return false;
+  }
+}
+
+function backupJSON(){
+  var data = (typeof records !== "undefined" && Array.isArray(records)) ? records : [];
+  if(data.length === 0){
+    alert("ยังไม่มีข้อมูลให้สำรอง กรุณารอให้โหลดข้อมูลเสร็จก่อน");
+    return;
+  }
+  downloadJSON({
+    app: "Machine Maintenance",
+    exportedBy: (typeof USERNAME !== "undefined" ? USERNAME
+                : (typeof username !== "undefined" ? username : "")),
+    exportedAt: new Date().toISOString(),
+    count: data.length,
+    records: data
+  }, "MachineMaintenance");
+}
+
 /* ===================== EXPORT ===================== */
 function exportExcel(){
   const data = getFiltered().map(function(item){
@@ -1022,7 +1071,10 @@ function exportExcel(){
 
 /* ===================== START ===================== */
 document.getElementById("userInfo").innerHTML = "👤 " + USERNAME + " (" + ROLE + ")";
-if (ROLE !== "Admin"){ document.getElementById("exportBtn").style.display = "none"; }
+if (ROLE !== "Admin"){
+  document.getElementById("exportBtn").style.display = "none";
+  document.getElementById("backupBtn").style.display = "none";
+}
 
 buildOptions();
 updateDate();
